@@ -4,15 +4,15 @@
 
 ## Index
 
-> :one: Team Rules
+> 1. [Team Rules](#team-rules)
 >
-> :two: Git Convention Rules
+> 2. [Git Convention Rules](#git-convention-rules)
 >
-> :three: 기술 스택
+> 3. [기술 스택](#기술-스택)
 
 
 
-## :one:Team Rules
+# Team Rules
 
 > 공통3반 1팀의 규칙입니다.
 
@@ -36,7 +36,7 @@
 
 ⛔ **오류 발생시**
 
-- 해결 여부 상관X 무조건 노션 기록 [Trouble Shooting](https://www.notion.so/Trouble-Shooting-be0e334cf078454aa332334697456c5d)
+- 해결 여부 상관X 무조건 노션 기록 [Trouble Shooting](https://little-condor-54f.notion.site/Trouble-Shooting-be0e334cf078454aa332334697456c5d)
 
   
 
@@ -64,7 +64,7 @@
 
 
 
-## :two:Git Convention Rules
+# Git Convention Rules
 
 
 
@@ -78,7 +78,7 @@
 
 :book: 참고 사항)
 
-### [Git 관련 컨벤션](https://www.notion.so/COMMIT-Convention-837b4b97c9e24daa9eccc51c0385162e)
+[Git 관련 컨벤션](https://little-condor-54f.notion.site/COMMIT-Convention-acfa64e3d6c840a1b4766273442e0adf)
 
 
 
@@ -86,7 +86,7 @@
 
 
 
-## :three: 기술 스택
+# 기술 스택
 
 >- 형상관리: Gitlab
 >- 이슈관리: Jira
