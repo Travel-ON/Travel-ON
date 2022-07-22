@@ -15,5 +15,11 @@
 
 - 요구사랑 정의서 (common-네비바) 작성
 - [BE] ERD 회의 후 설계
-![여만사](https://user-images.githubusercontent.com/26339069/180173175-62d8e348-b6a4-4aae-8aa3-a6bbfafa3789.png)
+  ![여만사](https://user-images.githubusercontent.com/26339069/180400984-a1a0500b-ec85-4c26-a7cb-500b935e9a72.png)
 
+0722
+
+- 데이터베이스 테이블 SQL문 작성
+- WebRTC 실습<br>
+  참고:[codelab](https://codelabs.developers.google.com/codelabs/webrtc-web/#8)
+- API 문서 작성 진행 중
