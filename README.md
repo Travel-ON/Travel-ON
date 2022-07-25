@@ -3,9 +3,9 @@
 ## Index
 
 > 1. [Team Rules](#team-rules)
->
+> 
 > 2. [Convention](#convention)
->
+> 
 > 3. [기술 스택](#기술-스택)
 
 # Team Rules
@@ -15,9 +15,9 @@
 ⚠️ **이슈 발생시**
 
 - 다음과 같은 내용을 정리하여 노션에 기록한다
-
+  
   - 문제 상황
-
+  
   - 문제 해결하려고 시도한 내용
 
 🕙 **오후 10시 Rule**
@@ -49,6 +49,7 @@
 #### ⭐️ 컨벤션 규칙 지켜주세요!
 
 - [Git 컨벤션](https://little-condor-54f.notion.site/COMMIT-Convention-acfa64e3d6c840a1b4766273442e0adf)
+  
   > NAME_tag: subject 형식입니다.
   > 예시: Jaehyun_Docs: README.md 수정
 - [Jira 컨벤션](https://little-condor-54f.notion.site/Jira-549149e42e4c4fe3836455985b842ff9)
@@ -64,11 +65,14 @@
 > - 디자인: Figma
 > - OS: Windows 10
 > - DB: MySQL 5.7.37
-> - Front-End
+>   
+>   ## Front-End
 > - HTML5, CSS3, JavaScript (ES6)
 > - Vue.js 3.0.11
+> - Vuetify
 > - Node.js 16.16.0
-> - Back-End
+>   
+>   ## Back-End
 > - Java JDK zulu-8.jdk
 > - Lombok 1.18.24
 > - JPA
