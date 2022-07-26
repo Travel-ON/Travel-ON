@@ -1,4 +1,4 @@
-package com.travel.travel_demo.controller;
+package com.travel.travel_on.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
