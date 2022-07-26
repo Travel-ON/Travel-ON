@@ -1,4 +1,4 @@
-package com.travel.travel_demo.dto;
+package com.travel.travel_on.dto;
 
 
 import lombok.*;
@@ -16,11 +16,12 @@ import javax.persistence.*;
 public class User {
 
     @Id
+    @Column(name="user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY) //MySQL의 AUTO_INCREMENT를 사용
-    private Integer user_id;
+    private Integer userId;
 
-    @Column(length = 20, nullable = false, unique = true)
-    private String id;
+    @Column(name="id", length = 20,nullable = false, unique = true)
+    private String realId;
 
     @Column(length = 20, nullable = false, unique = true)
     private String nickname;
@@ -34,15 +35,15 @@ public class User {
     @Column(length = 150, nullable = false)
     private String address;
 
-    @Column(nullable = false)
-    private boolean admin_flag;
+    @Column(name = "admin_flag",nullable = false)
+    private boolean adminFlag;
 
-    @Column(length = 20)
-    private String user_title;
+    @Column(name="user_title",length = 20)
+    private String userTitle;
 
-    @Column(nullable = false)
-    private int report_count;
+    @Column(name="report_count",nullable = false)
+    private int reportCount;
 
-    @Column(nullable = false)
-    private boolean alarm_flag;
+    @Column(name="alarm_flag", nullable = false)
+    private boolean alarmFlag;
 }
