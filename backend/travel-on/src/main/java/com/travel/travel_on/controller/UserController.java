@@ -107,22 +107,6 @@ public class UserController {
             return exceptionHandling(e);
         }
     }
-    /********/
-//    @ApiOperation(value="비밀번호 찾기: ", response = Integer.class )
-//    @PostMapping("/email")
-//    public ResponseEntity<?> resetPassword(String nickname){
-//        try{
-//            User user= usvc.selectByNickname(nickname);
-//            int result=0;
-//            if(user!=null){
-//                return new ResponseEntity<Integer>(++result, HttpStatus.OK);
-//            }else{ // 닉네임 사용 가능: 0 반환
-//                return new ResponseEntity<Integer>(result, HttpStatus.OK);
-//            }
-//        }catch (Exception e){
-//            return exceptionHandling(e);
-//        }
-//    }
 
     @ApiOperation(value="칭호 변경: 사용자 칭호를 수정한다", response = Integer.class )
     @PutMapping("/title")
@@ -136,34 +120,6 @@ public class UserController {
             return exceptionHandling(e);
         }
     }
-
-    /********/
-//    @ApiOperation(value="칭호 조회: 사용자가 얻은 칭호리스트를 조회한다", response = Integer.class )
-//    @PostMapping("/title")
-//    public ResponseEntity<?> selectTitle(User user){
-//        try{
-//            int result = usvc.update(user);
-//            return new ResponseEntity<Integer>(result, HttpStatus.OK);
-//        }catch (Exception e){
-//            return exceptionHandling(e);
-//        }
-//    }
-
-    /********/
-//    @ApiOperation(value="여행횟수 조회: 사용자의 지역별 여행횟수를 조회한다", response = User.class )
-//    @GetMapping("/trophy/{id}")
-//    public ResponseEntity<?> trophy(@PathVariable String id){
-//        try{
-//            User user= usvc.select(id);
-//            return new ResponseEntity<User>(user, HttpStatus.OK);
-//        }catch (Exception e){
-//            return exceptionHandling(e);
-//        }
-//    }
-
-    /********/
-    //위치 인증
-    //@ApiOperation
 
     private ResponseEntity<String> exceptionHandling(Exception e) {
         e.printStackTrace();

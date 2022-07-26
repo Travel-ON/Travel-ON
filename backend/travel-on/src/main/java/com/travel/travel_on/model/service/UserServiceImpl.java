@@ -48,9 +48,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public int delete(String id) {
         Optional<User> result = repo.findByRealId(id);
-        result.ifPresent(user -> {
-            repo.delete(user);
-        });
+        if (result.isPresent()) {
+            repo.delete(result.get());
+            return 0;
+        }
         return 1;
     }
 
