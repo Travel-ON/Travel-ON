@@ -1,4 +1,4 @@
-package com.travel.travel_demo;
+package com.travel.travel_on;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
