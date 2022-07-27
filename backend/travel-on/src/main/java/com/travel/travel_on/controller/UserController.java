@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
@@ -130,7 +131,6 @@ public class UserController {
         }
     }
 
-    /********페이징*/
     @ApiOperation(value = "칭호 조회: 사용자가 얻은 칭호리스트를 조회한다", response = List.class)
     @PostMapping("/title")
     public ResponseEntity<?> selectTitle(String id, String sidoName) {
@@ -143,24 +143,33 @@ public class UserController {
         }
     }
 
-    /********메일전송*/
-    @ApiOperation(value = "아직..! 비밀번호 찾기: 비밀번호를 초기화한 후 이메일로 전송한다", response = Integer.class)
+    @ApiOperation(value = "비밀번호 찾기: 비밀번호를 초기화한 후 이메일로 전송한다", response = Integer.class)
     @PostMapping("/email")
-    public ResponseEntity<?> resetPassword(String id) {
+    public ResponseEntity<?> resetPassword(String id, String email) {
         try {
+            int result = 1;
             User user = usvc.select(id);
-            user.setPassword("NCT127!!");
-            usvc.update(user);
-            int result = 0;
-            //이메일 전송
-
+            if(user!=null&&user.getEmail().equals(email)){
+                // 인증키 6자리 랜덤으로 생성 후 초기화
+                String authKey = Integer.toString( ThreadLocalRandom.current().nextInt(100000, 1000000) );
+                user.setPassword(authKey);
+                usvc.update(user);
+                usvc.sendMail(email,
+                        "[Travel-ON] 비밀번호 초기화",
+                        "안녕하세요 Travel-ON 입니다\n" +
+                                "인증번호는 " + authKey + " 입니다.\n" +
+                                "로그인 후 비밀번호를 변경해주세요.\n"+
+                                "Travel-ON을 이용해주셔서 감사합니다."
+                        );
+                //이메일 전송
+                result = 0;
+            }
             return new ResponseEntity<Integer>(result, HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
         }
     }
 
-    /********/
     @ApiOperation(value = "여행횟수 조회: 사용자의 지역별 여행횟수를 조회한다", response = List.class)
     @GetMapping("/trophy/{id}")
     public ResponseEntity<?> selectTrophy(@PathVariable String id) {
@@ -173,8 +182,7 @@ public class UserController {
         }
     }
 
-    /********/
-    @ApiOperation(value = "아직..! 여행횟수 업데이트: 사용자의 위치인증한 지역의 여행횟수를 1 증가시킨다", response = Integer.class)
+    @ApiOperation(value = "여행횟수 업데이트: 사용자의 위치인증한 지역의 여행횟수를 1 증가시킨다", response = Integer.class)
     @PostMapping("/trophy")
     public ResponseEntity<?> updateTrophy(String id, String sidoName) {
         try {

@@ -6,6 +6,9 @@ import com.travel.travel_on.model.repo.UserAchievementRepository;
 import com.travel.travel_on.model.repo.UserRepository;
 import com.travel.travel_on.model.repo.VisitationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +28,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     AchievementRepository arepo;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     @Override
     public User select(String id) {
@@ -149,5 +155,30 @@ public class UserServiceImpl implements UserService {
             return title;
         }
         return null;
+    }
+
+    @Override
+    public int sendMail(String mail, String title, String content) {
+        int result = 1;
+
+        try {
+            // 텍스트로 구성된 메일을 생성할때
+            SimpleMailMessage simpleMessage = new SimpleMailMessage();
+
+            // 받는사람 설정
+            simpleMessage.setTo(mail);
+
+            simpleMessage.setSubject(title);
+            simpleMessage.setText(content);
+
+            System.out.println(javaMailSender);
+            // 메일 발송
+            javaMailSender.send(simpleMessage);
+            result = 0;
+        } catch (MailException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return result;
     }
 }
