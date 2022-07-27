@@ -2,15 +2,18 @@
   <div style="display: flex; justify-content: space-between">
     <div class="left-space"></div>
     <div class="main-space">
-      <h1>This is main space</h1>
+      <HomeMainButtons />
     </div>
     <div class="right-space"></div>
   </div>
 </template>
 
 <script>
+import HomeMainButtons from "./HomeMainButtons.vue";
+
 export default {
   name: "MainSpacing",
+  components: { HomeMainButtons },
 };
 </script>
 
