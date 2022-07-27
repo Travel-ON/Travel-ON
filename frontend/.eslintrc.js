@@ -10,5 +10,8 @@ module.exports = {
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+    // 뷰티파이 관련 룰
+    // "vuetify/no-deprecated-classes": "error",
+    // "vuetify/no-legacy-grid": "error",
   },
 };
