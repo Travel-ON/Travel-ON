@@ -1,7 +1,12 @@
 package com.travel.travel_on.dto;
 
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -11,13 +16,13 @@ import javax.persistence.*;
 @NoArgsConstructor
 @ToString
 @Builder
-@Table (name="user")
+@Table(name="user")
 @Entity
 public class User {
 
     @Id
     @Column(name="user_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //MySQL의 AUTO_INCREMENT를 사용
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // MySQL의 AUTO_INCREMENT를 사용
     private Integer userId;
 
     @Column(name="id", length = 20,nullable = false, unique = true)
