@@ -3,11 +3,19 @@ package com.travel.travel_on.controller;
 import com.travel.travel_on.dto.FAQ;
 import com.travel.travel_on.dto.Notice;
 import com.travel.travel_on.model.service.NoticeServiceImpl;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
@@ -18,14 +26,24 @@ public class NoticeController {
     @Autowired
     private NoticeServiceImpl nsvc;
 
-    @PostMapping
-    public ResponseEntity<?> selectList(){
-        try{
-            List<Notice> result = nsvc.select();
-            return new ResponseEntity<List<Notice>>(result, HttpStatus.OK);
-        }catch (Exception e){
-            return exceptionHandling(e);
-        }
+//    @PostMapping
+//    public ResponseEntity<?> selectList(){
+//        try{
+//            List<Notice> result = nsvc.select();
+//            return new ResponseEntity<List<Notice>>(result, HttpStatus.OK);
+//        }catch (Exception e){
+//            return exceptionHandling(e);
+//        }
+//    }
+
+    @GetMapping("/page") //페이징 디폴트 10개씩
+    public ResponseEntity<?> selectPage(@PageableDefault(sort = "noticeId")Pageable pageable){
+        Board result = new Board();
+        result.P = nsvc.findPage(pageable); // 페이징
+        result.previous = pageable.previousOrFirst().getPageNumber(); // 이전버튼용
+        result.next = pageable.next().getPageNumber(); // 다음버튼용
+
+        return new ResponseEntity<Board>(result, HttpStatus.OK);
     }
 
     @PostMapping("/regist")
@@ -68,14 +86,24 @@ public class NoticeController {
         }
     }
 
+//    @PostMapping("/faq")
+//    public ResponseEntity<?> selectFAQList(){
+//        try{
+//            List<FAQ> result = nsvc.selectFAQ();
+//            return new ResponseEntity<List<FAQ>>(result, HttpStatus.OK);
+//        }catch (Exception e){
+//            return exceptionHandling(e);
+//        }
+//    }
+
     @PostMapping("/faq")
-    public ResponseEntity<?> selectFAQList(){
-        try{
-            List<FAQ> result = nsvc.selectFAQ();
-            return new ResponseEntity<List<FAQ>>(result, HttpStatus.OK);
-        }catch (Exception e){
-            return exceptionHandling(e);
-        }
+    public ResponseEntity<?> searchFAQ(String keyword, @PageableDefault(sort = "faqId")Pageable pageable){
+        FAQBoard result = new FAQBoard();
+        result.PF = nsvc.search(keyword, pageable);
+        result.previous = pageable.previousOrFirst().getPageNumber(); // 이전 버튼용
+        result.next = pageable.next().getPageNumber(); // 다음 버튼용
+
+        return new ResponseEntity<FAQBoard>(result, HttpStatus.OK);
     }
 
     private ResponseEntity<String> exceptionHandling(Exception e) {
@@ -83,4 +111,41 @@ public class NoticeController {
         return new ResponseEntity<String>("Sorry: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Getter
+    @Setter
+    static class Board{
+        Page<Notice> P;
+        int previous;
+        int next;
+
+        public Board() {
+
+        }
+
+        public Board(Page<Notice> P, int previous, int next){
+            P = this.P;
+            previous = this.previous;
+            next = this.next;
+        }
+    }
+
+    @Getter
+    @Setter
+    static class FAQBoard{
+        Page<FAQ> PF;
+        int previous;
+        int next;
+
+        public  FAQBoard(){
+
+        }
+
+        public FAQBoard(Page<FAQ> PF, int previous, int next){
+            PF = this.PF;
+            previous = this.previous;
+            next = this.next;
+        }
+    }
 }
+
+

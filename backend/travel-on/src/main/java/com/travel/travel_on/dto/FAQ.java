@@ -10,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @ToString
 @Builder
-@Table (name="notice")
+@Table (name="faq")
 @Entity
 public class FAQ {
 

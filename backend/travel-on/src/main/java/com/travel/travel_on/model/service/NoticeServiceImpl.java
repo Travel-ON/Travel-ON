@@ -5,6 +5,8 @@ import com.travel.travel_on.dto.Notice;
 import com.travel.travel_on.model.repo.FAQRepository;
 import com.travel.travel_on.model.repo.NoticeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,9 +14,9 @@ import java.util.Optional;
 
 @Service
 public class NoticeServiceImpl implements NoticeService {
-
     @Autowired
     NoticeRepository nRepo;
+
     @Autowired
     FAQRepository fRepo;
 
@@ -25,6 +27,11 @@ public class NoticeServiceImpl implements NoticeService {
             return result;
         }
         return null;
+    }
+
+    @Override
+    public Page<Notice> findPage(Pageable pageable) {
+        return nRepo.findAll(pageable);
     }
 
     @Override
@@ -76,4 +83,11 @@ public class NoticeServiceImpl implements NoticeService {
         }
         return null;
     }
+
+    @Override
+    public Page<FAQ> search(String keyword, Pageable pageable) {
+        return fRepo.findByQuestionContaining(keyword, pageable);
+    }
+
+
 }
