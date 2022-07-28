@@ -36,7 +36,7 @@ public class NoticeController {
 //        }
 //    }
 
-    @GetMapping("/page") //페이징 디폴트 10개씩
+    @GetMapping("/page") //페이징 디폴트 10개씩 아마도
     public ResponseEntity<?> selectPage(@PageableDefault(sort = "noticeId")Pageable pageable){
         Board result = new Board();
         result.P = nsvc.findPage(pageable); // 페이징
