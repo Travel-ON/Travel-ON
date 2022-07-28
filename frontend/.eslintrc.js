@@ -13,5 +13,6 @@ module.exports = {
     // 뷰티파이 관련 룰
     // "vuetify/no-deprecated-classes": "error",
     // "vuetify/no-legacy-grid": "error",
+    "import/prefer-default-export": "off",
   },
 };

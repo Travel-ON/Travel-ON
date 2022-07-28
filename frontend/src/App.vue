@@ -1,8 +1,11 @@
 <template>
   <v-app>
     <v-main>
+<<<<<<< HEAD
       <router-link to="/">Home</router-link> | <router-link to="/about">About</router-link> |
       <router-link to="/notice">Notice</router-link>
+=======
+>>>>>>> 64b664887aee00a4bcb6cb0ca359843c840c8b10
       <router-view />
     </v-main>
   </v-app>
@@ -11,6 +14,7 @@
 <script>
 export default {
   name: "App",
+<<<<<<< HEAD
 
   data: () => ({
     //
@@ -29,3 +33,11 @@ export default {
   margin-top: 60px;
 }
 </style>
+=======
+
+  data: () => ({
+    //
+  }),
+};
+</script>
+>>>>>>> 64b664887aee00a4bcb6cb0ca359843c840c8b10
