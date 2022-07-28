@@ -1,18 +1,24 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <MainNav />
+  <div style="margin-top: 80px">
+    <img src="https://via.placeholder.com/1920x1080" alt="main-banner" style="width: 100%" />
   </div>
+  <MainSpacingHome />
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import MainNav from "@/components/MainNav.vue";
+import MainSpacingHome from "@/components/MainSpacingHome.vue";
+import { defineComponent } from "vue";
 
-export default {
+// Components
+
+export default defineComponent({
   name: "HomeView",
+
   components: {
-    HelloWorld,
+    MainNav,
+    MainSpacingHome,
   },
-};
+});
 </script>
