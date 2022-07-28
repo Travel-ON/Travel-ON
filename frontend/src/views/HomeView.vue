@@ -9,7 +9,8 @@ export default {
   name: "Home",
 
   components: {
-    HelloWorld,
+    MainNav,
+    MainSpacingHome,
   },
-};
+});
 </script>
