@@ -1,5 +1,24 @@
 <template>
-  <div class="nav">
+  <div>
+    <v-toolbar extended extension-height="80">
+      <v-toolbar-title>Title</v-toolbar-title>
+
+      <v-spacer></v-spacer>
+
+      <v-btn icon>
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn>
+
+      <v-btn icon>
+        <v-icon>mdi-heart</v-icon>
+      </v-btn>
+
+      <v-btn icon>
+        <v-icon>mdi-dots-vertical</v-icon>
+      </v-btn>
+    </v-toolbar>
+  </div>
+  <!-- <div class="nav">
     <div class="nav_left">
       <div>
         <a href="#">(트래블론 로고)</a>
@@ -33,7 +52,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script>
