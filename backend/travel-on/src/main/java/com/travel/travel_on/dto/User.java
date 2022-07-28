@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -51,4 +53,7 @@ public class User {
 
     @Column(name="alarm_flag", nullable = false)
     private boolean alarmFlag;
+
+    @OneToMany(mappedBy = "user")
+    private List<Alarm> alarms = new ArrayList<>();
 }
