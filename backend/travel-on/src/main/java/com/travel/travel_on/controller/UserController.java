@@ -188,7 +188,6 @@ public class UserController {
         try {
             int result = 0;
             User user = usvc.select(id);
-            System.out.println(user);
             // 여행횟수 업데이트
             int count = usvc.updateVisitation(user.getUserId(), sidoName);
             // 업적 기준 확인
@@ -203,6 +202,7 @@ public class UserController {
                         .build();
                 usvc.insertUserAchievement(userAchievement);
                 // 알림 내용 추가 (알린 내용 수정)
+//                asvc.insert(user,"칭호획득: ["+sidoName+" "+title+"]");
                 asvc.insert(user.getUserId(),"칭호획득: ["+sidoName+" "+title+"]");
             }
             return new ResponseEntity<Integer>(result, HttpStatus.OK);

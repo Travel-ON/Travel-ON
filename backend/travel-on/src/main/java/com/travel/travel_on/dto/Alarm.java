@@ -20,6 +20,10 @@ public class Alarm implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // MySQL의 AUTO_INCREMENT를 사용
     private Integer alarmId;
 
+//    @ManyToOne
+//    @JoinColumn(name="user_id")
+//    private User user;
+
     @Column(name="user_id")
     private Integer userId;
 

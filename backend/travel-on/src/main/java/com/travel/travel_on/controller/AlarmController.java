@@ -25,17 +25,6 @@ public class AlarmController {
     @Autowired
     private AlarmService asvc;
 
-//    @ApiOperation(value = "알림생성", response = Integer.class)
-//    @PostMapping("/regist")
-//    public ResponseEntity<?> regist(User user) {
-//        try {
-//            int result = usvc.insert(user);
-//            return new ResponseEntity<Integer>(result, HttpStatus.CREATED);
-//        } catch (Exception e) {
-//            return exceptionHandling(e);
-//        }
-//    }
-
     @ApiOperation(value = "알림 조회: 사용자가 알림 리스트를 조회한다", response = List.class)
     @GetMapping("/{id}")
     public ResponseEntity<?> selectAlarm(@PathVariable String id) {
