@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface NoticeService {
 
-    List<Notice> select(); // 글 리스트 조회
+//    List<Notice> select(); // 글 리스트 조회
 
     Page<Notice> findPage(Pageable pageable); // 글 리스트 페이징 조회
 
@@ -22,8 +22,9 @@ public interface NoticeService {
 
     int delete(Integer id); // 글 삭제
 
-    List<FAQ> selectFAQ(); // FAQ 리스트 조회
+//    List<FAQ> selectFAQ(); // FAQ 리스트 조회
 
     Page<FAQ> search(String keyword, Pageable pageable);
+
 //    List<Notice> selectOneFAQ(); // FAQ 글 조회
 }
