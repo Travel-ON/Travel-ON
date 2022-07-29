@@ -1,6 +1,7 @@
 package com.travel.travel_on.model.service;
 
 import com.travel.travel_on.dto.Alarm;
+import com.travel.travel_on.dto.User;
 import com.travel.travel_on.model.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,13 +20,24 @@ public class AlarmServiceImpl implements AlarmService {
 
     @Override
     public List<Alarm> selectAll(int userId) {
-        Optional<List<Alarm>> result = repo.findByUserId(userId);
+        Optional<List<Alarm>> result = repo.findByUser_UserId(userId);
         if (result.isPresent()) {
             List<Alarm> list = result.get();
             return list;
         }
         return null;
     }
+
+//    @Override
+//    public int insert(User user,String content) {
+//        Alarm alarm = Alarm.builder()
+//                .user(user)
+//                .content(content)
+//                .build();
+//        repo.save(alarm);
+//        usvc.updateAlarm(user.getUserId());
+//        return 0;
+//    }
 
     @Override
     public int insert(int userId,String content) {
@@ -38,9 +50,10 @@ public class AlarmServiceImpl implements AlarmService {
         return 0;
     }
 
+
     @Override
     public int deleteAll(int userId) {
-        Optional<List<Alarm>> result = repo.findByUserId(userId);
+        Optional<List<Alarm>> result = repo.findByUser_UserId(userId);
         if (result.isPresent()) {
             for(Alarm alarm : result.get()) {
                 repo.delete(alarm);
