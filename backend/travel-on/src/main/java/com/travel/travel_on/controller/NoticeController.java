@@ -3,6 +3,7 @@ package com.travel.travel_on.controller;
 import com.travel.travel_on.dto.FAQ;
 import com.travel.travel_on.dto.Notice;
 import com.travel.travel_on.model.service.NoticeServiceImpl;
+import io.swagger.annotations.ApiOperation;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
@@ -36,6 +33,7 @@ public class NoticeController {
 //        }
 //    }
 
+    @ApiOperation(value = "글리스트 조회: 공지사항 글 조회 및 페이징")
     @GetMapping("/page") //페이징 디폴트 10개씩
     public ResponseEntity<?> selectPage(@PageableDefault(sort = "noticeId")Pageable pageable){
         Board result = new Board();
@@ -46,6 +44,7 @@ public class NoticeController {
         return new ResponseEntity<Board>(result, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "글쓰기: 공지사항을 작성한다.")
     @PostMapping("/regist")
     public ResponseEntity<?> regist(Notice notice){
         try{
@@ -56,7 +55,8 @@ public class NoticeController {
         }
     }
 
-    @GetMapping("/{noticeId}")
+    @ApiOperation(value = "글 조회: 선택한 글 조회")
+    @GetMapping("/detail/{noticeId}")
     public ResponseEntity<?> select(@PathVariable Integer noticeId){
         try{
             Notice result = nsvc.selectOne(noticeId);
@@ -66,7 +66,8 @@ public class NoticeController {
         }
     }
 
-    @PutMapping
+    @ApiOperation(value = "글 수정: 공지사항 글 수정")
+    @PutMapping("/modify")
     public ResponseEntity<?> modify(Notice notice){
         try{
             int result = nsvc.update(notice);
@@ -76,7 +77,8 @@ public class NoticeController {
         }
     }
 
-    @DeleteMapping("/{noticeId}")
+    @ApiOperation(value = "글 삭제: 글 삭제")
+    @DeleteMapping("delete/{noticeId}")
     public ResponseEntity<?> delete(@PathVariable Integer noticeId){
         try{
             int result = nsvc.delete(noticeId);
@@ -96,6 +98,7 @@ public class NoticeController {
 //        }
 //    }
 
+    @ApiOperation(value = "FAQ 리스트 조회: FAQ 글 조회 및 페이징, 검색")
     @PostMapping("/faq")
     public ResponseEntity<?> searchFAQ(String keyword, @PageableDefault(sort = "faqId")Pageable pageable){
         FAQBoard result = new FAQBoard();
