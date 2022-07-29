@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,14 +19,14 @@ public class NoticeServiceImpl implements NoticeService {
     @Autowired
     FAQRepository fRepo;
 
-    @Override
-    public List<Notice> select() {
-        List<Notice> result = nRepo.findAll();
-        if (!result.isEmpty()){
-            return result;
-        }
-        return null;
-    }
+//    @Override
+//    public List<Notice> select() {
+//        List<Notice> result = nRepo.findAll();
+//        if (!result.isEmpty()){
+//            return result;
+//        }
+//        return null;
+//    }
 
     @Override
     public Page<Notice> findPage(Pageable pageable) {
@@ -75,14 +74,14 @@ public class NoticeServiceImpl implements NoticeService {
         return 1;
     }
 
-    @Override
-    public List<FAQ> selectFAQ() {
-        List<FAQ> result = fRepo.findAll();
-        if (!result.isEmpty()){
-            return result;
-        }
-        return null;
-    }
+//    @Override
+//    public List<FAQ> selectFAQ() {
+//        List<FAQ> result = fRepo.findAll();
+//        if (!result.isEmpty()){
+//            return result;
+//        }
+//        return null;
+//    }
 
     @Override
     public Page<FAQ> search(String keyword, Pageable pageable) {
