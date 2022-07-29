@@ -61,8 +61,6 @@
 
 - [HTML/CSS Code 컨벤션](https://little-condor-54f.notion.site/HTML-CSS-456a804c8be644eb9492be737cf55267)
 
-
-
 ---
 
 # 기술 스택
@@ -77,7 +75,7 @@
 > 
 > - OS: Windows 10
 > 
-> - DB: MySQL 5.7.37
+> - DB: MySQL 8.0.30
 >   
 >   ## Front-End
 > 
@@ -96,11 +94,11 @@
 > - Lombok 1.18.24
 > 
 > - JPA
-> 
-> - IDE
+>   
+>   ## IDE
 > 
 > - MySQL Workbench
 > 
-> - STS 3.9.14.RELEASE
+> - intellij
 > 
 > - Visual Studio Code 1.69.0
