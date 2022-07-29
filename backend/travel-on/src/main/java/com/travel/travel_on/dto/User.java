@@ -54,6 +54,6 @@ public class User {
     @Column(name="alarm_flag", nullable = false)
     private boolean alarmFlag;
 
-    @OneToMany(mappedBy = "user")
-    private List<Alarm> alarms = new ArrayList<>();
+//    @OneToMany(mappedBy = "user")
+//    private List<Alarm> alarms = new ArrayList<>();
 }

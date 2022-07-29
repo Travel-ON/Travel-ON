@@ -28,16 +28,28 @@ public class AlarmServiceImpl implements AlarmService {
         return null;
     }
 
+//    @Override
+//    public int insert(User user,String content) {
+//        Alarm alarm = Alarm.builder()
+//                .user(user)
+//                .content(content)
+//                .build();
+//        repo.save(alarm);
+//        usvc.updateAlarm(user.getUserId());
+//        return 0;
+//    }
+
     @Override
-    public int insert(User user,String content) {
+    public int insert(int userId,String content) {
         Alarm alarm = Alarm.builder()
-                .user(user)
+                .userId(userId)
                 .content(content)
                 .build();
         repo.save(alarm);
-        usvc.updateAlarm(user.getUserId());
+        usvc.updateAlarm(userId);
         return 0;
     }
+
 
     @Override
     public int deleteAll(int userId) {

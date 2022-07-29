@@ -202,7 +202,8 @@ public class UserController {
                         .build();
                 usvc.insertUserAchievement(userAchievement);
                 // 알림 내용 추가 (알린 내용 수정)
-                asvc.insert(user,"칭호획득: ["+sidoName+" "+title+"]");
+//                asvc.insert(user,"칭호획득: ["+sidoName+" "+title+"]");
+                asvc.insert(user.getUserId(),"칭호획득: ["+sidoName+" "+title+"]");
             }
             return new ResponseEntity<Integer>(result, HttpStatus.OK);
         } catch (Exception e) {

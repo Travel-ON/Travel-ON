@@ -9,7 +9,8 @@ public interface AlarmService {
 
     List<Alarm> selectAll(int userId);
 
-    int insert(User user, String content);
+//    int insert(User user, String content);
+    int insert(int userId, String content);
 
     int deleteAll(int userId);
 }
