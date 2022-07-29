@@ -33,12 +33,9 @@ public class NoticeController {
 //        }
 //    }
 
-<<<<<<< HEAD
+
     @ApiOperation(value = "글리스트 조회: 공지사항 글 조회 및 페이징")
     @GetMapping("/page") //페이징 디폴트 10개씩
-=======
-    @GetMapping("/page") //페이징 디폴트 10개씩 아마도
->>>>>>> a147e20d2da71389d1ade77f4e01a9a3b8c6cd5c
     public ResponseEntity<?> selectPage(@PageableDefault(sort = "noticeId")Pageable pageable){
         Board result = new Board();
         result.P = nsvc.findPage(pageable); // 페이징
