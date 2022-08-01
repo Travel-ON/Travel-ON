@@ -1,5 +1,6 @@
 package com.travel.travel_on.model.service;
 
+import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.entity.User;
 import com.travel.travel_on.dto.UserAchievement;
 import com.travel.travel_on.dto.Visitation;
@@ -7,15 +8,15 @@ import com.travel.travel_on.dto.Visitation;
 import java.util.List;
 
 public interface UserService {
-    User select(String id);
+    UserDto select(String id);
 
-    int insert(User user);
+    int insert(UserDto userDto);
 
-    int update(User user);
+    int update(UserDto userDto);
 
     int delete(String id);
 
-    User selectByNickname(String nickname);
+    UserDto selectByNickname(String nickname);
 
     int updateAlarm(int userId);
 

@@ -1,6 +1,7 @@
 package com.travel.travel_on.controller;
 
 import com.travel.travel_on.dto.AlarmDto;
+import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.entity.Alarm;
 import com.travel.travel_on.entity.User;
 import com.travel.travel_on.model.service.AlarmService;
@@ -31,10 +32,10 @@ public class AlarmController {
     @GetMapping("/{id}")
     public ResponseEntity<?> selectAlarm(@PathVariable String id) {
         try {
-            User user = usvc.select(id);
-            if(user==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            UserDto userDto = usvc.select(id);
+            if(userDto==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-            List<Alarm> list = asvc.selectAll(user);
+            List<Alarm> list = asvc.selectAll(userDto.toEntity());
             List<AlarmDto> result = list.stream()
                     .map(r -> new AlarmDto(r))
                     .collect(Collectors.toList());
@@ -49,10 +50,10 @@ public class AlarmController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAlarm(@PathVariable String id) {
         try {
-            User user = usvc.select(id);
-            if(user==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            UserDto userDto = usvc.select(id);
+            if(userDto==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-            int result = asvc.deleteAll(user);
+            int result = asvc.deleteAll(userDto.toEntity());
             return new ResponseEntity<Integer>(result, HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);

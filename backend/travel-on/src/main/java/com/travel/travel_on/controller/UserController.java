@@ -1,5 +1,6 @@
 package com.travel.travel_on.controller;
 
+import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.entity.User;
 import com.travel.travel_on.dto.UserAchievement;
 import com.travel.travel_on.dto.Visitation;
@@ -27,9 +28,9 @@ public class UserController {
 
     @ApiOperation(value = "회원가입: 사용자 정보를 삽입한다", response = Integer.class)
     @PostMapping("/regist")
-    public ResponseEntity<?> regist(User user) {
+    public ResponseEntity<?> regist(UserDto userDto) {
         try {
-            int result = usvc.insert(user);
+            int result = usvc.insert(userDto);
             return new ResponseEntity<Integer>(result, HttpStatus.CREATED);
         } catch (Exception e) {
             return exceptionHandling(e);
@@ -40,9 +41,9 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(String id, String password) {
         try {
-            User user = usvc.select(id);
+            UserDto userDto = usvc.select(id);
             int result = 0;
-            if (user != null && user.getPassword().equals(password)) {
+            if (userDto != null && userDto.getPassword().equals(password)) {
                 return new ResponseEntity<Integer>(result, HttpStatus.OK);
             } else {
                 return new ResponseEntity<Integer>(++result, HttpStatus.OK);
@@ -56,9 +57,9 @@ public class UserController {
     @PostMapping("/idcheck")
     public ResponseEntity<?> idcheck(String id) {
         try {
-            User user = usvc.select(id);
+            UserDto userDto = usvc.select(id);
             int result = 0;
-            if (user != null) {
+            if (userDto != null) {
                 return new ResponseEntity<Integer>(++result, HttpStatus.OK);
             } else { // 아이디 사용 가능: 0 반환
                 return new ResponseEntity<Integer>(result, HttpStatus.OK);
@@ -72,9 +73,9 @@ public class UserController {
     @PostMapping("/nickcheck")
     public ResponseEntity<?> nickcheck(String nickname) {
         try {
-            User user = usvc.selectByNickname(nickname);
+            UserDto userDto = usvc.selectByNickname(nickname);
             int result = 0;
-            if (user != null) {
+            if (userDto != null) {
                 return new ResponseEntity<Integer>(++result, HttpStatus.OK);
             } else { // 닉네임 사용 가능: 0 반환
                 return new ResponseEntity<Integer>(result, HttpStatus.OK);
@@ -84,12 +85,12 @@ public class UserController {
         }
     }
 
-    @ApiOperation(value = "회원정보 조회: 사용자 정보를 조회한다", response = User.class)
+    @ApiOperation(value = "회원정보 조회: 사용자 정보를 조회한다", response = UserDto.class)
     @GetMapping("/detail/{id}")
     public ResponseEntity<?> detail(@PathVariable String id) {
         try {
-            User user = usvc.select(id);
-            return new ResponseEntity<User>(user, HttpStatus.OK);
+            UserDto userDto = usvc.select(id);
+            return new ResponseEntity<UserDto>(userDto, HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
         }
@@ -97,9 +98,9 @@ public class UserController {
 
     @ApiOperation(value = "회원정보 수정: 사용자 정보를 수정한다", response = Integer.class)
     @PutMapping("/modify")
-    public ResponseEntity<?> modify(User user) {
+    public ResponseEntity<?> modify(UserDto userDto) {
         try {
-            int result = usvc.update(user);
+            int result = usvc.update(userDto);
             return new ResponseEntity<Integer>(result, HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
@@ -121,9 +122,9 @@ public class UserController {
     @PutMapping("/title")
     public ResponseEntity<?> modifyTitle(String id, String title) {
         try {
-            User user = usvc.select(id);
-            user.setUserTitle(title);
-            int result = usvc.update(user);
+            UserDto userDto = usvc.select(id);
+            userDto.setUserTitle(title);
+            int result = usvc.update(userDto);
             return new ResponseEntity<Integer>(result, HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
@@ -134,8 +135,8 @@ public class UserController {
     @PostMapping("/title")
     public ResponseEntity<?> selectTitle(String id, String sidoName) {
         try {
-            User user = usvc.select(id);
-            List<UserAchievement> list = usvc.selectUserAchievement(user.getUserId(), sidoName);
+            UserDto userDto = usvc.select(id);
+            List<UserAchievement> list = usvc.selectUserAchievement(userDto.getUserId(), sidoName);
             return new ResponseEntity<List<UserAchievement>>(list, HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
@@ -147,12 +148,12 @@ public class UserController {
     public ResponseEntity<?> resetPassword(String id, String email) {
         try {
             int result = 1;
-            User user = usvc.select(id);
-            if(user!=null&&user.getEmail().equals(email)){
+            UserDto userDto = usvc.select(id);
+            if(userDto!=null&&userDto.getEmail().equals(email)){
                 // 인증키 6자리 랜덤으로 생성 후 초기화
                 String authKey = Integer.toString( ThreadLocalRandom.current().nextInt(100000, 1000000) );
-                user.setPassword(authKey);
-                usvc.update(user);
+                userDto.setPassword(authKey);
+                usvc.update(userDto);
                 usvc.sendMail(email,
                         "[Travel-ON] 비밀번호 초기화",
                         "안녕하세요 Travel-ON 입니다\n" +
@@ -173,8 +174,8 @@ public class UserController {
     @GetMapping("/trophy/{id}")
     public ResponseEntity<?> selectTrophy(@PathVariable String id) {
         try {
-            User user = usvc.select(id);
-            List<Visitation> list = usvc.selectVisitation(user.getUserId());
+            UserDto userDto = usvc.select(id);
+            List<Visitation> list = usvc.selectVisitation(userDto.getUserId());
             return new ResponseEntity<List<Visitation>>(list, HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
@@ -186,23 +187,23 @@ public class UserController {
     public ResponseEntity<?> updateTrophy(String id, String sidoName) {
         try {
             int result = 0;
-            User user = usvc.select(id);
+            UserDto userDto = usvc.select(id);
             // 여행횟수 업데이트
-            int count = usvc.updateVisitation(user.getUserId(), sidoName);
+            int count = usvc.updateVisitation(userDto.getUserId(), sidoName);
             // 업적 기준 확인
             String title = usvc.selectAchievement(count);
             // 칭호 획득
             if (title != null) {
                 // 사용자 테이블에 칭호 넣기, 알림 업데이트
                 UserAchievement userAchievement = UserAchievement.builder()
-                        .userId(user.getUserId())
+                        .userId(userDto.getUserId())
                         .sidoName(sidoName)
                         .title(title)
                         .build();
                 usvc.insertUserAchievement(userAchievement);
                 // 알림 내용 추가 (알린 내용 수정)
 //                asvc.insert(user,"칭호획득: ["+sidoName+" "+title+"]");
-                asvc.insert(user,"칭호획득: ["+sidoName+" "+title+"]");
+                asvc.insert(userDto,"칭호획득: ["+sidoName+" "+title+"]");
             }
             return new ResponseEntity<Integer>(result, HttpStatus.OK);
         } catch (Exception e) {

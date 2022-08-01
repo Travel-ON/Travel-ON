@@ -31,6 +31,6 @@ public class Alarm implements Serializable {
 
     public void setUser(User user){
         this.user = user;
-        user.getAlarms().add(this);
+        this.user.getAlarms().add(this);
     }
 }

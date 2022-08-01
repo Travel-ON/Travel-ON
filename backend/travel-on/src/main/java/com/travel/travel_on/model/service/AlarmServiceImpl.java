@@ -1,5 +1,6 @@
 package com.travel.travel_on.model.service;
 
+import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.entity.Alarm;
 import com.travel.travel_on.entity.User;
 import com.travel.travel_on.model.repo.*;
@@ -24,7 +25,12 @@ public class AlarmServiceImpl implements AlarmService {
     }
 
     @Override
-    public int insert(User user,String content) {
+    public int insert(UserDto userDto, String content) {
+        User user = userDto.toEntity();
+        System.out.println("<<<<<<<<<<<<");
+        System.out.println(user.getAlarms());
+        System.out.println("<<<<<<<<<<<<");
+
         Alarm alarm = Alarm.builder()
                 .user(user)
                 .content(content)

@@ -34,30 +34,33 @@ public class UserServiceImpl implements UserService {
     private JavaMailSender javaMailSender;
 
     @Override
-    public User select(String id) {
+    public UserDto select(String id) {
         Optional<User> result = repo.findByRealId(id);
         if (result.isPresent()) {
             User user = result.get();
-            return user;
+            UserDto userDto = new UserDto(user);
+            return userDto;
         }
         return null;
     }
 
     @Override
-    public int insert(User user) {
-        Optional<User> result = repo.findByRealId(user.getRealId());
+    public int insert(UserDto userDto) {
+        Optional<User> result = repo.findByRealId(userDto.getRealId());
         if (result.isPresent()) {
             return 1;
         } else {
+            User user = userDto.toEntity();
             repo.save(user);
             return 0;
         }
     }
 
     @Override
-    public int update(User user) {
-        Optional<User> result = repo.findByRealId(user.getRealId());
+    public int update(UserDto userDto) {
+        Optional<User> result = repo.findByRealId(userDto.getRealId());
         if (result.isPresent()) {
+            User user = userDto.toEntity();
             repo.save(user);
             return 0;
         } else {
@@ -76,11 +79,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User selectByNickname(String nickname) {
+    public UserDto selectByNickname(String nickname) {
         Optional<User> result = repo.findByNickname(nickname);
         if (result.isPresent()) {
             User user = result.get();
-            return user;
+            UserDto userDto = new UserDto(user);
+            return userDto;
         }
         return null;
     }

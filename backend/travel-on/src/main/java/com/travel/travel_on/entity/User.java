@@ -55,6 +55,7 @@ public class User {
     private boolean alarmFlag;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<Alarm> alarms = new ArrayList<>();
 
 }

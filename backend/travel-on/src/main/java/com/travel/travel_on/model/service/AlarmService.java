@@ -1,5 +1,6 @@
 package com.travel.travel_on.model.service;
 
+import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.entity.Alarm;
 import com.travel.travel_on.entity.User;
 
@@ -9,7 +10,7 @@ public interface AlarmService {
 
     List<Alarm> selectAll(User user);
 
-    int insert(User user, String content);
+    int insert(UserDto userDto, String content);
 
     int deleteAll(User user);
 }
