@@ -3,7 +3,7 @@
     <div id="title">Notice</div>
     <v-container>
       <div class="d-flex justify-end mb-6">
-        <v-btn color="primary">글작성</v-btn>
+        <v-btn color="primary" @click="write">글작성</v-btn>
       </div>
       <v-row style="background-color: lightgrey">
         <v-col>글번호 </v-col>
@@ -11,7 +11,7 @@
         <v-col>작성날짜</v-col>
         <v-col>조회수</v-col>
       </v-row>
-      <v-row v-for="notice in notices" :key="notice">
+      <v-row v-for="notice in notices" :key="notice.notice_id">
         <v-col v-if="notice.fixation_flag">notice</v-col>
         <v-col v-else>{{ notice.notice_id }}</v-col>
         <v-col>{{ notice.title }}</v-col>
@@ -45,7 +45,13 @@ export default {
         console.log(err);
       });
   },
-  methods: {},
+  methods: {
+    write() {
+      this.$router.push({
+        path: "/notice/create",
+      });
+    },
+  },
 };
 </script>
 
