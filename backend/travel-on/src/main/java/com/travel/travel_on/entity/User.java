@@ -62,4 +62,8 @@ public class User {
     @Builder.Default
     private List<UserAchievement> userAchievements = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Visitation> visitations = new ArrayList<>();
+
 }

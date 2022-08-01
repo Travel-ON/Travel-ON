@@ -1,8 +1,10 @@
 package com.travel.travel_on.model.service;
 
 import com.travel.travel_on.dto.*;
+import com.travel.travel_on.entity.Achievement;
 import com.travel.travel_on.entity.User;
 import com.travel.travel_on.entity.UserAchievement;
+import com.travel.travel_on.entity.Visitation;
 import com.travel.travel_on.model.repo.AchievementRepository;
 import com.travel.travel_on.model.repo.UserAchievementRepository;
 import com.travel.travel_on.model.repo.UserRepository;
@@ -118,18 +120,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Visitation> selectVisitation(int userId) {
-        Optional<List<Visitation>> result = vrepo.findByUserId(userId);
-        if (result.isPresent()) {
-            List<Visitation> list = result.get();
-            return list;
-        }
-        return null;
+    public List<Visitation> selectVisitation(User user) {
+        List<Visitation> list = vrepo.findByUser(user);
+        return list;
     }
 
     @Override
-    public int updateVisitation(int userId, String sidoName) {
-        Optional<Visitation> result = vrepo.findByUserIdAndSidoName(userId, sidoName);
+    public int updateVisitation(User user, String sidoName) {
+        Optional<Visitation> result = vrepo.findByUserAndSidoName(user, sidoName);
         Visitation visitation;
         if (result.isPresent()) {
             //업데이트
@@ -140,7 +138,7 @@ public class UserServiceImpl implements UserService {
         } else {
             //생성
             visitation = Visitation.builder()
-                    .userId(userId)
+                    .user(user)
                     .sidoName(sidoName)
                     .count(1)
                     .build();

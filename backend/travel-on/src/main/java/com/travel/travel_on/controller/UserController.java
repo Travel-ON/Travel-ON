@@ -3,9 +3,11 @@ package com.travel.travel_on.controller;
 import com.travel.travel_on.dto.AlarmDto;
 import com.travel.travel_on.dto.UserAchievementDto;
 import com.travel.travel_on.dto.UserDto;
+import com.travel.travel_on.dto.VisitationDto;
+import com.travel.travel_on.entity.Alarm;
 import com.travel.travel_on.entity.User;
 import com.travel.travel_on.entity.UserAchievement;
-import com.travel.travel_on.dto.Visitation;
+import com.travel.travel_on.entity.Visitation;
 import com.travel.travel_on.model.service.AlarmService;
 import com.travel.travel_on.model.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -188,8 +190,14 @@ public class UserController {
     public ResponseEntity<?> selectTrophy(@PathVariable String id) {
         try {
             UserDto userDto = usvc.select(id);
-            List<Visitation> list = usvc.selectVisitation(userDto.getUserId());
-            return new ResponseEntity<List<Visitation>>(list, HttpStatus.OK);
+            if(userDto==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+            List<Visitation> list = usvc.selectVisitation(userDto.toEntity());
+            List<VisitationDto> result = list.stream()
+                    .map(r -> new VisitationDto(r))
+                    .collect(Collectors.toList());
+            log.info("VisitationList : {}", result.toString());
+            return new ResponseEntity<List>(result, HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
         }
@@ -201,9 +209,11 @@ public class UserController {
         try {
             int result = 0;
             UserDto userDto = usvc.select(id);
+            if(userDto==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
             User user = userDto.toEntity();
             // 여행횟수 업데이트
-            int count = usvc.updateVisitation(userDto.getUserId(), sidoName);
+            int count = usvc.updateVisitation(userDto.toEntity(), sidoName);
             // 업적 기준 확인
             String title = usvc.selectAchievement(count);
             // 칭호 획득

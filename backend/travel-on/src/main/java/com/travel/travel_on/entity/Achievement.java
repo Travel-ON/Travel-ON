@@ -1,4 +1,4 @@
-package com.travel.travel_on.dto;
+package com.travel.travel_on.entity;
 
 import lombok.*;
 
