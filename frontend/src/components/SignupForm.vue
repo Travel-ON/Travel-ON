@@ -1,16 +1,22 @@
 <template>
   <form @submit.prevent="submitForm">
     <div>
-      <label for="username">아이디: </label>
-      <input id="username" type="text" v-model="username" />
+      <label for="username"
+        >아이디:
+        <input id="username" type="text" v-model="username" />
+      </label>
     </div>
     <div>
-      <label for="password">비밀번호: </label>
-      <input id="password" type="text" v-model="password" />
+      <label for="password"
+        >비밀번호:
+        <input id="password" type="text" v-model="password" />
+      </label>
     </div>
     <div>
-      <label for="nickname">닉네임: </label>
-      <input id="nickname" type="text" v-model="nickname" />
+      <label for="nickname"
+        >닉네임:
+        <input id="nickname" type="text" v-model="nickname" />
+      </label>
     </div>
     <button type="submit">회원 가입</button>
 
@@ -19,7 +25,7 @@
 </template>
 
 <script>
-import { registerUser } from '@/api/index';
+import { registerUser } from "../api/index";
 
 export default {
   data() {
