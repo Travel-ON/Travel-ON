@@ -1,11 +1,11 @@
 <template>
-  <div style="position: fixed; top: 0; left: 0; right: 0">
+  <div style="position: fixed; top: 0; left: 0; right: 0; z-index: 3000">
     <v-toolbar height="116px">
       <v-btn>(트래블론 로고)</v-btn>
       <v-btn>방만들기</v-btn>
       <v-btn>방매칭하기</v-btn>
       <v-btn>여행플래너</v-btn>
-      <v-menu open-on-hover>
+      <v-menu open-on-hover style="z-index: 3500">
         <template v-slot:activator="{ props }">
           <v-btn v-bind="props"> 커뮤니티 </v-btn>
         </template>
@@ -22,7 +22,7 @@
         <v-btn> 회원가입 </v-btn>
       </div>
       <div v-else>
-        <v-menu open-on-hover>
+        <v-menu open-on-hover style="z-index: 3500">
           <template v-slot:activator="{ props }">
             <v-btn icon v-bind="props">
               <v-badge color="red" dot>
@@ -36,7 +36,7 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <v-menu open-on-hover>
+        <v-menu open-on-hover style="z-index: 3500">
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props">
               <div style="font-size: x-small">대전 풋내기</div>
