@@ -1,22 +1,24 @@
 package com.travel.travel_on.controller;
 
-import com.travel.travel_on.dto.Alarm;
-import com.travel.travel_on.dto.User;
-import com.travel.travel_on.dto.UserAchievement;
-import com.travel.travel_on.dto.Visitation;
+import com.travel.travel_on.dto.AlarmDto;
+import com.travel.travel_on.entity.Alarm;
+import com.travel.travel_on.entity.User;
 import com.travel.travel_on.model.service.AlarmService;
 import com.travel.travel_on.model.service.UserService;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
 @RequestMapping("/alarm")
+@Slf4j
 public class AlarmController {
 
     @Autowired
@@ -30,8 +32,12 @@ public class AlarmController {
     public ResponseEntity<?> selectAlarm(@PathVariable String id) {
         try {
             User user = usvc.select(id);
-            List<Alarm> list = asvc.selectAll(user.getUserId());
-            return new ResponseEntity<List<Alarm>>(list, HttpStatus.OK);
+            List<Alarm> list = asvc.selectAll(user);
+            List<AlarmDto> result = list.stream()
+                    .map(r -> new AlarmDto(r))
+                    .collect(Collectors.toList());
+            log.info("AlarmList : {}", result.toString());
+            return new ResponseEntity<List>(result, HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
         }
@@ -42,7 +48,7 @@ public class AlarmController {
     public ResponseEntity<?> deleteAlarm(@PathVariable String id) {
         try {
             User user = usvc.select(id);
-            int result = asvc.deleteAll(user.getUserId());
+            int result = asvc.deleteAll(user);
             return new ResponseEntity<Integer>(result, HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);

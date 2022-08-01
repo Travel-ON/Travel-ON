@@ -1,7 +1,6 @@
 package com.travel.travel_on.controller;
 
-import com.travel.travel_on.dto.Alarm;
-import com.travel.travel_on.dto.User;
+import com.travel.travel_on.entity.User;
 import com.travel.travel_on.dto.UserAchievement;
 import com.travel.travel_on.dto.Visitation;
 import com.travel.travel_on.model.service.AlarmService;
@@ -203,7 +202,7 @@ public class UserController {
                 usvc.insertUserAchievement(userAchievement);
                 // 알림 내용 추가 (알린 내용 수정)
 //                asvc.insert(user,"칭호획득: ["+sidoName+" "+title+"]");
-                asvc.insert(user.getUserId(),"칭호획득: ["+sidoName+" "+title+"]");
+                asvc.insert(user,"칭호획득: ["+sidoName+" "+title+"]");
             }
             return new ResponseEntity<Integer>(result, HttpStatus.OK);
         } catch (Exception e) {

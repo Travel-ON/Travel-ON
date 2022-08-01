@@ -1,6 +1,7 @@
 package com.travel.travel_on.model.service;
 
 import com.travel.travel_on.dto.*;
+import com.travel.travel_on.entity.User;
 import com.travel.travel_on.model.repo.AchievementRepository;
 import com.travel.travel_on.model.repo.UserAchievementRepository;
 import com.travel.travel_on.model.repo.UserRepository;
