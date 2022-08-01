@@ -27,10 +27,6 @@ public class AlarmServiceImpl implements AlarmService {
     @Override
     public int insert(UserDto userDto, String content) {
         User user = userDto.toEntity();
-        System.out.println("<<<<<<<<<<<<");
-        System.out.println(user.getAlarms());
-        System.out.println("<<<<<<<<<<<<");
-
         Alarm alarm = Alarm.builder()
                 .user(user)
                 .content(content)
