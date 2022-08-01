@@ -20,7 +20,7 @@ public class AlarmServiceImpl implements AlarmService {
 
     @Override
     public List<Alarm> selectAll(int userId) {
-        Optional<List<Alarm>> result = repo.findByUser_UserId(userId);
+        Optional<List<Alarm>> result = repo.findByUserId(userId);
         if (result.isPresent()) {
             List<Alarm> list = result.get();
             return list;
@@ -53,7 +53,7 @@ public class AlarmServiceImpl implements AlarmService {
 
     @Override
     public int deleteAll(int userId) {
-        Optional<List<Alarm>> result = repo.findByUser_UserId(userId);
+        Optional<List<Alarm>> result = repo.findByUserId(userId);
         if (result.isPresent()) {
             for(Alarm alarm : result.get()) {
                 repo.delete(alarm);

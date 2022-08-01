@@ -10,5 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface AlarmRepository extends JpaRepository<Alarm,Integer> {
-    Optional<List<Alarm>> findByUser_UserId(@Param(value="userID") int userId);
+    Optional<List<Alarm>> findByUserId(int userId);
 }
