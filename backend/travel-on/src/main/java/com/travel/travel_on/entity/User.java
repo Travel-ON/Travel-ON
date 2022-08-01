@@ -58,4 +58,8 @@ public class User {
     @Builder.Default
     private List<Alarm> alarms = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<UserAchievement> userAchievements = new ArrayList<>();
+
 }

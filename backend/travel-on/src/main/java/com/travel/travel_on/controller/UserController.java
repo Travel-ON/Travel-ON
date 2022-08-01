@@ -1,12 +1,15 @@
 package com.travel.travel_on.controller;
 
+import com.travel.travel_on.dto.AlarmDto;
+import com.travel.travel_on.dto.UserAchievementDto;
 import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.entity.User;
-import com.travel.travel_on.dto.UserAchievement;
+import com.travel.travel_on.entity.UserAchievement;
 import com.travel.travel_on.dto.Visitation;
 import com.travel.travel_on.model.service.AlarmService;
 import com.travel.travel_on.model.service.UserService;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +17,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class UserController {
 
     @Autowired
@@ -123,6 +128,8 @@ public class UserController {
     public ResponseEntity<?> modifyTitle(String id, String title) {
         try {
             UserDto userDto = usvc.select(id);
+            if(userDto==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
             userDto.setUserTitle(title);
             int result = usvc.update(userDto);
             return new ResponseEntity<Integer>(result, HttpStatus.OK);
@@ -136,8 +143,14 @@ public class UserController {
     public ResponseEntity<?> selectTitle(String id, String sidoName) {
         try {
             UserDto userDto = usvc.select(id);
-            List<UserAchievement> list = usvc.selectUserAchievement(userDto.getUserId(), sidoName);
-            return new ResponseEntity<List<UserAchievement>>(list, HttpStatus.OK);
+            if(userDto==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+            List<UserAchievement> list = usvc.selectUserAchievement(userDto.toEntity(), sidoName);
+            List<UserAchievementDto> result = list.stream()
+                    .map(r -> new UserAchievementDto(r))
+                    .collect(Collectors.toList());
+            log.info("UserAchievementList : {}", result.toString());
+            return new ResponseEntity<List>(result, HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
         }
@@ -188,6 +201,7 @@ public class UserController {
         try {
             int result = 0;
             UserDto userDto = usvc.select(id);
+            User user = userDto.toEntity();
             // 여행횟수 업데이트
             int count = usvc.updateVisitation(userDto.getUserId(), sidoName);
             // 업적 기준 확인
@@ -196,7 +210,7 @@ public class UserController {
             if (title != null) {
                 // 사용자 테이블에 칭호 넣기, 알림 업데이트
                 UserAchievement userAchievement = UserAchievement.builder()
-                        .userId(userDto.getUserId())
+                        .user(user)
                         .sidoName(sidoName)
                         .title(title)
                         .build();

@@ -2,7 +2,7 @@ package com.travel.travel_on.model.service;
 
 import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.entity.User;
-import com.travel.travel_on.dto.UserAchievement;
+import com.travel.travel_on.entity.UserAchievement;
 import com.travel.travel_on.dto.Visitation;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public interface UserService {
 
     int updateAlarm(int userId);
 
-    List<UserAchievement> selectUserAchievement(int userId, String sidoName);
+    List<UserAchievement> selectUserAchievement(User user, String sidoName);
 
     int insertUserAchievement(UserAchievement userAchievement);
 

@@ -2,6 +2,7 @@ package com.travel.travel_on.model.service;
 
 import com.travel.travel_on.dto.*;
 import com.travel.travel_on.entity.User;
+import com.travel.travel_on.entity.UserAchievement;
 import com.travel.travel_on.model.repo.AchievementRepository;
 import com.travel.travel_on.model.repo.UserAchievementRepository;
 import com.travel.travel_on.model.repo.UserRepository;
@@ -102,16 +103,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserAchievement> selectUserAchievement(int userId, String sidoName) {
-        Optional<List<UserAchievement>> result;
-        if (sidoName == null) result = uarepo.findByUserId(userId);
-        else result = uarepo.findByUserIdAndSidoName(userId, sidoName);
+    public List<UserAchievement> selectUserAchievement(User user, String sidoName) {
+        List<UserAchievement> list;
+        if (sidoName == null) list = uarepo.findByUser(user);
+        else list = uarepo.findByUserAndSidoName(user, sidoName);
 
-        if (result.isPresent()) {
-            List<UserAchievement> list = result.get();
-            return list;
-        }
-        return null;
+        return list;
     }
 
     @Override
