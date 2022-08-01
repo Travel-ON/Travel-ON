@@ -3,11 +3,13 @@ package com.travel.travel_on.controller;
 import com.travel.travel_on.dto.AlarmDto;
 import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.entity.Alarm;
-import com.travel.travel_on.entity.User;
 import com.travel.travel_on.model.service.AlarmService;
 import com.travel.travel_on.model.service.UserService;
+
 import io.swagger.annotations.ApiOperation;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

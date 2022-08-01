@@ -1,10 +1,9 @@
 package com.travel.travel_on.entity;
 
 import lombok.*;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 
 @Getter
@@ -19,7 +18,7 @@ public class Alarm implements Serializable {
 
     @Id
     @Column(name="alarm_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // MySQL의 AUTO_INCREMENT를 사용
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer alarmId;
 
     @ManyToOne(fetch = FetchType.LAZY)

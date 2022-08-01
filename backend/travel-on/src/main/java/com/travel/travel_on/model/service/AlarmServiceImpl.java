@@ -3,7 +3,8 @@ package com.travel.travel_on.model.service;
 import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.entity.Alarm;
 import com.travel.travel_on.entity.User;
-import com.travel.travel_on.model.repo.*;
+import com.travel.travel_on.model.repo.AlarmRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

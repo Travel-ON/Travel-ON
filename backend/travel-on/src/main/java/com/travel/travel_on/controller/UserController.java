@@ -1,17 +1,18 @@
 package com.travel.travel_on.controller;
 
-import com.travel.travel_on.dto.AlarmDto;
 import com.travel.travel_on.dto.UserAchievementDto;
 import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.dto.VisitationDto;
-import com.travel.travel_on.entity.Alarm;
 import com.travel.travel_on.entity.User;
 import com.travel.travel_on.entity.UserAchievement;
 import com.travel.travel_on.entity.Visitation;
 import com.travel.travel_on.model.service.AlarmService;
 import com.travel.travel_on.model.service.UserService;
+
 import io.swagger.annotations.ApiOperation;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -226,7 +227,6 @@ public class UserController {
                         .build();
                 usvc.insertUserAchievement(userAchievement);
                 // 알림 내용 추가 (알린 내용 수정)
-//                asvc.insert(user,"칭호획득: ["+sidoName+" "+title+"]");
                 asvc.insert(userDto,"칭호획득: ["+sidoName+" "+title+"]");
             }
             return new ResponseEntity<Integer>(result, HttpStatus.OK);

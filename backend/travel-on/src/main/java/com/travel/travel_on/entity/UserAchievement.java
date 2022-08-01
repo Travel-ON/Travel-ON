@@ -3,6 +3,7 @@ package com.travel.travel_on.entity;
 import lombok.*;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 
 @Getter
@@ -17,15 +18,12 @@ public class UserAchievement implements Serializable {
 
     @Id
     @Column(name="user_achievement_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // MySQL의 AUTO_INCREMENT를 사용
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userAchievementId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
-
-//    @Column(name="user_id")
-//    private Integer userId;
 
     @Column(name="sido_name", length = 20, nullable = false)
     private String sidoName;

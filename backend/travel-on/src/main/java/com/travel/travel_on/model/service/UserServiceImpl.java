@@ -1,6 +1,6 @@
 package com.travel.travel_on.model.service;
 
-import com.travel.travel_on.dto.*;
+import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.entity.Achievement;
 import com.travel.travel_on.entity.User;
 import com.travel.travel_on.entity.UserAchievement;
@@ -9,6 +9,7 @@ import com.travel.travel_on.model.repo.AchievementRepository;
 import com.travel.travel_on.model.repo.UserAchievementRepository;
 import com.travel.travel_on.model.repo.UserRepository;
 import com.travel.travel_on.model.repo.VisitationRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
