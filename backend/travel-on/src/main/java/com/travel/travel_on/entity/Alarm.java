@@ -24,11 +24,7 @@ public class Alarm implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
-    @NotFound(action = NotFoundAction.IGNORE) // 값이 발견되지 않으면 무시
     private User user;
-//
-//    @Column(name="user_id")
-//    private Integer userId;
 
     @Column(length = 100, nullable = false)
     private String content;
