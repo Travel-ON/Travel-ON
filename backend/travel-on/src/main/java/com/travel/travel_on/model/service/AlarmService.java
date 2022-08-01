@@ -10,7 +10,6 @@ public interface AlarmService {
     List<Alarm> selectAll(User user);
 
     int insert(User user, String content);
-//    int insert(int userId, String content);
 
     int deleteAll(User user);
 }

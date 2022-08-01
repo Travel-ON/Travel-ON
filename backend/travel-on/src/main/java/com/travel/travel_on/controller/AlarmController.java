@@ -32,6 +32,8 @@ public class AlarmController {
     public ResponseEntity<?> selectAlarm(@PathVariable String id) {
         try {
             User user = usvc.select(id);
+            if(user==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
             List<Alarm> list = asvc.selectAll(user);
             List<AlarmDto> result = list.stream()
                     .map(r -> new AlarmDto(r))
@@ -48,6 +50,8 @@ public class AlarmController {
     public ResponseEntity<?> deleteAlarm(@PathVariable String id) {
         try {
             User user = usvc.select(id);
+            if(user==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
             int result = asvc.deleteAll(user);
             return new ResponseEntity<Integer>(result, HttpStatus.OK);
         } catch (Exception e) {
