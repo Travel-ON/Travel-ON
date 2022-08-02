@@ -1,6 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import NoticeView from "../views/NoticeView.vue";
+
+import Notice from "../views/Notice.vue";
+import NoticeList from "../components/notice/NoticeList.vue";
+import NoticeDetail from "../components/notice/NoticeDetail.vue";
+import NoticeWrite from "../components/notice/NoticeCreate.vue";
+import NoticeUpdate from "../components/notice/NoticeUpdate.vue";
 
 const routes = [
   {
@@ -10,9 +15,31 @@ const routes = [
   },
   {
     path: "/notice",
-    name: "notice",
-    component: NoticeView,
+    component: Notice,
+    children: [
+      {
+        path: "",
+        name: "NoticeList",
+        component: NoticeList,
+      },
+      {
+        path: "detail",
+        name: "NoticeDetail",
+        component: NoticeDetail,
+      },
+      {
+        path: "update",
+        name: "NoticeUpdate",
+        component: NoticeUpdate,
+      },
+      {
+        path: "create",
+        name: "NoticeWrite",
+        component: NoticeWrite,
+      },
+    ],
   },
+
   {
     path: "/about",
     name: "about",
