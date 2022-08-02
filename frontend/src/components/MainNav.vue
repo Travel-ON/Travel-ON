@@ -40,7 +40,7 @@
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props">
               <div style="font-size: x-small">대전 풋내기</div>
-              <div>김태훈</div>
+              <div>{{ currentUser }}</div>
               <v-icon>mdi-chevron-down</v-icon>
             </v-btn>
           </template>
