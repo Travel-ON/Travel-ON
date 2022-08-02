@@ -1,22 +1,27 @@
 package com.travel.travel_on.controller;
 
-import com.travel.travel_on.dto.Alarm;
-import com.travel.travel_on.dto.User;
-import com.travel.travel_on.dto.UserAchievement;
-import com.travel.travel_on.dto.Visitation;
+import com.travel.travel_on.dto.AlarmDto;
+import com.travel.travel_on.dto.UserDto;
+import com.travel.travel_on.entity.Alarm;
 import com.travel.travel_on.model.service.AlarmService;
 import com.travel.travel_on.model.service.UserService;
+
 import io.swagger.annotations.ApiOperation;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
 @RequestMapping("/alarm")
+@Slf4j
 public class AlarmController {
 
     @Autowired
@@ -25,24 +30,19 @@ public class AlarmController {
     @Autowired
     private AlarmService asvc;
 
-//    @ApiOperation(value = "알림생성", response = Integer.class)
-//    @PostMapping("/regist")
-//    public ResponseEntity<?> regist(User user) {
-//        try {
-//            int result = usvc.insert(user);
-//            return new ResponseEntity<Integer>(result, HttpStatus.CREATED);
-//        } catch (Exception e) {
-//            return exceptionHandling(e);
-//        }
-//    }
-
     @ApiOperation(value = "알림 조회: 사용자가 알림 리스트를 조회한다", response = List.class)
     @GetMapping("/{id}")
     public ResponseEntity<?> selectAlarm(@PathVariable String id) {
         try {
-            User user = usvc.select(id);
-            List<Alarm> list = asvc.selectAll(user.getUserId());
-            return new ResponseEntity<List<Alarm>>(list, HttpStatus.OK);
+            UserDto userDto = usvc.select(id);
+            if(userDto==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+            List<Alarm> list = asvc.selectAll(userDto.toEntity());
+            List<AlarmDto> result = list.stream()
+                    .map(r -> new AlarmDto(r))
+                    .collect(Collectors.toList());
+            log.info("AlarmList : {}", result.toString());
+            return new ResponseEntity<List>(result, HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
         }
@@ -52,8 +52,10 @@ public class AlarmController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAlarm(@PathVariable String id) {
         try {
-            User user = usvc.select(id);
-            int result = asvc.deleteAll(user.getUserId());
+            UserDto userDto = usvc.select(id);
+            if(userDto==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+            int result = asvc.deleteAll(userDto.toEntity());
             return new ResponseEntity<Integer>(result, HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);

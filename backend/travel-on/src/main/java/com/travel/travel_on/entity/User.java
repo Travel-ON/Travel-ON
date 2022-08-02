@@ -1,4 +1,4 @@
-package com.travel.travel_on.dto;
+package com.travel.travel_on.entity;
 
 
 import lombok.Getter;
@@ -10,11 +10,14 @@ import lombok.ToString;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = {"alarms"})
 @Builder
 @Table(name="user")
 @Entity
@@ -22,7 +25,7 @@ public class User {
 
     @Id
     @Column(name="user_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // MySQL의 AUTO_INCREMENT를 사용
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
 
     @Column(name="id", length = 20,nullable = false, unique = true)
@@ -51,4 +54,17 @@ public class User {
 
     @Column(name="alarm_flag", nullable = false)
     private boolean alarmFlag;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Alarm> alarms = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<UserAchievement> userAchievements = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Visitation> visitations = new ArrayList<>();
+
 }
