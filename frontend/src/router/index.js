@@ -4,7 +4,7 @@ import HomeView from "../views/HomeView.vue";
 import Notice from "../views/Notice.vue";
 import NoticeList from "../components/notice/NoticeList.vue";
 import NoticeDetail from "../components/notice/NoticeDetail.vue";
-import NoticeWrite from "../components/notice/NoticeCreate.vue";
+import NoticeWrite from "../components/notice/NoticeWrite.vue";
 import NoticeUpdate from "../components/notice/NoticeUpdate.vue";
 
 const routes = [
@@ -23,7 +23,7 @@ const routes = [
         component: NoticeList,
       },
       {
-        path: "detail",
+        path: "detail/:id",
         name: "NoticeDetail",
         component: NoticeDetail,
       },
@@ -33,7 +33,7 @@ const routes = [
         component: NoticeUpdate,
       },
       {
-        path: "create",
+        path: "write",
         name: "NoticeWrite",
         component: NoticeWrite,
       },
