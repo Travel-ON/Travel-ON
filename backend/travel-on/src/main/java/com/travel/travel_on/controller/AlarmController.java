@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,9 @@ public class AlarmController {
     public ResponseEntity<?> selectAlarm(@PathVariable String id) {
         try {
             UserDto userDto = usvc.select(id);
-            if(userDto==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            if(userDto==null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
 
             List<Alarm> list = asvc.selectAll(userDto.toEntity());
             List<AlarmDto> result = list.stream()
@@ -48,15 +51,17 @@ public class AlarmController {
         }
     }
 
-    @ApiOperation(value = "알림 삭제: 사용자가 알림 리스트를 전체 삭제한다", response = Integer.class)
+    @ApiOperation(value = "알림 삭제: 사용자가 알림 리스트를 전체 삭제한다")
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<?> deleteAlarm(@PathVariable String id) {
         try {
             UserDto userDto = usvc.select(id);
-            if(userDto==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-            int result = asvc.deleteAll(userDto.toEntity());
-            return new ResponseEntity<Integer>(result, HttpStatus.OK);
+            if(userDto==null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            asvc.deleteAll(userDto.toEntity());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return exceptionHandling(e);
         }

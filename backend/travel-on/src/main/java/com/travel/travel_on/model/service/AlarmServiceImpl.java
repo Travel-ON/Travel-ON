@@ -26,25 +26,22 @@ public class AlarmServiceImpl implements AlarmService {
     }
 
     @Override
-    public int insert(UserDto userDto, String content) {
-        User user = userDto.toEntity();
+    public void insert(User user, String content) {
         Alarm alarm = Alarm.builder()
                 .user(user)
                 .content(content)
                 .build();
         alarm.setUser(user);
         repo.save(alarm);
-        usvc.updateAlarm(user.getUserId());
-        return 0;
+        usvc.updateAlarm(user);
     }
 
 
     @Override
-    public int deleteAll(User user) {
+    public void deleteAll(User user) {
         List<Alarm> list = repo.findByUser(user);
             for(Alarm alarm : list) {
                 repo.delete(alarm);
             }
-            return 0;
     }
 }
