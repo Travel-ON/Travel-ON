@@ -1,12 +1,14 @@
 package com.travel.travel_on.controller;
 
-import com.travel.travel_on.dto.FAQ;
-import com.travel.travel_on.dto.Notice;
-import com.travel.travel_on.dto.QNA;
+import com.travel.travel_on.dto.QNADto;
+import com.travel.travel_on.dto.UserDto;
+import com.travel.travel_on.entity.QNA;
 import com.travel.travel_on.model.service.QNAServiceImpl;
+import com.travel.travel_on.model.service.UserServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,59 +17,81 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
 @RequestMapping("/qna")
+@Slf4j
 public class QNAController {
+
+    @Autowired
+    private UserServiceImpl usvc;
 
     @Autowired
     private QNAServiceImpl qsvc;
 
-    @ApiOperation(value = "QNA 리스트 조회: QNA 글 조회 및 페이징, 검색")
-    @PostMapping("/page")
-    public ResponseEntity<?> searchQNA(String keyword, @PageableDefault(sort = "qnaId") Pageable pageable){
-        QNABoard result = new QNABoard();
-        result.PQ = qsvc.selectQNA(keyword, pageable);
-        result.previous = pageable.previousOrFirst().getPageNumber(); // 이전 버튼용
-        result.next = pageable.next().getPageNumber(); // 다음 버튼용
 
-        return new ResponseEntity<QNABoard>(result, HttpStatus.OK);
+    @ApiOperation(value = "QNA 리스트 조회: QNA 글 조회")
+    @GetMapping("/{id}")
+    public ResponseEntity<?> searchQNA(@PathVariable String id, @RequestParam(value = "keyword", required = false)String keyword){
+        try {
+            UserDto userDto = usvc.select(id);
+            if(userDto == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+            System.out.println("ㅎㅇ");
+
+            List<QNA> list;
+            if(keyword == null || keyword.isEmpty()){
+                list = qsvc.selectAll(userDto.toEntity(), "null");
+            }else{
+                list = qsvc.selectAll(userDto.toEntity(), keyword);
+            }
+            List<QNADto> result = list.stream()
+                    .map(r -> new QNADto(r))
+                    .collect(Collectors.toList());
+            log.info("QNAList : {}", result.toString());
+            return new ResponseEntity<List>(result, HttpStatus.OK);
+        }catch (Exception e) {
+            return exceptionHandling(e);
+        }
     }
 
-    @ApiOperation(value = "글쓰기: 공지사항을 작성한다.")
+    @ApiOperation(value = "글쓰기: QNA를 작성한다.")
     @PostMapping("/regist")
-    public ResponseEntity<?> regist(QNA qna){
+    public ResponseEntity<?> regist(UserDto userDto, QNADto qnaDto){
         try{
-            int result = qsvc.write(qna);
+            int result = qsvc.write(userDto, qnaDto);
             return new ResponseEntity<Integer>(result, HttpStatus.OK);
         }catch (Exception e){
             return exceptionHandling(e);
         }
     }
 
-    @ApiOperation(value = "글 조회: 선택한 글 조회")
+    @ApiOperation(value = "글 조회: 선택한 QNA 조회")
     @GetMapping("/detail/{qnaId}")
     public ResponseEntity<?> select(@PathVariable Integer qnaId){
         try{
-            QNA result = qsvc.selectOne(qnaId);
-            return new ResponseEntity<QNA>(result, HttpStatus.OK);
+            QNADto result = qsvc.selectOne(qnaId);
+            return new ResponseEntity<QNADto>(result, HttpStatus.OK);
         }catch (Exception e){
             return exceptionHandling(e);
         }
     }
 
-    @ApiOperation(value = "글 수정: 공지사항 글 수정")
+    @ApiOperation(value = "글 수정: QNA 글 수정")
     @PutMapping("/modify")
-    public ResponseEntity<?> modify(QNA qna){
+    public ResponseEntity<?> modify(QNADto qnaDto){
         try{
-            int result = qsvc.update(qna);
+            int result = qsvc.update(qnaDto);
             return new ResponseEntity<Integer>(result, HttpStatus.OK);
         }catch (Exception e){
             return exceptionHandling(e);
         }
     }
 
-    @ApiOperation(value = "글 삭제: 글 삭제")
+    @ApiOperation(value = "글 삭제: QNA 삭제")
     @DeleteMapping("delete/{qnaId}")
     public ResponseEntity<?> delete(@PathVariable Integer qnaId){
         try{
@@ -83,21 +107,4 @@ public class QNAController {
         return new ResponseEntity<String>("Sorry: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @Getter
-    @Setter
-    static class QNABoard{
-        Page<QNA> PQ;
-        int previous;
-        int next;
-
-        public  QNABoard(){
-
-        }
-
-        public QNABoard(Page<QNA> PQ, int previous, int next){
-            PQ = this.PQ;
-            previous = this.previous;
-            next = this.next;
-        }
-    }
 }
