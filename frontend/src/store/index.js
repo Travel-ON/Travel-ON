@@ -1,8 +1,10 @@
 import router from "@/router";
 import { createStore } from "vuex";
+import { Accounts } from "./modules/accounts";
 import { createApi } from "@/api";
 
 const api = createApi();
+
 
 export default createStore({
   state: {
@@ -73,5 +75,7 @@ export default createStore({
         });
     },
   },
-  modules: {},
+  modules: {
+    Accounts,
+  },
 });
