@@ -1,21 +1,21 @@
 <template>
   <div>
-    <hello-world />
     <main-nav />
+    <div>
+      <img src="https://via.placeholder.com/1920x1080" alt="main-banner" style="width: 100%" />
+    </div>
     <main-spacing-home />
   </div>
 </template>
 
 <script>
-import HelloWorld from "../components/HelloWorld.vue";
 import MainNav from "../components/MainNav.vue";
 import MainSpacingHome from "../components/MainSpacingHome.vue";
+import { defineComponent } from "vue";
 
-export default {
-  name: "HomeView",
-
+export default defineComponent({
+  name: "HomeView;",
   components: {
-    HelloWorld,
     MainNav,
     MainSpacingHome,
   },
