@@ -10,19 +10,19 @@ import java.util.List;
 public interface UserService {
     UserDto select(String id);
 
-    int insert(UserDto userDto);
+    boolean insert(UserDto userDto);
 
-    int update(UserDto userDto);
+    boolean update(UserDto userDto);
 
-    int delete(String id);
+    boolean delete(String id);
 
     UserDto selectByNickname(String nickname);
 
-    int updateAlarm(int userId);
+    void updateAlarm(User user);
 
     List<UserAchievement> selectUserAchievement(User user, String sidoName);
 
-    int insertUserAchievement(UserAchievement userAchievement);
+    void insertUserAchievement(UserAchievement userAchievement);
 
     List<Visitation> selectVisitation(User user);
 
@@ -30,5 +30,5 @@ public interface UserService {
 
     String selectAchievement(int count);
 
-    int sendMail(String mail, String title, String content);
+    void sendMail(String mail, String title, String content);
 }

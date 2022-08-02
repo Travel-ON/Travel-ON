@@ -49,37 +49,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int insert(UserDto userDto) {
-        Optional<User> result = repo.findByRealId(userDto.getRealId());
+    public boolean insert(UserDto userDto) {
+        Optional<User> result = repo.findByRealId(userDto.getId());
         if (result.isPresent()) {
-            return 1;
+            return false;
         } else {
             User user = userDto.toEntity();
             repo.save(user);
-            return 0;
+            return true;
         }
     }
 
     @Override
-    public int update(UserDto userDto) {
-        Optional<User> result = repo.findByRealId(userDto.getRealId());
+    public boolean update(UserDto userDto) {
+        Optional<User> result = repo.findByRealId(userDto.getId());
         if (result.isPresent()) {
             User user = userDto.toEntity();
             repo.save(user);
-            return 0;
+            return true;
         } else {
-            return 1;
+            return false;
         }
     }
 
     @Override
-    public int delete(String id) {
+    public boolean delete(String id) {
         Optional<User> result = repo.findByRealId(id);
         if (result.isPresent()) {
             repo.delete(result.get());
-            return 0;
+            return true;
         }
-        return 1;
+        return false;
     }
 
     @Override
@@ -94,15 +94,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int updateAlarm(int userId) {
-        Optional<User> result = repo.findById(userId);
-        if (result.isPresent()) {
-            User user = result.get();
-            user.setAlarmFlag(true);
-            repo.save(user);
-            return 0;
-        }
-        return 1;
+    public void updateAlarm(User user) {
+        user.setAlarmFlag(true);
+        repo.save(user);
     }
 
     @Override
@@ -115,9 +109,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int insertUserAchievement(UserAchievement userAchievement) {
+    public void insertUserAchievement(UserAchievement userAchievement) {
         uarepo.save(userAchievement);
-        return 0;
     }
 
     @Override
@@ -159,8 +152,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int sendMail(String mail, String title, String content) {
-        int result = 1;
+    public void sendMail(String mail, String title, String content) {
 
         try {
             // 텍스트로 구성된 메일을 생성할때
@@ -175,11 +167,9 @@ public class UserServiceImpl implements UserService {
             System.out.println(javaMailSender);
             // 메일 발송
             javaMailSender.send(simpleMessage);
-            result = 0;
         } catch (MailException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return result;
     }
 }

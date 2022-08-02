@@ -2,18 +2,16 @@ package com.travel.travel_on.dto;
 
 import com.travel.travel_on.entity.User;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class UserDto {
     private Integer userId;
-    private String realId;
+    private String id;
     private String nickname;
     private String password;
     private String email;
@@ -23,10 +21,18 @@ public class UserDto {
     private int reportCount;
     private boolean alarmFlag;
 
+    UserDto(String id,String nickname,String password,String email,String address ){
+        this.id=id;
+        this.nickname=nickname;
+        this.password=password;
+        this.email=email;
+        this.address=address;
+    }
+
     public User toEntity() {
         return User.builder()
                 .userId(this.userId)
-                .realId(this.realId)
+                .realId(this.id)
                 .nickname(this.nickname)
                 .password(this.password)
                 .email(this.email)
@@ -40,7 +46,7 @@ public class UserDto {
 
     public UserDto(User user) {
         this.userId = user.getUserId();
-        this.realId = user.getRealId();
+        this.id = user.getRealId();
         this.nickname = user.getNickname();
         this.password = user.getPassword();
         this.email = user.getEmail();
