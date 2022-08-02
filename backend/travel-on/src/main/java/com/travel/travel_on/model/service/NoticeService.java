@@ -1,12 +1,9 @@
 package com.travel.travel_on.model.service;
 
-import com.travel.travel_on.dto.FAQ;
-import com.travel.travel_on.dto.Notice;
+import com.travel.travel_on.entity.FAQ;
+import com.travel.travel_on.entity.Notice;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
-import java.util.Map;
 
 public interface NoticeService {
 

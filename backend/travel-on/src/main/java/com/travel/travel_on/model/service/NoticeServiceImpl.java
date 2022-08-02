@@ -1,7 +1,7 @@
 package com.travel.travel_on.model.service;
 
-import com.travel.travel_on.dto.FAQ;
-import com.travel.travel_on.dto.Notice;
+import com.travel.travel_on.entity.FAQ;
+import com.travel.travel_on.entity.Notice;
 import com.travel.travel_on.model.repo.FAQRepository;
 import com.travel.travel_on.model.repo.NoticeRepository;
 import org.springframework.beans.factory.annotation.Autowired;

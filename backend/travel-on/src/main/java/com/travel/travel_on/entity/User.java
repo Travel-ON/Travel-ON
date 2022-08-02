@@ -67,4 +67,8 @@ public class User {
     @Builder.Default
     private List<Visitation> visitations = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<QNA> qnas = new ArrayList<>();
+
 }
