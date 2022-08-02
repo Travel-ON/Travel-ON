@@ -1,33 +1,32 @@
 package com.travel.travel_on.model.service;
 
-import com.travel.travel_on.dto.Alarm;
-import com.travel.travel_on.dto.User;
-import com.travel.travel_on.dto.UserAchievement;
-import com.travel.travel_on.dto.Visitation;
-import org.springframework.data.domain.Pageable;
+import com.travel.travel_on.dto.UserDto;
+import com.travel.travel_on.entity.User;
+import com.travel.travel_on.entity.UserAchievement;
+import com.travel.travel_on.entity.Visitation;
 
 import java.util.List;
 
 public interface UserService {
-    User select(String id);
+    UserDto select(String id);
 
-    int insert(User user);
+    int insert(UserDto userDto);
 
-    int update(User user);
+    int update(UserDto userDto);
 
     int delete(String id);
 
-    User selectByNickname(String nickname);
+    UserDto selectByNickname(String nickname);
 
     int updateAlarm(int userId);
 
-    List<UserAchievement> selectUserAchievement(int userId, String sidoName);
+    List<UserAchievement> selectUserAchievement(User user, String sidoName);
 
     int insertUserAchievement(UserAchievement userAchievement);
 
-    List<Visitation> selectVisitation(int userId);
+    List<Visitation> selectVisitation(User user);
 
-    int updateVisitation(int userId, String sidoName);
+    int updateVisitation(User user, String sidoName);
 
     String selectAchievement(int count);
 

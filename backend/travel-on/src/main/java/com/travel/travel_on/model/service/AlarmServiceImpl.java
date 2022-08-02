@@ -1,13 +1,14 @@
 package com.travel.travel_on.model.service;
 
-import com.travel.travel_on.dto.Alarm;
-import com.travel.travel_on.dto.User;
-import com.travel.travel_on.model.repo.*;
+import com.travel.travel_on.dto.UserDto;
+import com.travel.travel_on.entity.Alarm;
+import com.travel.travel_on.entity.User;
+import com.travel.travel_on.model.repo.AlarmRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AlarmServiceImpl implements AlarmService {
@@ -19,47 +20,31 @@ public class AlarmServiceImpl implements AlarmService {
     UserService usvc;
 
     @Override
-    public List<Alarm> selectAll(int userId) {
-        Optional<List<Alarm>> result = repo.findByUser_UserId(userId);
-        if (result.isPresent()) {
-            List<Alarm> list = result.get();
-            return list;
-        }
-        return null;
+    public List<Alarm> selectAll(User user) {
+        List<Alarm> list = repo.findByUser(user);
+        return list;
     }
 
-//    @Override
-//    public int insert(User user,String content) {
-//        Alarm alarm = Alarm.builder()
-//                .user(user)
-//                .content(content)
-//                .build();
-//        repo.save(alarm);
-//        usvc.updateAlarm(user.getUserId());
-//        return 0;
-//    }
-
     @Override
-    public int insert(int userId,String content) {
+    public int insert(UserDto userDto, String content) {
+        User user = userDto.toEntity();
         Alarm alarm = Alarm.builder()
-                .userId(userId)
+                .user(user)
                 .content(content)
                 .build();
+        alarm.setUser(user);
         repo.save(alarm);
-        usvc.updateAlarm(userId);
+        usvc.updateAlarm(user.getUserId());
         return 0;
     }
 
 
     @Override
-    public int deleteAll(int userId) {
-        Optional<List<Alarm>> result = repo.findByUser_UserId(userId);
-        if (result.isPresent()) {
-            for(Alarm alarm : result.get()) {
+    public int deleteAll(User user) {
+        List<Alarm> list = repo.findByUser(user);
+            for(Alarm alarm : list) {
                 repo.delete(alarm);
             }
             return 0;
-        }
-        return 1;
     }
 }
