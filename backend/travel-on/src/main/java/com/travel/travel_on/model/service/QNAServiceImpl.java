@@ -49,8 +49,11 @@ public class QNAServiceImpl implements QNAService{
     }
 
     @Override
-    public int write(UserDto userDto, QNADto qnaDto) {
+    public boolean write(UserDto userDto, QNADto qnaDto) {
         User user = userDto.toEntity();
+        if(qnaDto == null){
+            return false;
+        }
         QNA qna = QNA.builder()
                 .user(user)
                 .realId(qnaDto.getRealId())
@@ -64,15 +67,14 @@ public class QNAServiceImpl implements QNAService{
                 .build();
         qna.setUser(user);
         qRepo.save(qna);
-        return 0;
+        return true;
     }
 
     @Override
-    public int update(QNADto qnaDto) {
+    public boolean update(QNADto qnaDto) {
         Optional<QNA> result = qRepo.findById(qnaDto.getQNAId());
 
         if (result.isPresent()){
-//            User user = userDto.toEntity();
             QNA qna = result.get();
             qna.setQnaId(qnaDto.getQNAId());
             qna.setAnswer(qnaDto.getAnswer());
@@ -82,21 +84,24 @@ public class QNAServiceImpl implements QNAService{
             qna.setRealId(qnaDto.getRealId());
             qna.setNickname(qnaDto.getNickname());
             qna.setAnswerFlag(qnaDto.isAnswerFlag());
-//            qna.setUser(user);
             qRepo.save(qna);
-            return 0;
+            return true;
         }else{
-            return 1;
+            return false;
         }
     }
 
     @Override
-    public int delete(Integer id) {
+    public boolean delete(Integer id) {
         Optional<QNA> result = qRepo.findById(id);
-        result.ifPresent(qna -> {
-            qRepo.delete(qna);
-        });
-        return 1;
+        if(result == null){
+            return false;
+        }else{
+            result.ifPresent(qna -> {
+                qRepo.delete(qna);
+            });
+            return true;
+        }
     }
 
 }

@@ -33,14 +33,12 @@ public class QNAController {
     private QNAServiceImpl qsvc;
 
 
-    @ApiOperation(value = "QNA 리스트 조회: QNA 글 조회")
+    @ApiOperation(value = "QNA 리스트 조회: QNA 글 조회(검색가능)", response = List.class)
     @GetMapping("/{id}")
     public ResponseEntity<?> searchQNA(@PathVariable String id, @RequestParam(value = "keyword", required = false)String keyword){
         try {
             UserDto userDto = usvc.select(id);
-            if(userDto == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-            System.out.println("ㅎㅇ");
+            if(userDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
             List<QNA> list;
             if(keyword == null || keyword.isEmpty()){
@@ -62,19 +60,33 @@ public class QNAController {
     @PostMapping("/regist")
     public ResponseEntity<?> regist(UserDto userDto, QNADto qnaDto){
         try{
-            int result = qsvc.write(userDto, qnaDto);
-            return new ResponseEntity<Integer>(result, HttpStatus.OK);
+            if(userDto == null){
+                return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            boolean result = qsvc.write(userDto, qnaDto);
+
+            if(result){
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            }else{
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+
         }catch (Exception e){
             return exceptionHandling(e);
         }
     }
 
-    @ApiOperation(value = "글 조회: 선택한 QNA 조회")
+    @ApiOperation(value = "글 조회: 선택한 QNA 조회", response = QNADto.class)
     @GetMapping("/detail/{qnaId}")
     public ResponseEntity<?> select(@PathVariable Integer qnaId){
         try{
             QNADto result = qsvc.selectOne(qnaId);
-            return new ResponseEntity<QNADto>(result, HttpStatus.OK);
+
+            if(result == null){
+                return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }else{
+                return new ResponseEntity<QNADto>(result, HttpStatus.OK);
+            }
         }catch (Exception e){
             return exceptionHandling(e);
         }
@@ -84,8 +96,13 @@ public class QNAController {
     @PutMapping("/modify")
     public ResponseEntity<?> modify(QNADto qnaDto){
         try{
-            int result = qsvc.update(qnaDto);
-            return new ResponseEntity<Integer>(result, HttpStatus.OK);
+
+            boolean result = qsvc.update(qnaDto);
+            if(result){
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            }else{
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
         }catch (Exception e){
             return exceptionHandling(e);
         }
@@ -95,8 +112,8 @@ public class QNAController {
     @DeleteMapping("delete/{qnaId}")
     public ResponseEntity<?> delete(@PathVariable Integer qnaId){
         try{
-            int result = qsvc.delete(qnaId);
-            return new ResponseEntity<Integer>(result, HttpStatus.OK);
+            boolean result = qsvc.delete(qnaId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (Exception e){
             return exceptionHandling(e);
         }
