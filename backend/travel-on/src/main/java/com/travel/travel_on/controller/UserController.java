@@ -274,6 +274,21 @@ public class UserController {
         }
     }
 
+    @ApiOperation(value = "신규알림 여부 조회: 신규알림이 생성됐는지 여부를 확인한다", response = Boolean.class)
+    @GetMapping("/alarm/{id}")
+    public ResponseEntity<?> alarmCheck(@PathVariable String id) {
+        try {
+            UserDto userDto = usvc.select(id);
+            if(userDto==null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<Boolean>(userDto.isAlarmFlag(), HttpStatus.OK);
+        } catch (Exception e) {
+            return exceptionHandling(e);
+        }
+    }
+
+
     private ResponseEntity<String> exceptionHandling(Exception e) {
         e.printStackTrace();
         return new ResponseEntity<String>("Sorry: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
