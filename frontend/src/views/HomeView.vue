@@ -1,17 +1,17 @@
 <template>
-  <MainNav />
   <div>
-    <img src="https://via.placeholder.com/1920x1080" alt="main-banner" style="width: 100%" />
+    <main-nav />
+    <div>
+      <img src="https://via.placeholder.com/1920x1080" alt="main-banner" style="width: 100%" />
+    </div>
+    <main-spacing-home />
   </div>
-  <MainSpacingHome />
 </template>
 
 <script>
-import MainNav from "@/components/MainNav.vue";
-import MainSpacingHome from "@/components/MainSpacingHome.vue";
+import MainNav from "../components/MainNav.vue";
+import MainSpacingHome from "../components/MainSpacingHome.vue";
 import { defineComponent } from "vue";
-
-// Components
 
 export default defineComponent({
   name: "HomeView;",
@@ -19,5 +19,5 @@ export default defineComponent({
     MainNav,
     MainSpacingHome,
   },
-});
+};
 </script>
