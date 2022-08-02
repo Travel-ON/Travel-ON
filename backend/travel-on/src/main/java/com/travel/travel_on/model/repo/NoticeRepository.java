@@ -1,10 +1,8 @@
 package com.travel.travel_on.model.repo;
 
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.travel.travel_on.dto.Notice;
+import com.travel.travel_on.entity.Notice;
 
 import java.util.List;
 

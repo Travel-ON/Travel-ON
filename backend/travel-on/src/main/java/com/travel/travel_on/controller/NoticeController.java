@@ -1,7 +1,7 @@
 package com.travel.travel_on.controller;
 
-import com.travel.travel_on.dto.FAQ;
-import com.travel.travel_on.dto.Notice;
+import com.travel.travel_on.entity.FAQ;
+import com.travel.travel_on.entity.Notice;
 import com.travel.travel_on.model.service.NoticeServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import lombok.Getter;
