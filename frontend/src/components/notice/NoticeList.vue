@@ -10,10 +10,10 @@
         <v-col>작성날짜</v-col>
         <v-col>조회수</v-col>
       </v-row>
-      <v-row v-for="notice in notices" :key="notice">
+      <v-row v-for="notice in notices" :key="notice.notice_id">
         <v-col v-if="notice.fixation_flag">notice</v-col>
         <v-col v-else>{{ notice.notice_id }}</v-col>
-        <v-col @click="moveToDetail({{notice.notice_id}})">{{ notice.title }}</v-col>
+        <v-col @click="moveToDetail(notice.notice_id)">{{ notice.title }}</v-col>
         <v-col>{{ notice.notice_date }}</v-col>
         <v-col>{{ notice.hits }}</v-col>
       </v-row>
@@ -22,33 +22,27 @@
 </template>
 
 <script>
-import axios from "axios";
+import { mapState } from "vuex";
 
 export default {
+  computed: {
+    ...mapState(["notices"]),
+  },
   data() {
-    return {
-      notices: [],
-    };
+    return {};
   },
   created() {
-    axios
-      .get("https://7d0c97ac-6236-4b8f-9ba8-f257edcdfe2d.mock.pstmn.io//notice/page")
-      .then((res) => {
-        this.notices = res.data;
-        // notice sort
-        this.notices.sort((a, b) => {
-          return a.fixation_flag > b.fixation_flag ? -1 : 1;
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    this.$store.dispatch("getNotices");
   },
   methods: {
-    moveToDetail(id) {},
+    moveToDetail(id) {
+      this.$router.push({
+        path: `/notice/detail/${id}`,
+      });
+    },
     moveToWrite() {
       this.$router.push({
-        path: "/notice/create",
+        path: "/notice/write",
       });
     },
   },
