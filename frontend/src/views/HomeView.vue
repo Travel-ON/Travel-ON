@@ -9,16 +9,15 @@
 </template>
 
 <script>
-import MainNav from "../components/MainNav.vue";
-import MainSpacingHome from "../components/MainSpacingHome.vue";
 import { defineComponent } from "vue";
+import MainNav from "../components/common/MainNav.vue";
+import MainSpacingHome from "../components/main/MainSpacingHome.vue";
 
 export default defineComponent({
   name: "HomeView;",
   components: {
-    HelloWorld,
     MainNav,
     MainSpacingHome,
   },
-};
+});
 </script>
