@@ -1,8 +1,12 @@
-package com.travel.travel_on.dto;
+package com.travel.travel_on.entity;
 
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import java.io.Serializable;
 
 @Getter
