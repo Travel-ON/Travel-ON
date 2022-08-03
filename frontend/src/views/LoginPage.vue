@@ -1,5 +1,5 @@
 <template>
-  <div>공지 생성 페이지</div>
+  <div>login</div>
 </template>
 
 <script>

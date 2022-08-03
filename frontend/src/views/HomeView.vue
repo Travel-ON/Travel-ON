@@ -16,6 +16,7 @@ import MainSpacingHome from "../components/MainSpacingHome.vue";
 export default defineComponent({
   name: "HomeView;",
   components: {
+    HelloWorld,
     MainNav,
     MainSpacingHome,
   },
