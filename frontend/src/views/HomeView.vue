@@ -9,9 +9,9 @@
 </template>
 
 <script>
+import { defineComponent } from "vue";
 import MainNav from "../components/MainNav.vue";
 import MainSpacingHome from "../components/MainSpacingHome.vue";
-import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "HomeView;",
@@ -19,5 +19,5 @@ export default defineComponent({
     MainNav,
     MainSpacingHome,
   },
-};
+});
 </script>

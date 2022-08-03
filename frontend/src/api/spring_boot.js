@@ -22,5 +22,5 @@ export default {
     userTitle: () => HOST + USER + "title/", // 칭호 변경, 불러오기
     userTrophy: () => HOST + USER + "trophy/" + String(id) + "/", // 업적지도용 여행횟수 가져오기
     userTrophyUpdate: () => HOST + USER + "trophy/", // 여행횟수 업데이트
-  }
-}
+  },
+};

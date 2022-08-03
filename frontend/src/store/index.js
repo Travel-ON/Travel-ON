@@ -1,10 +1,9 @@
-import router from "@/router";
 import { createStore } from "vuex";
+import router from "@/router";
+import { createApi } from "../api";
 import { Accounts } from "./modules/accounts";
-import { createApi } from "@/api";
 
 const api = createApi();
-
 
 export default createStore({
   state: {
@@ -24,9 +23,10 @@ export default createStore({
       state.notices = payload;
     },
     WRITE_NOTICE(state, payload) {
-      console.log(payload);
       state.notices.push(payload);
-      console.log(state.notices);
+    },
+    MODIFY_NOTICE(state, payload) {
+      state.notice = payload;
     },
   },
   actions: {
@@ -53,26 +53,50 @@ export default createStore({
         params,
       })
         .then((res) => {
-          console.log(res);
           commit("GET_NOTICES", res.data);
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    writeNotice({ commit }, newBoard) {
+    writeNotice({ commit }, newNotice) {
       api({
         url: `/notice/regist`,
         method: "POST",
-        params: newBoard,
+        params: newNotice,
       })
         .then(() => {
-          commit("WRITE_NOTICE", newBoard);
+          commit("WRITE_NOTICE", newNotice);
           router.push("/notice");
         })
         .catch((err) => {
           console.log(err);
         });
+    },
+    modifyNotice({ commit }, payload) {
+      api({
+        url: `/notice/modify`,
+        method: "PUT",
+        params: payload,
+      }).then(() => {
+        commit("MODIFY_NOTICE", payload);
+        router.push({
+          name: "NoticeDetail",
+          params: {
+            id: payload.no,
+          },
+        });
+      });
+    },
+    deleteNotice({ commit }, payload) {
+      // eslint-disable-next-line no-unused-expressions
+      commit;
+      api({
+        url: `/notice/delete/${payload}`,
+        method: "DELETE",
+      }).then(() => {
+        router.push({ name: "NoticeList" });
+      });
     },
   },
   modules: {

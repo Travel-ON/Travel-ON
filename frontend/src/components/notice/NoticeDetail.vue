@@ -1,8 +1,14 @@
 <template>
   <div>
-    <v-container style="background-color: lightgrey">
+    <v-container>
       <v-row class="mb-6" no-gutters>
-        <v-col><v-card>제목</v-card><v-card> 작성일 2022.07.14 조회수 127 </v-card></v-col>
+        <v-col
+          ><v-card>
+            {{ notice.title }}
+            <div>작성일 {{ notice.notice_date }}</div>
+            <div>조회수 {{ notice.hits }}</div></v-card
+          >
+        </v-col>
       </v-row>
       <v-row>
         <v-col
@@ -11,9 +17,9 @@
       </v-row>
       <v-row>
         <v-col class="d-flex justify-end mb-6">
-          <v-btn depressed color="primary"> 상단고정 설정 </v-btn>
-          <v-btn depressed color="red"> 수정 </v-btn>
-          <v-btn depressed color="blue"> 삭제 </v-btn>
+          <v-btn depressed color="primary" @click="fixedToggle"> 상단고정 설정 </v-btn>
+          <v-btn depressed color="red" @click="moveToUpdate"> 수정 </v-btn>
+          <v-btn depressed color="blue" @click="NoticeDelete"> 삭제 </v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -37,6 +43,19 @@ export default {
     const pathName = new URL(document.location).pathname.split("/");
     const noticeId = pathName[pathName.length - 1];
     this.$store.dispatch("getNotice", noticeId);
+  },
+  methods: {
+    fixedToggle() {
+      this.notice.fixation_flag = !this.notice.fixation_flag;
+    },
+    moveToUpdate() {
+      this.$router.push({
+        path: `/notice/update/${this.notice.notice_id}`,
+      });
+    },
+    NoticeDelete() {
+      this.$store.dispatch("deleteNotice", this.notice.notice_id);
+    },
   },
 };
 </script>

@@ -24,15 +24,15 @@ export const Accounts = {
   },
   actions: {
     saveToken({ commit }, token) {
-      /* 
-      state.token 추가 
+      /*
+      state.token 추가
       localStorage에 token 추가
       */
       commit("SET_TOKEN", token);
       localStorage.setItem("token", token, Date.now() + 1);
     },
     removeToken({ commit }) {
-      /* 
+      /*
       state.token 삭제
       localStorage에 token 추가
       */
@@ -40,7 +40,7 @@ export const Accounts = {
       localStorage.setItem("token", "");
     },
     login({ commit }, credentials) {
-      /* 
+      /*
       POST: 사용자 입력정보를 login URL로 보내기
         성공하면
           응답 토큰 저장
