@@ -8,13 +8,13 @@ export const Accounts = {
   // state는 직접 접근하지 않는다.
   state: () => ({
     token: localStorage.getItem("token") || "", // 토큰
-    currentUser: "", // 현재 유저 닉네임
+    currentUser: "김태훈", // 현재 유저 닉네임
     admin: false, // 관리자 여부
   }),
   getters: {
-    isLoggedIn: (state) => !!state.token, // 로그인 여부
+    isLoggedIn: (state) => !!state.currentUser, // 로그인 여부
     isAdmin: (state) => state.admin, // 관리자 여부
-    currentUser: (state) => state.currenUser, // 현재 로그인한 사용자명
+    currentUser: (state) => state.currentUser, // 현재 로그인한 사용자명
     admin: (state) => state.admin,
   },
   mutations: {

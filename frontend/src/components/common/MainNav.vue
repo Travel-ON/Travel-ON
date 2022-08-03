@@ -1,7 +1,9 @@
 <template>
   <div style="position: fixed; top: 0; left: 0; right: 0; z-index: 3000">
     <v-toolbar height="116px">
-      <v-btn>(트래블론 로고)</v-btn>
+      <router-link :to="{ name: 'home' }">
+        <v-btn>(트래블론 로고)</v-btn>
+      </router-link>
       <v-btn>방만들기</v-btn>
       <v-btn>방매칭하기</v-btn>
       <v-btn>여행플래너</v-btn>
@@ -11,15 +13,21 @@
         </template>
         <v-list>
           <v-list-item v-for="(item, index) in items_community" :key="index" :value="index">
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item-title @click="$router.push({ name: item.name })">
+              {{ item.title }}
+            </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
       <v-spacer></v-spacer>
       <!-- false시 로그인 상태, true시 비로그인 상태 -->
-      <div v-if="false">
-        <v-btn> 로그인 </v-btn>
-        <v-btn> 회원가입 </v-btn>
+      <div v-if="!isLoggedIn">
+        <router-link :to="{ name: 'login' }">
+          <v-btn>로그인</v-btn>
+        </router-link>
+        <router-link :to="{ name: 'signup' }">
+          <v-btn>회원가입</v-btn>
+        </router-link>
       </div>
       <div v-else>
         <v-menu open-on-hover style="z-index: 3500">
@@ -56,14 +64,29 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
+
 export default {
   name: "MainNav",
   data: () => ({
     // items_메뉴
-    items_community: [{ title: "공지사항" }, { title: "FAQ" }, { title: "Q&A" }],
+    items_community: [
+      { title: "공지사항", name: "NoticeList" },
+      { title: "FAQ", name: "faq" },
+      { title: "Q&A", name: "qna" },
+    ],
     items_user: [{ title: "마이페이지" }, { title: "로그아웃" }],
     items_new: [{ title: "[Q&A] 에 답변이 달렸습니다." }, { title: "[대전 마스터] 업적을 달성하셨습니다." }],
   }),
+  methods: {
+    ...mapActions(["logout"]),
+  },
+  computed: {
+    ...mapGetters({
+      isLoggedIn: "isLoggedIn",
+      currentUser: "currentUser",
+    }),
+  },
 };
 </script>
 
