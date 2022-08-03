@@ -49,8 +49,11 @@ public class QNAServiceImpl implements QNAService{
     }
 
     @Override
-    public int write(UserDto userDto, QNADto qnaDto) {
+    public boolean write(UserDto userDto, QNADto qnaDto) {
         User user = userDto.toEntity();
+        if(qnaDto == null){
+            return false;
+        }
         QNA qna = QNA.builder()
                 .user(user)
                 .realId(qnaDto.getRealId())
@@ -64,15 +67,14 @@ public class QNAServiceImpl implements QNAService{
                 .build();
         qna.setUser(user);
         qRepo.save(qna);
-        return 0;
+        return true;
     }
 
     @Override
-    public int update(QNADto qnaDto) {
+    public boolean update(QNADto qnaDto) {
         Optional<QNA> result = qRepo.findById(qnaDto.getQNAId());
 
         if (result.isPresent()){
-//            User user = userDto.toEntity();
             QNA qna = result.get();
             qna.setQnaId(qnaDto.getQNAId());
             qna.setAnswer(qnaDto.getAnswer());
@@ -82,21 +84,56 @@ public class QNAServiceImpl implements QNAService{
             qna.setRealId(qnaDto.getRealId());
             qna.setNickname(qnaDto.getNickname());
             qna.setAnswerFlag(qnaDto.isAnswerFlag());
-//            qna.setUser(user);
             qRepo.save(qna);
-            return 0;
+            return true;
         }else{
-            return 1;
+            return false;
         }
     }
 
     @Override
-    public int delete(Integer id) {
+    public boolean delete(Integer id) {
         Optional<QNA> result = qRepo.findById(id);
-        result.ifPresent(qna -> {
-            qRepo.delete(qna);
-        });
-        return 1;
+        if(result == null){
+            return false;
+        }else{
+            result.ifPresent(qna -> {
+                qRepo.delete(qna);
+            });
+            return true;
+        }
+    }
+
+    @Override
+    public List<QNA> adminSelectAll(String keyword) {
+        List<QNA> list = qRepo.findAll();
+
+        if(keyword.equals("null")){
+            return list;
+        }else{
+            List<QNA> klist = new LinkedList<>();
+            for (QNA qna:list) {
+                if(qna.getTitle().contains(keyword)){
+                    klist.add(qna);
+                }
+            }
+            return klist;
+        }
+    }
+
+    @Override
+    public List<QNA> noneAnswerAll() {
+        List<QNA> list = qRepo.findAll();
+
+        List<QNA> alist = new LinkedList<>();
+        for (QNA qna:list){
+            System.out.println("WHAT");
+            if(qna.isAnswerFlag() == false){
+                alist.add(qna);
+            }
+        }
+
+        return alist;
     }
 
 }
