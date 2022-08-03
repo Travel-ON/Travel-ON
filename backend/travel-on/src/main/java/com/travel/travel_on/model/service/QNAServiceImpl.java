@@ -104,4 +104,36 @@ public class QNAServiceImpl implements QNAService{
         }
     }
 
+    @Override
+    public List<QNA> adminSelectAll(String keyword) {
+        List<QNA> list = qRepo.findAll();
+
+        if(keyword.equals("null")){
+            return list;
+        }else{
+            List<QNA> klist = new LinkedList<>();
+            for (QNA qna:list) {
+                if(qna.getTitle().contains(keyword)){
+                    klist.add(qna);
+                }
+            }
+            return klist;
+        }
+    }
+
+    @Override
+    public List<QNA> noneAnswerAll() {
+        List<QNA> list = qRepo.findAll();
+
+        List<QNA> alist = new LinkedList<>();
+        for (QNA qna:list){
+            System.out.println("WHAT");
+            if(qna.isAnswerFlag() == false){
+                alist.add(qna);
+            }
+        }
+
+        return alist;
+    }
+
 }

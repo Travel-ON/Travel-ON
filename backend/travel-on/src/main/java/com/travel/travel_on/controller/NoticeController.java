@@ -39,7 +39,11 @@ public class NoticeController {
     public ResponseEntity<?> regist(Notice notice){
         try{
             boolean result = nsvc.write(notice);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            if(result){
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            }else{
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
         }catch (Exception e){
             return exceptionHandling(e);
         }

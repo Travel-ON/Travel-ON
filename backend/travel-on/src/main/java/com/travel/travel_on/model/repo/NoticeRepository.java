@@ -7,5 +7,4 @@ import com.travel.travel_on.entity.Notice;
 import java.util.List;
 
 public interface NoticeRepository extends JpaRepository<Notice, Integer> {
-    List<Notice> findAll();
 }

@@ -22,7 +22,7 @@ public class Notice {
     @Column(length = 70, nullable = false)
     private String title;
 
-    @Column(nullable = false) // sql text 타입은 length 안줘도 되겠지?
+    @Column(nullable = false)
     private String content;
 
     @Column(name = "notice_date", nullable = false)

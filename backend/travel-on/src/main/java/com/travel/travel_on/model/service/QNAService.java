@@ -21,4 +21,7 @@ public interface QNAService {
 
     boolean delete(Integer id); // 글 삭제
 
+    List<QNA> adminSelectAll(String keyword); // 매니저 글 리스트 전체 조회
+
+    List<QNA> noneAnswerAll();
 }

@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
@@ -58,10 +59,11 @@ public class QNAController {
 
     @ApiOperation(value = "글쓰기: QNA를 작성한다.")
     @PostMapping("/regist")
-    public ResponseEntity<?> regist(UserDto userDto, QNADto qnaDto){
+    public ResponseEntity<?> regist(QNADto qnaDto){
         try{
+            UserDto userDto = usvc.select(qnaDto.getRealId());
             if(userDto == null){
-                return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             boolean result = qsvc.write(userDto, qnaDto);
 
@@ -96,7 +98,6 @@ public class QNAController {
     @PutMapping("/modify")
     public ResponseEntity<?> modify(QNADto qnaDto){
         try{
-
             boolean result = qsvc.update(qnaDto);
             if(result){
                 return new ResponseEntity<>(HttpStatus.CREATED);
@@ -113,7 +114,47 @@ public class QNAController {
     public ResponseEntity<?> delete(@PathVariable Integer qnaId){
         try{
             boolean result = qsvc.delete(qnaId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            if(result){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else{
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+        }catch (Exception e){
+            return exceptionHandling(e);
+        }
+    }
+
+    @ApiOperation(value = "글 조회: 관리자모드 QNA리스트 조회", response = List.class)
+    @GetMapping("/admin")
+    public ResponseEntity<?> adminSelect(@RequestParam(value = "keyword", required = false)String keyword){
+        try{
+            List<QNA> list;
+            if(keyword == null || keyword.isEmpty()){
+                list = qsvc.adminSelectAll("null");
+            }else{
+                list = qsvc.adminSelectAll(keyword);
+            }
+            List<QNADto> result = list.stream()
+                    .map(r -> new QNADto(r))
+                    .collect(Collectors.toList());
+            log.info("QNAList : {}", result.toString());
+            return new ResponseEntity<List>(result, HttpStatus.OK);
+        }catch (Exception e){
+            return exceptionHandling(e);
+        }
+    }
+
+    @ApiOperation(value = "글 조회: 관리자모드 답변대기글 조회", response = List.class)
+    @GetMapping("/admin/answer")
+    public ResponseEntity<?> adminSelect(){
+        try{
+            List<QNA> list = qsvc.noneAnswerAll();
+
+            List<QNADto> result = list.stream()
+                    .map(r -> new QNADto(r))
+                    .collect(Collectors.toList());
+            log.info("QNAList : {}", result.toString());
+            return new ResponseEntity<List>(result, HttpStatus.OK);
         }catch (Exception e){
             return exceptionHandling(e);
         }

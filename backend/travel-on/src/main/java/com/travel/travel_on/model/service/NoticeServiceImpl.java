@@ -26,8 +26,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public boolean write(Notice notice) {
-        Optional<Notice> result = nRepo.findById(notice.getNoticeId());
-        if (result.isPresent()){
+        if (notice == null){
             return false;
         }else {
             nRepo.save(notice);
