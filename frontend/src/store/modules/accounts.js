@@ -8,7 +8,7 @@ export const Accounts = {
   // state는 직접 접근하지 않는다.
   state: () => ({
     token: localStorage.getItem("token") || "", // 토큰
-    currentUser: "김태훈", // 현재 유저 닉네임
+    currentUser: "", // 현재 유저 닉네임
     admin: false, // 관리자 여부
   }),
   getters: {
