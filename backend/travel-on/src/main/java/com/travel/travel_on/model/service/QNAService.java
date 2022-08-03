@@ -15,10 +15,13 @@ public interface QNAService {
 
     QNADto selectOne(Integer id); // 글 조회
 
-    int write(UserDto userDto, QNADto qnaDto); // 글 등록
+    boolean write(UserDto userDto, QNADto qnaDto); // 글 등록
 
-    int update(QNADto qnaDto); // 글 수정
+    boolean update(QNADto qnaDto); // 글 수정
 
-    int delete(Integer id); // 글 삭제
+    boolean delete(Integer id); // 글 삭제
 
+    List<QNA> adminSelectAll(String keyword); // 매니저 글 리스트 전체 조회
+
+    List<QNA> noneAnswerAll();
 }
