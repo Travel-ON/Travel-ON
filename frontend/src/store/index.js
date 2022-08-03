@@ -1,10 +1,9 @@
-import router from "@/router";
 import { createStore } from "vuex";
-import { Accounts } from "./modules/accounts";
 import { createApi } from "@/api";
+import router from "@/router";
+import { Accounts } from "./modules/accounts";
 
 const api = createApi();
-
 
 export default createStore({
   state: {
