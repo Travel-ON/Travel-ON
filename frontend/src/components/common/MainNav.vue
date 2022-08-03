@@ -40,7 +40,9 @@
           </template>
           <v-list>
             <v-list-item v-for="(item, index) in items_new" :key="index" :value="index">
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
+              <v-list-item-title @click="$router.push({ name: item.name })">
+                {{ item.title }}
+              </v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -54,7 +56,9 @@
           </template>
           <v-list>
             <v-list-item v-for="(item, index) in items_user" :key="index" :value="index">
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
+              <v-list-item-title @click="$router.push({ name: item.name })">
+                {{ item.title }}
+              </v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -75,7 +79,10 @@ export default {
       { title: "FAQ", name: "faq" },
       { title: "Q&A", name: "qna" },
     ],
-    items_user: [{ title: "마이페이지" }, { title: "로그아웃" }],
+    items_user: [
+      { title: "마이페이지", name: "" },
+      { title: "로그아웃", name: "logout" },
+    ],
     items_new: [{ title: "[Q&A] 에 답변이 달렸습니다." }, { title: "[대전 마스터] 업적을 달성하셨습니다." }],
   }),
   methods: {

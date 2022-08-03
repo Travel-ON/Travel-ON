@@ -4,6 +4,7 @@ import spring from "@/api/spring_boot";
 
 /* eslint-disable no-return-assign */
 export const Accounts = {
+  /* eslint-disable */
   // namespaced: true,
   // state는 직접 접근하지 않는다.
   state: () => ({
@@ -70,6 +71,8 @@ export const Accounts = {
     logout({ commit }) {
       commit("SET_CURRENT_USER", "");
       commit("SET_ADMIN", false);
+      alert("성공적으로 로그아웃 했습니다!");
+      router.push({ name: "home" });
     },
   },
 };
