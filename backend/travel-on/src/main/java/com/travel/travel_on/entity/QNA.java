@@ -1,8 +1,10 @@
-package com.travel.travel_on.dto;
+package com.travel.travel_on.entity;
 
+import com.travel.travel_on.entity.User;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -12,15 +14,16 @@ import javax.persistence.*;
 @Builder
 @Table (name="qna")
 @Entity
-public class QNA {
+public class QNA implements Serializable {
 
     @Id
     @Column(name="qna_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer qnaId;
 
-    @Column(name="user_id", nullable = false)
-    private Integer userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private User user;
 
     @Column(name="id", length = 20,nullable = false)
     private String realId;
@@ -45,4 +48,9 @@ public class QNA {
 
     @Column(name="answer_date", nullable = true)
     private String answerDate;
+
+    public  void setUser(User user){
+        this.user = user;
+        this.user.getQnas().add(this);
+    }
 }

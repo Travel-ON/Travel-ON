@@ -1,8 +1,9 @@
-package com.travel.travel_on.dto;
+package com.travel.travel_on.entity;
 
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -22,15 +23,23 @@ public class Notice {
     @Column(length = 70, nullable = false)
     private String title;
 
-    @Column(nullable = false) // sql text 타입은 length 안줘도 되겠지?
+    @Column(nullable = false)
     private String content;
 
-    @Column(name = "notice_date", nullable = false)
+    @Column(name = "notice_date")
     private String noticeDate;
 
-    @Column(nullable = false)
+    @Column
     private Integer hits;
 
-    @Column(name = "fixation_flag", nullable = false)
+    @Column(name = "fixation_flag")
     private boolean fixationFlag;
+
+    public void Notice(){
+    }
+
+    public void Notice(String title, String content){
+        this.title = title;
+        this.content = content;
+    }
 }

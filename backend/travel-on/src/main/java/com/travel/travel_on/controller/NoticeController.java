@@ -1,7 +1,8 @@
 package com.travel.travel_on.controller;
 
-import com.travel.travel_on.dto.FAQ;
-import com.travel.travel_on.dto.Notice;
+import com.travel.travel_on.dto.UserDto;
+import com.travel.travel_on.entity.FAQ;
+import com.travel.travel_on.entity.Notice;
 import com.travel.travel_on.model.service.NoticeServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import lombok.Getter;
@@ -14,27 +15,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
 @RequestMapping("/notice")
 public class NoticeController {
 
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     private NoticeServiceImpl nsvc;
 
-//    @PostMapping
-//    public ResponseEntity<?> selectList(){
-//        try{
-//            List<Notice> result = nsvc.select();
-//            return new ResponseEntity<List<Notice>>(result, HttpStatus.OK);
-//        }catch (Exception e){
-//            return exceptionHandling(e);
-//        }
-//    }
-
-
-    @ApiOperation(value = "글리스트 조회: 공지사항 글 조회 및 페이징")
+    @ApiOperation(value = "글리스트 조회: 공지사항 글 조회 및 페이징", response = Board.class )
     @GetMapping("/page") //페이징 디폴트 10개씩
     public ResponseEntity<?> selectPage(@PageableDefault(sort = "noticeId")Pageable pageable){
         Board result = new Board();
@@ -48,20 +42,34 @@ public class NoticeController {
     @ApiOperation(value = "글쓰기: 공지사항을 작성한다.")
     @PostMapping("/regist")
     public ResponseEntity<?> regist(Notice notice){
+        Date time = new Date();
+        String nowTime = format.format(time);
         try{
-            int result = nsvc.write(notice);
-            return new ResponseEntity<Integer>(result, HttpStatus.OK);
+            notice.setHits(0);
+            notice.setNoticeDate(nowTime);
+
+            boolean result = nsvc.write(notice);
+            if(result){
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            }else{
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
         }catch (Exception e){
             return exceptionHandling(e);
         }
     }
 
-    @ApiOperation(value = "글 조회: 선택한 글 조회")
+    @ApiOperation(value = "글 조회: 선택한 글 조회", response = Notice.class)
     @GetMapping("/detail/{noticeId}")
     public ResponseEntity<?> select(@PathVariable Integer noticeId){
         try{
             Notice result = nsvc.selectOne(noticeId);
-            return new ResponseEntity<Notice>(result, HttpStatus.OK);
+
+            if(result == null){
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }else{
+                return new ResponseEntity<Notice>(result, HttpStatus.OK);
+            }
         }catch (Exception e){
             return exceptionHandling(e);
         }
@@ -71,8 +79,12 @@ public class NoticeController {
     @PutMapping("/modify")
     public ResponseEntity<?> modify(Notice notice){
         try{
-            int result = nsvc.update(notice);
-            return new ResponseEntity<Integer>(result, HttpStatus.OK);
+            boolean result = nsvc.update(notice);
+            if(result){
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            }else{
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
         }catch (Exception e){
             return exceptionHandling(e);
         }
@@ -82,24 +94,18 @@ public class NoticeController {
     @DeleteMapping("delete/{noticeId}")
     public ResponseEntity<?> delete(@PathVariable Integer noticeId){
         try{
-            int result = nsvc.delete(noticeId);
-            return new ResponseEntity<Integer>(result, HttpStatus.OK);
+            boolean result = nsvc.delete(noticeId);
+            if(result){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else{
+                return  new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
         }catch (Exception e){
             return exceptionHandling(e);
         }
     }
 
-//    @PostMapping("/faq")
-//    public ResponseEntity<?> selectFAQList(){
-//        try{
-//            List<FAQ> result = nsvc.selectFAQ();
-//            return new ResponseEntity<List<FAQ>>(result, HttpStatus.OK);
-//        }catch (Exception e){
-//            return exceptionHandling(e);
-//        }
-//    }
-
-    @ApiOperation(value = "FAQ 리스트 조회: FAQ 글 조회 및 페이징, 검색")
+    @ApiOperation(value = "FAQ 리스트 조회: FAQ 글 조회 및 페이징, 검색", response = FAQBoard.class)
     @PostMapping("/faq")
     public ResponseEntity<?> searchFAQ(String keyword, @PageableDefault(sort = "faqId")Pageable pageable){
         FAQBoard result = new FAQBoard();
