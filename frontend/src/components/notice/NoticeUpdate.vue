@@ -1,7 +1,12 @@
 <template>
   <div>
     <v-form ref="form" v-model="valid" lazy-validation>
-      <v-container class="">
+      <v-container class=""
+        ><v-row>
+          <v-col class="d-flex mb-6">
+            <v-btn depressed color="yellow" @click="moveToList"> 뒤로가기 </v-btn>
+          </v-col>
+        </v-row>
         <v-row>
           <v-col
             ><v-text-field v-model="notice.title" :counter="10" :rules="titleRules" label="제목" required>
@@ -44,6 +49,11 @@ export default {
   },
 
   methods: {
+    moveToList() {
+      this.$router.push({
+        name: "NoticeList",
+      });
+    },
     validate() {
       this.$refs.form.validate();
     },

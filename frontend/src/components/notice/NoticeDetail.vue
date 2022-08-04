@@ -1,6 +1,11 @@
 <template>
   <div>
     <v-container>
+      <v-row>
+        <v-col class="d-flex mb-6">
+          <v-btn depressed color="yellow" @click="moveToList"> 뒤로가기 </v-btn>
+        </v-col>
+      </v-row>
       <v-row class="mb-6" no-gutters>
         <v-col
           ><v-card>
@@ -45,6 +50,11 @@ export default {
     this.$store.dispatch("getNotice", noticeId);
   },
   methods: {
+    moveToList() {
+      this.$router.push({
+        name: "NoticeList",
+      });
+    },
     fixedToggle() {
       this.notice.fixation_flag = !this.notice.fixation_flag;
       this.$store.dispatch("modifyNotice", this.notice);
