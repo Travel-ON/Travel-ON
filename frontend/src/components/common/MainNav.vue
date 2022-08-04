@@ -2,7 +2,22 @@
   <div style="position: fixed; top: 0; left: 0; right: 0; z-index: 3000">
     <v-toolbar height="116px">
       <router-link :to="{ name: 'home' }">
-        <v-btn>(트래블론 로고)</v-btn>
+        <v-btn style="width: 150px">
+          <v-img
+            src="https://user-images.githubusercontent.com/97648026/182758932-c401e00f-c153-4a48-9186-b16491197fa1.png"
+            alt="logo"
+            width="150px"
+          />
+        </v-btn>
+        <!-- <v-btn> -->
+        <!-- <div width="100px"> -->
+        <!-- <img
+          src="https://user-images.githubusercontent.com/97648026/182758932-c401e00f-c153-4a48-9186-b16491197fa1.png"
+          alt="logo"
+          width="100%"
+        /> -->
+        <!-- </div> -->
+        <!-- </v-btn> -->
       </router-link>
       <v-btn>방만들기</v-btn>
       <v-btn>방매칭하기</v-btn>
@@ -68,7 +83,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 
 export default {
   name: "MainNav",
@@ -91,8 +106,8 @@ export default {
   computed: {
     ...mapGetters({
       isLoggedIn: "isLoggedIn",
-      currentUser: "currentUser",
     }),
+    ...mapState({ currentUser: "currentUser" }),
   },
 };
 </script>

@@ -14,9 +14,6 @@ export const Accounts = {
   }),
   getters: {
     isLoggedIn: (state) => !!state.currentUser, // 로그인 여부
-    isAdmin: (state) => state.admin, // 관리자 여부
-    currentUser: (state) => state.currentUser, // 현재 로그인한 사용자명
-    admin: (state) => state.admin,
   },
   mutations: {
     SET_CURRENT_USER: (state, user) => (state.currentUser = user),
