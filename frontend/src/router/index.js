@@ -23,7 +23,7 @@ const routes = [
         component: NoticeList,
       },
       {
-        path: "detail/:id",
+        path: "detail/:noticeId",
         name: "NoticeDetail",
         component: NoticeDetail,
       },

@@ -49,7 +49,7 @@ export default {
     },
     updateNotice() {
       const newNotice = {
-        no: this.notice.notice_id,
+        notice_id: this.notice.notice_id,
         title: this.notice.title,
         content: this.notice.content,
       };

@@ -83,7 +83,7 @@ export default createStore({
         router.push({
           name: "NoticeDetail",
           params: {
-            id: payload.no,
+            noticeId: payload.notice_id,
           },
         });
       });

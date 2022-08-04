@@ -47,6 +47,7 @@ export default {
   methods: {
     fixedToggle() {
       this.notice.fixation_flag = !this.notice.fixation_flag;
+      this.$store.dispatch("modifyNotice", this.notice);
     },
     moveToUpdate() {
       this.$router.push({
