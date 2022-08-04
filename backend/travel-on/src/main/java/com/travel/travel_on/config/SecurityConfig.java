@@ -14,29 +14,57 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String[] PERMIT_URL_ARRAY = {
+    private static final String[] PERMIT_ALL_URL_ARRAY = {
             // swagger
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-resources/**",
 
-            // 컨트롤러
+            // controller
+            "/user/login",
+            "/user/regist",
+            "/user/idcheck",
+            "/user/nickcheck",
+            "/user/email",
+            "/notice/page",
+            "/notice/faq",
+            "/notice/detail/**",
+    };
+
+    private static final String[] PERMIT_ADMIN_URL_ARRAY = {
+            // controller
+            "/qna/admin/**",
             "/notice/**",
+    };
+
+    private static final String[] PERMIT_ADMIN_AND_USER_URL_ARRAY = {
+            // controller
+            "/qna/detail/**",
+            "/qna/modify",
+    };
+
+    private static final String[] PERMIT_USER_URL_ARRAY = {
+            // controller
             "/qna/**",
             "/user/**",
             "/alarm/**",
+            "/plan/**",
+            "/videochat/**",
     };
+
+
+
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring()
-                .antMatchers(
-                        "/favicon.ico"
-                        ,"/error"
-                        ,"/swagger-ui/**"
-                        ,"/swagger-resources/**"
-                        ,"/v3/api-docs/**"
-                );
+//        web.ignoring()
+//                .antMatchers(
+//                        "/favicon.ico"
+//                        ,"/error"
+//                        ,"/swagger-ui/**"
+//                        ,"/swagger-resources/**"
+//                        ,"/v3/api-docs/**"
+//                );
     }
 
     @Override
@@ -44,7 +72,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable() // swagger API 호출시 403 에러 발생 방지
                 .authorizeRequests()
-                .antMatchers(PERMIT_URL_ARRAY).permitAll()
+                .antMatchers(PERMIT_ALL_URL_ARRAY).permitAll()
+                .antMatchers(PERMIT_ADMIN_URL_ARRAY).access("hasRole('ADMIN')") // ADMIN만 가능
+                .antMatchers(PERMIT_ADMIN_AND_USER_URL_ARRAY).access("hasRole('ADMIN') or hasRole('USER')") //ADMIN or SYS
+                .antMatchers(PERMIT_USER_URL_ARRAY).hasRole("USER") // 페이지 유저만 가능
                 .anyRequest().authenticated();
     }
 
