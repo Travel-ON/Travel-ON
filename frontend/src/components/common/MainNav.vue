@@ -56,7 +56,7 @@
           </template>
           <v-list>
             <v-list-item v-for="(item, index) in items_user" :key="index" :value="index">
-              <v-list-item-title @click="$router.push({ name: item.name })">
+              <v-list-item-title @click="$router.push({ name: `${item.name}` })">
                 {{ item.title }}
               </v-list-item-title>
             </v-list-item>

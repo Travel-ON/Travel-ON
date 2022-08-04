@@ -29,7 +29,7 @@ const routes = [
   {
     path: "/logout",
     name: "logout",
-    compoonent: LogoutPage,
+    component: LogoutPage,
   },
   {
     path: "/notice",
