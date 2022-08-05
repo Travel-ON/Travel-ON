@@ -1,5 +1,6 @@
 <template>
-  <div>login</div>
+  <div id="title">LoginPage</div>
+  <router-view />
 </template>
 
 <script>
