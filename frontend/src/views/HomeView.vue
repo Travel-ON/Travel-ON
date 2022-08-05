@@ -1,6 +1,5 @@
 <template>
   <div>
-    <main-nav />
     <div>
       <img src="https://via.placeholder.com/1920x1080" alt="main-banner" style="width: 100%" />
     </div>
@@ -10,13 +9,11 @@
 
 <script>
 import { defineComponent } from "vue";
-import MainNav from "../components/common/MainNav.vue";
 import MainSpacingHome from "../components/main/MainSpacingHome.vue";
 
 export default defineComponent({
   name: "HomeView;",
   components: {
-    MainNav,
     MainSpacingHome,
   },
 });
