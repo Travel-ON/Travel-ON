@@ -1,5 +1,7 @@
 package com.travel.travel_on.controller;
 
+import com.travel.travel_on.auth.JwtTokenProvider;
+import com.travel.travel_on.auth.JwtUserDetails;
 import com.travel.travel_on.dto.UserAchievementDto;
 import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.dto.VisitationDto;
@@ -16,7 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.transaction.Transactional;
 import java.util.HashMap;
@@ -36,6 +41,9 @@ public class UserController {
 
     @Autowired
     private AlarmService asvc;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @ApiOperation(value = "회원가입: 사용자 정보를 삽입한다")
     @PostMapping("/regist")
@@ -58,8 +66,10 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody Map<String, String> param) {
         try {
             UserDto userDto = usvc.select(param.get("id"));
-            if (userDto != null && userDto.getPassword().equals(param.get("password"))) {
+//            if (userDto != null && userDto.getPassword().equals(param.get("password"))) {
+            if (userDto != null && passwordEncoder.matches(param.get("password"), userDto.getPassword())) {
                 Map<String, Object> result=new HashMap<>();
+                result.put("accessToken", JwtTokenProvider.getToken(param.get("id")));
                 result.put("nickname", userDto.getNickname());
                 result.put("userTitle", userDto.getUserTitle());
                 result.put("adminFlag", userDto.isAdminFlag());
@@ -103,13 +113,21 @@ public class UserController {
     }
 
     @ApiOperation(value = "회원정보 조회: 사용자 정보를 조회한다", response = UserDto.class)
-    @GetMapping("/detail/{id}")
-    public ResponseEntity<?> detail(@PathVariable String id) {
+    @GetMapping("/detail")
+    public ResponseEntity<?> detail(@ApiIgnore Authentication authentication) {
         try {
-            UserDto userDto = usvc.select(id);
+            log.info("회원정보 조회");
+            /**
+             * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저 식별.
+             * 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access Denied"}) 발생.
+             */
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userId = userDetails.getUsername();
+            UserDto userDto = usvc.select(userId);
             if(userDto==null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
+            userDto.setPassword("");
             return new ResponseEntity<UserDto>(userDto, HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
@@ -119,10 +137,20 @@ public class UserController {
     @ApiOperation(value = "회원정보 수정: 사용자 정보를 수정한다")
     @PutMapping("/modify")
     @Transactional
-    public ResponseEntity<?> modify(@RequestBody UserDto modifyUser) {
+    public ResponseEntity<?> modify(@ApiIgnore Authentication authentication, @RequestBody UserDto modifyUser) {
         try {
-            UserDto userDto = usvc.select(modifyUser.getId());
-            if(userDto==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            log.info("회원정보 수정");
+
+            /**
+             * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저 식별.
+             * 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access Denied"}) 발생.
+             */
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userId = userDetails.getUsername();
+            UserDto userDto = usvc.select(userId);
+            if(userDto==null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
 
             if(modifyUser.getNickname()!=null) userDto.setNickname(modifyUser.getNickname());
             if(modifyUser.getPassword()!=null) userDto.setPassword(modifyUser.getPassword());
