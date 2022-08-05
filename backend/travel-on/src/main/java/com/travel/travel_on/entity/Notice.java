@@ -3,7 +3,6 @@ package com.travel.travel_on.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -26,20 +25,12 @@ public class Notice {
     @Column(nullable = false)
     private String content;
 
-    @Column(name = "notice_date")
+    @Column(name = "notice_date", nullable = false)
     private String noticeDate;
 
-    @Column
+    @Column(nullable = false)
     private Integer hits;
 
-    @Column(name = "fixation_flag")
+    @Column(name = "fixation_flag", nullable = false)
     private boolean fixationFlag;
-
-    public void Notice(){
-    }
-
-    public void Notice(String title, String content){
-        this.title = title;
-        this.content = content;
-    }
 }
