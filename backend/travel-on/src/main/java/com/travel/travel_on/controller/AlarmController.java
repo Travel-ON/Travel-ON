@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
-@RequestMapping("/alarm")
+@RequestMapping("/api/alarm")
 @Slf4j
 public class AlarmController {
 

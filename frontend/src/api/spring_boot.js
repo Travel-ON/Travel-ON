@@ -1,4 +1,4 @@
-const HOST = "https://7d0c97ac-6236-4b8f-9ba8-f257edcdfe2d.mock.pstmn.io/";
+const HOST = "http://i7b301.p.ssafy.io:3000/api";
 
 const USER = "user/";
 // const QNA = "qna/";

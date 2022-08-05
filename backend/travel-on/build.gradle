@@ -28,7 +28,8 @@ dependencies {
     //메일보내기
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
-    //security
+
+    //Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.security:spring-security-test'
 
