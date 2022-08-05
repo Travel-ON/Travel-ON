@@ -4,13 +4,11 @@ module.exports = defineConfig({
   transpileDependencies: true,
   
   devServer: {
+         https: false,
+         port: 8080,
+         open: true,
          allowedHosts:'all',
-         proxy: {
-		'/api': {
-			target: 'http://i7b301.p.ssafy.io:3000/api',
-			changeOrigin:true
-		}
-	} 
+         
   },
 
   pluginOptions: {
