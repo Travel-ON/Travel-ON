@@ -1,12 +1,15 @@
 package com.travel.travel_on.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.firewall.DefaultHttpFirewall;
+import org.springframework.security.web.firewall.HttpFirewall;
 
 @RequiredArgsConstructor
 @Configuration
@@ -21,14 +24,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-resources/**",
 
             // 컨트롤러
-            "/notice/**",
-            "/qna/**",
-            "/user/**",
-            "/alarm/**",
+            "/api/**",
+
     };
 
     @Override
     public void configure(WebSecurity web) {
+        web.httpFirewall(defaultHttpFirwall());
+
         web.ignoring()
                 .antMatchers(
                         "/favicon.ico"
@@ -37,6 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         ,"/swagger-resources/**"
                         ,"/v3/api-docs/**"
                 );
+
     }
 
     @Override
@@ -48,4 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
     }
 
+    @Bean
+    public HttpFirewall defaultHttpFirwall(){
+        return new DefaultHttpFirewall();
+    }
 }
