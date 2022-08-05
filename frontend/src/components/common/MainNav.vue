@@ -2,22 +2,7 @@
   <div style="position: fixed; top: 0; left: 0; right: 0; z-index: 3000">
     <v-toolbar height="116px">
       <router-link :to="{ name: 'home' }">
-        <v-btn style="width: 150px">
-          <v-img
-            src="https://user-images.githubusercontent.com/97648026/182758932-c401e00f-c153-4a48-9186-b16491197fa1.png"
-            alt="logo"
-            width="150px"
-          />
-        </v-btn>
-        <!-- <v-btn> -->
-        <!-- <div width="100px"> -->
-        <!-- <img
-          src="https://user-images.githubusercontent.com/97648026/182758932-c401e00f-c153-4a48-9186-b16491197fa1.png"
-          alt="logo"
-          width="100%"
-        /> -->
-        <!-- </div> -->
-        <!-- </v-btn> -->
+        <v-btn>(트래블론 로고)</v-btn>
       </router-link>
       <v-btn>방만들기</v-btn>
       <v-btn>방매칭하기</v-btn>
@@ -37,10 +22,10 @@
       <v-spacer></v-spacer>
       <!-- false시 로그인 상태, true시 비로그인 상태 -->
       <div v-if="!isLoggedIn">
-        <router-link :to="{ name: 'MemberLogin' }">
+        <router-link :to="{ name: 'login' }">
           <v-btn>로그인</v-btn>
         </router-link>
-        <router-link :to="{ name: 'MemberRegister' }">
+        <router-link :to="{ name: 'signup' }">
           <v-btn>회원가입</v-btn>
         </router-link>
       </div>
@@ -55,9 +40,7 @@
           </template>
           <v-list>
             <v-list-item v-for="(item, index) in items_new" :key="index" :value="index">
-              <v-list-item-title @click="$router.push({ name: item.name })">
-                {{ item.title }}
-              </v-list-item-title>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -71,9 +54,7 @@
           </template>
           <v-list>
             <v-list-item v-for="(item, index) in items_user" :key="index" :value="index">
-              <v-list-item-title @click="$router.push({ name: `${item.name}` })">
-                {{ item.title }}
-              </v-list-item-title>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -94,10 +75,7 @@ export default {
       { title: "FAQ", name: "faq" },
       { title: "Q&A", name: "qna" },
     ],
-    items_user: [
-      { title: "마이페이지", name: "" },
-      { title: "로그아웃", name: "MemberLogout" },
-    ],
+    items_user: [{ title: "마이페이지" }, { title: "로그아웃" }],
     items_new: [{ title: "[Q&A] 에 답변이 달렸습니다." }, { title: "[대전 마스터] 업적을 달성하셨습니다." }],
   }),
   methods: {
