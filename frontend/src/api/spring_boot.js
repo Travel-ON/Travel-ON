@@ -1,5 +1,4 @@
-const HOST = "https://localhost:3000";
-// const HOST = "https://7d0c97ac-6236-4b8f-9ba8-f257edcdfe2d.mock.pstmn.io/";
+const HOST = "https://7d0c97ac-6236-4b8f-9ba8-f257edcdfe2d.mock.pstmn.io/";
 
 const USER = "user/";
 // const QNA = "qna/";
@@ -23,5 +22,5 @@ export default {
     userTitle: () => HOST + USER + "title/", // 칭호 변경, 불러오기
     userTrophy: () => HOST + USER + "trophy/" + String(id) + "/", // 업적지도용 여행횟수 가져오기
     userTrophyUpdate: () => HOST + USER + "trophy/", // 여행횟수 업데이트
-  },
-};
+  }
+}

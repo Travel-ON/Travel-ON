@@ -15,10 +15,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
 @RequestMapping("/notice")
 public class NoticeController {
+
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     private NoticeServiceImpl nsvc;
@@ -37,7 +42,12 @@ public class NoticeController {
     @ApiOperation(value = "글쓰기: 공지사항을 작성한다.")
     @PostMapping("/regist")
     public ResponseEntity<?> regist(Notice notice){
+        Date time = new Date();
+        String nowTime = format.format(time);
         try{
+            notice.setHits(0);
+            notice.setNoticeDate(nowTime);
+
             boolean result = nsvc.write(notice);
             if(result){
                 return new ResponseEntity<>(HttpStatus.CREATED);
