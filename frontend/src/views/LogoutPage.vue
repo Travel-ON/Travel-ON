@@ -1,6 +1,5 @@
 <template>
-  <div id="title">LoginPage</div>
-  <router-view />
+  <div>logout</div>
 </template>
 
 <script>
@@ -9,16 +8,17 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   /* eslint-disable */
   methods: {
-    ...mapActions(["login"]),
+    ...mapActions(["logout"]),
   },
   computed: {
     ...mapGetters(["isLoggedIn"]),
   },
   created() {
-    // 로그인시 로그인 상태가 아니면 처리
-    if (!this.isLoggedIn) {
-      this.login();
-    } else { // 로그인 상태인데 로그인 시도시 홈으로 이동
+    // 로그아웃시 로그인 상태일때 처리
+    if (this.isLoggedIn) {
+      console.log("로그아웃 페이지 진입")
+      this.logout();
+    } else { // 로그인 상태가 아닌데 로그아웃 시도시 홈으로 이동
       alert("잘못된 접근");
       router.push({ name: "home" });
     }
