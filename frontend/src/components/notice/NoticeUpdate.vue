@@ -1,72 +1,72 @@
 <template>
   <div>
-    <div id="title">Notice</div>
-    <v-container>
-      <div class="d-flex justify-end mb-6">
-        <v-btn color="primary" @click="write">글작성</v-btn>
-      </div>
-      <v-row style="background-color: lightgrey">
-        <v-col>글번호 </v-col>
-        <v-col>제목</v-col>
-        <v-col>작성날짜</v-col>
-        <v-col>조회수</v-col>
-      </v-row>
-      <v-row v-for="notice in notices" :key="notice.notice_id">
-        <v-col v-if="notice.fixation_flag">notice</v-col>
-        <v-col v-else>{{ notice.notice_id }}</v-col>
-        <v-col>{{ notice.title }}</v-col>
-        <v-col>{{ notice.notice_date }}</v-col>
-        <v-col>{{ notice.hits }}</v-col>
-      </v-row>
-    </v-container>
+    <v-form ref="form" v-model="valid" lazy-validation>
+      <v-container class=""
+        ><v-row>
+          <v-col class="d-flex mb-6">
+            <v-btn depressed color="yellow" @click="moveToList"> 뒤로가기 </v-btn>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col
+            ><v-text-field v-model="notice.title" :counter="10" :rules="titleRules" label="제목" required>
+            </v-text-field
+          ></v-col>
+        </v-row>
+        <v-row>
+          <v-col
+            ><v-textarea v-model="notice.content" :counter="300" label="내용" :rules="contentRules" required>
+            </v-textarea
+          ></v-col>
+        </v-row>
+        <div class="d-flex justify-end mb-6">
+          <v-btn :disabled="!valid" color="success" class="d-flex justify-end" @click="[validate(), updateNotice()]">
+            수정
+          </v-btn>
+        </div>
+      </v-container>
+    </v-form>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import { mapState } from "vuex";
 
 export default {
+  computed: {
+    ...mapState(["notice"]),
+  },
   data() {
     return {
-      notices: [],
+      valid: true,
+      titleRules: [
+        (v) => !!v || "제목을 입력하세요",
+        (v) => (v && v.length <= 10) || "제목은 10글자 이하로 입력하세요",
+      ],
+      content: "",
+      contentRules: [(v) => !!v || "내용을 입력하세요", (v) => (v && v.length <= 300) || "내용은 최대 200글자입니다."],
     };
   },
-  created() {
-    axios
-      .get("https://7d0c97ac-6236-4b8f-9ba8-f257edcdfe2d.mock.pstmn.io//notice/page")
-      .then((res) => {
-        this.notices = res.data;
-        // notice sort
-        this.notices.sort((a, b) => {
-          return a.fixation_flag > b.fixation_flag ? -1 : 1;
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  },
+
   methods: {
-    write() {
+    moveToList() {
       this.$router.push({
-        path: "/notice/create",
+        name: "NoticeList",
       });
+    },
+    validate() {
+      this.$refs.form.validate();
+    },
+    updateNotice() {
+      const newNotice = {
+        notice_id: this.notice.notice_id,
+        title: this.notice.title,
+        content: this.notice.content,
+      };
+      this.$store.dispatch("modifyNotice", newNotice);
     },
   },
 };
 </script>
 
-<style>
-#title {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  justify-content: center;
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 700;
-  font-size: 40px;
-  line-height: 48px;
-}
-</style>
+<style></style>
