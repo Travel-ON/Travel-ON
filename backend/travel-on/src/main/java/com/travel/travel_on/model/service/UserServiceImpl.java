@@ -1,10 +1,15 @@
 package com.travel.travel_on.model.service;
 
-import com.travel.travel_on.dto.*;
+import com.travel.travel_on.dto.UserDto;
+import com.travel.travel_on.entity.Achievement;
+import com.travel.travel_on.entity.User;
+import com.travel.travel_on.entity.UserAchievement;
+import com.travel.travel_on.entity.Visitation;
 import com.travel.travel_on.model.repo.AchievementRepository;
 import com.travel.travel_on.model.repo.UserAchievementRepository;
 import com.travel.travel_on.model.repo.UserRepository;
 import com.travel.travel_on.model.repo.VisitationRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -33,101 +38,90 @@ public class UserServiceImpl implements UserService {
     private JavaMailSender javaMailSender;
 
     @Override
-    public User select(String id) {
+    public UserDto select(String id) {
         Optional<User> result = repo.findByRealId(id);
         if (result.isPresent()) {
             User user = result.get();
-            return user;
+            UserDto userDto = new UserDto(user);
+            return userDto;
         }
         return null;
     }
 
     @Override
-    public int insert(User user) {
-        Optional<User> result = repo.findByRealId(user.getRealId());
+    public boolean insert(UserDto userDto) {
+        Optional<User> result = repo.findByRealId(userDto.getId());
         if (result.isPresent()) {
-            return 1;
+            return false;
         } else {
+            User user = userDto.toEntity();
             repo.save(user);
-            return 0;
+            return true;
         }
     }
 
     @Override
-    public int update(User user) {
-        Optional<User> result = repo.findByRealId(user.getRealId());
+    public boolean update(UserDto userDto) {
+        Optional<User> result = repo.findByRealId(userDto.getId());
         if (result.isPresent()) {
+            User user = userDto.toEntity();
             repo.save(user);
-            return 0;
+            return true;
         } else {
-            return 1;
+            return false;
         }
     }
 
     @Override
-    public int delete(String id) {
+    public boolean delete(String id) {
         Optional<User> result = repo.findByRealId(id);
         if (result.isPresent()) {
             repo.delete(result.get());
-            return 0;
+            return true;
         }
-        return 1;
+        return false;
     }
 
     @Override
-    public User selectByNickname(String nickname) {
+    public UserDto selectByNickname(String nickname) {
         Optional<User> result = repo.findByNickname(nickname);
         if (result.isPresent()) {
             User user = result.get();
-            return user;
+            UserDto userDto = new UserDto(user);
+            return userDto;
         }
         return null;
     }
 
     @Override
-    public int updateAlarm(int userId) {
-        Optional<User> result = repo.findById(userId);
-        if (result.isPresent()) {
-            User user = result.get();
-            user.setAlarmFlag(true);
-            repo.save(user);
-            return 0;
-        }
-        return 1;
+    public void updateAlarm(User user) {
+        user.setAlarmFlag(true);
+        repo.save(user);
     }
 
     @Override
-    public List<UserAchievement> selectUserAchievement(int userId, String sidoName) {
-        Optional<List<UserAchievement>> result;
-        if (sidoName == null) result = uarepo.findByUserId(userId);
-        else result = uarepo.findByUserIdAndSidoName(userId, sidoName);
+    public List<UserAchievement> selectUserAchievement(User user, String sidoName) {
+        List<UserAchievement> list;
+        if (sidoName == null) list = uarepo.findByUser(user);
+        else list = uarepo.findByUserAndSidoName(user, sidoName);
 
-        if (result.isPresent()) {
-            List<UserAchievement> list = result.get();
-            return list;
-        }
-        return null;
+        return list;
     }
 
     @Override
-    public int insertUserAchievement(UserAchievement userAchievement) {
+    public void insertUserAchievement(UserAchievement userAchievement) {
         uarepo.save(userAchievement);
-        return 0;
     }
 
     @Override
-    public List<Visitation> selectVisitation(int userId) {
-        Optional<List<Visitation>> result = vrepo.findByUserId(userId);
-        if (result.isPresent()) {
-            List<Visitation> list = result.get();
-            return list;
-        }
-        return null;
+    public List<Visitation> selectVisitation(User user) {
+        List<Visitation> list = vrepo.findByUser(user);
+        return list;
     }
 
     @Override
-    public int updateVisitation(int userId, String sidoName) {
-        Optional<Visitation> result = vrepo.findByUserIdAndSidoName(userId, sidoName);
+    public int updateVisitation(User user, String sidoName) {
+        Optional<Visitation> result = vrepo.findByUserAndSidoName(user, sidoName);
         Visitation visitation;
         if (result.isPresent()) {
             //업데이트
@@ -138,7 +132,7 @@ public class UserServiceImpl implements UserService {
         } else {
             //생성
             visitation = Visitation.builder()
-                    .userId(userId)
+                    .user(user)
                     .sidoName(sidoName)
                     .count(1)
                     .build();
@@ -158,8 +152,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int sendMail(String mail, String title, String content) {
-        int result = 1;
+    public void sendMail(String mail, String title, String content) {
 
         try {
             // 텍스트로 구성된 메일을 생성할때
@@ -174,11 +167,9 @@ public class UserServiceImpl implements UserService {
             System.out.println(javaMailSender);
             // 메일 발송
             javaMailSender.send(simpleMessage);
-            result = 0;
         } catch (MailException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return result;
     }
 }

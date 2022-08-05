@@ -1,6 +1,9 @@
 import { createStore } from "vuex";
-import { Notices } from "@/store/modules/notices";
+import { createApi } from "@/api";
+import router from "@/router";
 import { Accounts } from "./modules/accounts";
+import { Notices } from "@/store/modules/notices";
+const api = createApi();
 
 export default createStore({
   state: {},

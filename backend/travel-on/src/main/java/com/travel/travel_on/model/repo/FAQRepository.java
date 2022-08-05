@@ -1,6 +1,6 @@
 package com.travel.travel_on.model.repo;
 
-import com.travel.travel_on.dto.FAQ;
+import com.travel.travel_on.entity.FAQ;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

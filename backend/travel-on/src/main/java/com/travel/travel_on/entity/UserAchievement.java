@@ -1,8 +1,9 @@
-package com.travel.travel_on.dto;
+package com.travel.travel_on.entity;
 
 import lombok.*;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 
 @Getter
@@ -17,15 +18,21 @@ public class UserAchievement implements Serializable {
 
     @Id
     @Column(name="user_achievement_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // MySQL의 AUTO_INCREMENT를 사용
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userAchievementId;
 
-    @Column(name="user_id")
-    private Integer userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private User user;
 
     @Column(name="sido_name", length = 20, nullable = false)
     private String sidoName;
 
     @Column(length = 20, nullable = false)
     private String title;
+
+    public void setUser(User user){
+        this.user = user;
+        this.user.getUserAchievements().add(this);
+    }
 }
