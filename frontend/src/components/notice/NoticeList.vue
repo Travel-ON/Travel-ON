@@ -26,13 +26,13 @@ import { mapState } from "vuex";
 
 export default {
   computed: {
-    ...mapState(["notices"]),
+    ...mapState("Notices", ["notices"]),
   },
   data() {
     return {};
   },
   created() {
-    this.$store.dispatch("getNotices");
+    this.$store.dispatch("Notices/getNotices");
   },
   methods: {
     moveToDetail(id) {
