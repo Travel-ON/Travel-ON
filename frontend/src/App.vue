@@ -5,9 +5,9 @@
       <main-nav v-if="!state.exceptList.includes($route.name)" />
       <router-link to="/">Home</router-link> |
       <router-link to="/notice">Notice</router-link>
-      | <router-link to="/login">로그인</router-link> |
+      | <router-link to="/member/login">로그인</router-link> |
       <router-link to="/member/register">회원가입</router-link>
-      |<router-link to="/modify">회원정보수정</router-link>
+      |<router-link to="/member/modify">회원정보수정</router-link>
       <router-view />
     </v-main>
   </v-app>

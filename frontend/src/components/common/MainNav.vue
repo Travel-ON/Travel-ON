@@ -37,10 +37,10 @@
       <v-spacer></v-spacer>
       <!-- false시 로그인 상태, true시 비로그인 상태 -->
       <div v-if="!isLoggedIn">
-        <router-link :to="{ name: 'login' }">
+        <router-link :to="{ name: 'MemberLogin' }">
           <v-btn>로그인</v-btn>
         </router-link>
-        <router-link :to="{ name: 'signup' }">
+        <router-link :to="{ name: 'MemberRegister' }">
           <v-btn>회원가입</v-btn>
         </router-link>
       </div>
@@ -96,7 +96,7 @@ export default {
     ],
     items_user: [
       { title: "마이페이지", name: "" },
-      { title: "로그아웃", name: "logout" },
+      { title: "로그아웃", name: "MemberLogout" },
     ],
     items_new: [{ title: "[Q&A] 에 답변이 달렸습니다." }, { title: "[대전 마스터] 업적을 달성하셨습니다." }],
   }),
