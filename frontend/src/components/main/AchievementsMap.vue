@@ -13,13 +13,20 @@
     >
       <div>내가 여행가본 지역들은? - 업적</div>
     </div>
-    <div style="height: 490px; width: 100%"></div>
+    <div style="height: 490px; width: 100%">
+      <KoreaMap />
+    </div>
   </div>
 </template>
 
 <script>
+import KoreaMap from "./KoreaMap.vue";
+
 export default {
   name: "AchievementsMap",
+  components: {
+    KoreaMap,
+  },
 };
 </script>
 

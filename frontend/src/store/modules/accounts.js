@@ -14,6 +14,8 @@ export const Accounts = {
   }),
   getters: {
     isLoggedIn: (state) => !!state.currentUser, // 로그인 여부
+    currentUser: (state) => state.currentUser,
+    admin: (state) => state.currentUser,
   },
   mutations: {
     SET_CURRENT_USER: (state, user) => (state.currentUser = user),

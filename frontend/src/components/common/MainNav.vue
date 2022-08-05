@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "MainNav",
@@ -106,8 +106,8 @@ export default {
   computed: {
     ...mapGetters({
       isLoggedIn: "isLoggedIn",
+      currentUser: "currentUser",
     }),
-    ...mapState({ currentUser: "currentUser" }),
   },
 };
 </script>
