@@ -79,4 +79,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
     }
 
+    @Bean
+    public HttpFirewall defaultHttpFirwall(){
+        return new DefaultHttpFirewall();
+    }
 }
