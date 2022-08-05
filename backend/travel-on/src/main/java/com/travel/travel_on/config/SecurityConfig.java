@@ -15,6 +15,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.firewall.DefaultHttpFirewall;
+import org.springframework.security.web.firewall.HttpFirewall;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -28,14 +30,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-resources/**",
 
             // controller
-            "/user/login",
-            "/user/regist",
-            "/user/idcheck",
-            "/user/nickcheck",
-            "/user/email",
-            "/notice/page",
-            "/notice/faq",
-            "/notice/detail/**",
+            "/api/user/login",
+            "/api/user/regist",
+            "/api/user/idcheck",
+            "/api/user/nickcheck",
+            "/api/user/email",
+            "/api/notice/page",
+            "/api/notice/faq",
+            "/api/notice/detail/**",
     };
 
     @Autowired

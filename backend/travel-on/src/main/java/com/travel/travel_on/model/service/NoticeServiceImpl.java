@@ -58,7 +58,8 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public boolean delete(Integer id) {
         Optional<Notice> result = nRepo.findById(id);
-        if(result == null){
+
+        if(!result.isPresent()){
             return  false;
         }else{
             result.ifPresent(notice -> {

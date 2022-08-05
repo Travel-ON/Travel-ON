@@ -70,6 +70,11 @@ public class UserServiceImpl implements UserService {
         Optional<User> result = repo.findByRealId(userDto.getId());
         if (result.isPresent()) {
             User user = userDto.toEntity();
+            if(result.get().getPassword().equals(userDto.getPassword())){
+                user.setPassword(result.get().getPassword());
+            }else{
+                user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            }
             repo.save(user);
             return true;
         } else {
