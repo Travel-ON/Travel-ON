@@ -1,6 +1,5 @@
 <template>
-  <div id="title">Signup</div>
-  <router-view />
+  <div>signup</div>
 </template>
 
 <script>
