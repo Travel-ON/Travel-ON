@@ -3,6 +3,7 @@
     <div class="left-space"></div>
     <div class="main-space">
       <HomeMainButtons />
+      <MainServices />
     </div>
     <div class="right-space"></div>
   </div>
@@ -10,10 +11,11 @@
 
 <script>
 import HomeMainButtons from "./HomeMainButtons.vue";
+import MainServices from "./MainServices.vue";
 
 export default {
   name: "MainSpacing",
-  components: { HomeMainButtons },
+  components: { HomeMainButtons, MainServices },
 };
 </script>
 
@@ -21,6 +23,5 @@ export default {
 .main-space {
   width: 1128px;
   padding: 30px, 20px;
-  background-color: skyblue;
 }
 </style>
