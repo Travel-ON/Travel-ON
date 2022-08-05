@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
-@RequestMapping("/notice")
+@RequestMapping("/api/notice")
 public class NoticeController {
 
     @Autowired

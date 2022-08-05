@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,6 +34,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     AchievementRepository arepo;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Autowired
     private JavaMailSender javaMailSender;
@@ -55,6 +59,7 @@ public class UserServiceImpl implements UserService {
             return false;
         } else {
             User user = userDto.toEntity();
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             repo.save(user);
             return true;
         }
