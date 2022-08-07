@@ -9,8 +9,6 @@ import com.travel.travel_on.model.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,19 +32,19 @@ import java.util.Date;
 @Slf4j
 public class NoticeController {
 
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
-    private NoticeService nsvc;
+    private NoticeService noticeService;
 
     @Autowired
-    private UserService usvc;
+    private UserService userService;
 
     @ApiOperation(value = "글리스트 조회: 공지사항 글 조회 및 페이징", response = Board.class )
     @GetMapping("/page") //페이징 디폴트 10개씩
     public ResponseEntity<?> selectPage(@PageableDefault(sort = "noticeId")Pageable pageable){
         Board result = new Board();
-        result.P = nsvc.findPage(pageable);
+        result.P = noticeService.findPage(pageable);
         result.previous = pageable.previousOrFirst().getPageNumber();
         result.next = pageable.next().getPageNumber();
 
@@ -60,14 +58,14 @@ public class NoticeController {
             log.info("공지사항 글쓰기");
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
             if(userDto.isAdminFlag()) {
                 Date time = new Date();
-                String nowTime = format.format(time);
+                String nowTime = simpleDateFormat.format(time);
                 notice.setHits(0);
                 notice.setNoticeDate(nowTime);
                 notice.setFixationFlag(false);
-                boolean result = nsvc.write(notice);
+                boolean result = noticeService.write(notice);
                 if (result) {
                     return new ResponseEntity<>(HttpStatus.CREATED);
                 } else {
@@ -85,13 +83,13 @@ public class NoticeController {
     @GetMapping("/detail/{noticeId}")
     public ResponseEntity<?> select(@PathVariable Integer noticeId){
         try{
-            Notice result = nsvc.selectOne(noticeId);
+            Notice result = noticeService.selectOne(noticeId);
 
             if(result == null){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }else{
                 result.setHits(result.getHits()+1);
-                nsvc.update(result);
+                noticeService.update(result);
                 return new ResponseEntity<Notice>(result, HttpStatus.OK);
             }
         }catch (Exception e){
@@ -106,9 +104,9 @@ public class NoticeController {
             log.info("공지사항 수정");
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
             if(userDto.isAdminFlag()) {
-                boolean result = nsvc.update(notice);
+                boolean result = noticeService.update(notice);
                 if(result){
                     return new ResponseEntity<>(HttpStatus.CREATED);
                 }else{
@@ -129,9 +127,9 @@ public class NoticeController {
             log.info("공지사항 삭제");
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
             if(userDto.isAdminFlag()) {
-                boolean result = nsvc.delete(noticeId);
+                boolean result = noticeService.delete(noticeId);
                 if(result){
                     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 }else{
@@ -149,7 +147,7 @@ public class NoticeController {
     @PostMapping("/faq")
     public ResponseEntity<?> searchFAQ(String keyword, @PageableDefault(sort = "faqId")Pageable pageable){
         FAQBoard result = new FAQBoard();
-        result.PF = nsvc.search(keyword, pageable);
+        result.PF = noticeService.search(keyword, pageable);
         result.previous = pageable.previousOrFirst().getPageNumber();
         result.next = pageable.next().getPageNumber();
 

@@ -37,10 +37,10 @@ import java.util.stream.Collectors;
 public class UserController {
 
     @Autowired
-    private UserService usvc;
+    private UserService userService;
 
     @Autowired
-    private AlarmService asvc;
+    private AlarmService alarmService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -50,7 +50,7 @@ public class UserController {
     @Transactional
     public ResponseEntity<?> regist(@RequestBody UserDto userDto) {
         try {
-            boolean result = usvc.insert(userDto);
+            boolean result = userService.insert(userDto);
             if(result) {
                 return new ResponseEntity<>(HttpStatus.CREATED);
             } else {
@@ -65,7 +65,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> param) {
         try {
-            UserDto userDto = usvc.select(param.get("id"));
+            UserDto userDto = userService.select(param.get("id"));
             if (userDto != null && passwordEncoder.matches(param.get("password"), userDto.getPassword())) {
                 Map<String, Object> result=new HashMap<>();
                 result.put("accessToken", JwtTokenProvider.getToken(param.get("id")));
@@ -85,7 +85,7 @@ public class UserController {
     @PostMapping("/idcheck")
     public ResponseEntity<?> idcheck(@RequestParam String id) {
         try {
-            UserDto userDto = usvc.select(id);
+            UserDto userDto = userService.select(id);
             if (userDto != null) {
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }else {
@@ -100,7 +100,7 @@ public class UserController {
     @PostMapping("/nickcheck")
     public ResponseEntity<?> nickcheck(@RequestParam String nickname) {
         try {
-            UserDto userDto = usvc.selectByNickname(nickname);
+            UserDto userDto = userService.selectByNickname(nickname);
             if (userDto != null) {
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             } else {
@@ -118,7 +118,7 @@ public class UserController {
             log.info("회원정보 조회");
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
             if(userDto==null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -138,7 +138,7 @@ public class UserController {
 
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
             if(userDto==null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -148,7 +148,7 @@ public class UserController {
             if(modifyUser.getEmail()!=null) userDto.setEmail(modifyUser.getEmail());
             if(modifyUser.getAddress()!=null) userDto.setAddress(modifyUser.getAddress());
 
-            boolean result = usvc.update(userDto);
+            boolean result = userService.update(userDto);
             if(result) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }else{
@@ -168,7 +168,7 @@ public class UserController {
 
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            boolean result = usvc.delete(userId);
+            boolean result = userService.delete(userId);
             if(result) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }else{
@@ -187,11 +187,11 @@ public class UserController {
             log.info("칭호 변경");
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
             if(userDto==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
             userDto.setUserTitle(param.get("title"));
-            boolean result = usvc.update(userDto);
+            boolean result = userService.update(userDto);
             if(result) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }else{
@@ -209,10 +209,10 @@ public class UserController {
             log.info("칭호 조회");
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
             if(userDto==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-            List<UserAchievement> list = usvc.selectUserAchievement(userDto.toEntity(), param.get("sidoName"));
+            List<UserAchievement> list = userService.selectUserAchievement(userDto.toEntity(), param.get("sidoName"));
             List<UserAchievementDto> result = list.stream()
                     .map(r -> new UserAchievementDto(r))
                     .collect(Collectors.toList());
@@ -228,14 +228,14 @@ public class UserController {
     @Transactional
     public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> param) {
         try {
-            UserDto userDto = usvc.select(param.get("id"));
+            UserDto userDto = userService.select(param.get("id"));
             if(userDto!=null&&userDto.getEmail().equals(param.get("email"))){
                 // 인증키 6자리 랜덤으로 생성 후 초기화
                 String authKey = Integer.toString( ThreadLocalRandom.current().nextInt(100000, 1000000) );
                 userDto.setPassword(authKey);
-                boolean result = usvc.update(userDto);
+                boolean result = userService.update(userDto);
                 if(result) {
-                    usvc.sendMail(userDto.getEmail(),
+                    userService.sendMail(userDto.getEmail(),
                             "[Travel-ON] 비밀번호 초기화",
                             "안녕하세요 Travel-ON 입니다\n" +
                                     "인증번호는 " + authKey + " 입니다.\n" +
@@ -260,10 +260,10 @@ public class UserController {
             log.info("여행횟수 조회");
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
             if(userDto==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-            List<Visitation> list = usvc.selectVisitation(userDto.toEntity());
+            List<Visitation> list = userService.selectVisitation(userDto.toEntity());
             List<VisitationDto> result = list.stream()
                     .map(r -> new VisitationDto(r))
                     .collect(Collectors.toList());
@@ -282,21 +282,21 @@ public class UserController {
             log.info("여행횟수 업데이트");
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
             String sidoName = param.get("sidoName");
             if(userDto==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
             User user = userDto.toEntity();
-            int count = usvc.updateVisitation(userDto.toEntity(), sidoName);
-            String title = usvc.selectAchievement(count);
+            int count = userService.updateVisitation(userDto.toEntity(), sidoName);
+            String title = userService.selectAchievement(count);
             if (title != null) {
                 UserAchievement userAchievement = UserAchievement.builder()
                         .user(user)
                         .sidoName(sidoName)
                         .title(title)
                         .build();
-                usvc.insertUserAchievement(userAchievement);
-                asvc.insert(user,"칭호획득: ["+sidoName+" "+title+"]");
+                userService.insertUserAchievement(userAchievement);
+                alarmService.insert(user,"칭호획득: ["+sidoName+" "+title+"]");
             }
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
@@ -311,7 +311,7 @@ public class UserController {
             log.info("여행횟수 업데이트");
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
             if(userDto==null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }

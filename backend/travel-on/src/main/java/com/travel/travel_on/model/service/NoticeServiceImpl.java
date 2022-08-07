@@ -15,14 +15,14 @@ import java.util.Optional;
 @Service
 public class NoticeServiceImpl implements NoticeService {
     @Autowired
-    NoticeRepository nRepo;
+    NoticeRepository noticeRepository;
 
     @Autowired
-    FAQRepository fRepo;
+    FAQRepository faqRepository;
 
     @Override
     public Page<Notice> findPage(Pageable pageable) {
-        return nRepo.findAll(pageable);
+        return noticeRepository.findAll(pageable);
     }
 
     @Override
@@ -30,14 +30,14 @@ public class NoticeServiceImpl implements NoticeService {
         if (notice == null){
             return false;
         }else {
-            nRepo.save(notice);
+            noticeRepository.save(notice);
             return true;
         }
     }
 
     @Override
     public Notice selectOne(Integer id) {
-        Optional<Notice> result = nRepo.findById(id);
+        Optional<Notice> result = noticeRepository.findById(id);
         if(result.isPresent()){
             Notice notice = result.get();
             return notice;
@@ -47,9 +47,9 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public boolean update(Notice notice) {
-        Optional<Notice> result = nRepo.findById(notice.getNoticeId());
+        Optional<Notice> result = noticeRepository.findById(notice.getNoticeId());
         if (result.isPresent()){
-            nRepo.save(notice);
+            noticeRepository.save(notice);
             return true;
         }else{
             return false;
@@ -58,13 +58,13 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public boolean delete(Integer id) {
-        Optional<Notice> result = nRepo.findById(id);
+        Optional<Notice> result = noticeRepository.findById(id);
 
         if(!result.isPresent()){
             return  false;
         }else{
             result.ifPresent(notice -> {
-                nRepo.delete(notice);
+                noticeRepository.delete(notice);
             });
             return true;
         }
@@ -72,7 +72,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public Page<FAQ> search(String keyword, Pageable pageable) {
-        return fRepo.findByQuestionContaining(keyword, pageable);
+        return faqRepository.findByQuestionContaining(keyword, pageable);
     }
 
 }

@@ -16,11 +16,11 @@ import java.util.Optional;
 public class JwtUserDetailService implements UserDetailsService{
 
 	@Autowired
-	UserRepository repo;
+	UserRepository userRepository;
 
 	@Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<User> result = repo.findByRealId(username);
+		Optional<User> result = userRepository.findByRealId(username);
 		if (result.isPresent()) {
 			User user = result.get();
 			if(user != null) {
