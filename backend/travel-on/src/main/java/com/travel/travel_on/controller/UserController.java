@@ -111,6 +111,21 @@ public class UserController {
         }
     }
 
+    @ApiOperation(value = "비밀번호 체크: 사용자의 비밀번호가 올바른지 확인한다")
+    @PostMapping("/check")
+    public ResponseEntity<?> passwordCheck(@ApiIgnore Authentication authentication, @RequestBody Map<String, String> param) {
+        try {
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userPassword = userDetails.getPassword();
+            if(passwordEncoder.matches(param.get("password"), userPassword)){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return exceptionHandling(e);
+        }
+    }
+
     @ApiOperation(value = "회원정보 조회: 사용자 정보를 조회한다", response = UserDto.class)
     @GetMapping("/detail")
     public ResponseEntity<?> detail(@ApiIgnore Authentication authentication) {
