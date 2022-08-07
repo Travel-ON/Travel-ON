@@ -28,8 +28,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-resources/**",
 
             // controller
-            "/user/login",
-            "/user/regist",
+            "/api/user/login",
+            "/api/user/regist",
             "/user/idcheck",
             "/user/nickcheck",
             "/user/email",
@@ -77,10 +77,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests() // 요청에 대한 사용권한 체크
                 .antMatchers(PERMIT_ALL_URL_ARRAY).permitAll()
                 .anyRequest().authenticated();
-    }
-
-    @Bean
-    public HttpFirewall defaultHttpFirwall(){
-        return new DefaultHttpFirewall();
     }
 }
