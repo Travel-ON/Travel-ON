@@ -13,7 +13,7 @@ import axios from "axios";
 
 function createApi() {
   return axios.create({
-    baseURL: `http://i7b301.p.ssafy.io:3000/api`,
+    baseURL: `http://localhost:3000/`,
     headers: {
       "Content-Type": "application/json",
     },
