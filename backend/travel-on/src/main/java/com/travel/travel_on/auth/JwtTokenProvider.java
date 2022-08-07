@@ -7,7 +7,6 @@ import com.auth0.jwt.exceptions.*;
 
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -37,14 +36,6 @@ import java.util.Date;
                     .sign(Algorithm.HMAC512(secretKey.getBytes()));
         }
 
-        public static String getToken(Instant expires, String userId) {
-            return JWT.create()
-                    .withSubject(userId)
-                    .withExpiresAt(Date.from(expires))
-                    .withIssuedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
-                    .sign(Algorithm.HMAC512(secretKey.getBytes()));
-        }
-
         public static Date getTokenExpiration(int expirationTime) {
             Date now = new Date();
             return new Date(now.getTime() + expirationTime);
@@ -55,30 +46,6 @@ import java.util.Date;
                     .require(Algorithm.HMAC512(secretKey.getBytes()))
                     .build();
 
-            try {
-                verifier.verify(token.replace(TOKEN_PREFIX, ""));
-            } catch (AlgorithmMismatchException ex) {
-                throw ex;
-            } catch (InvalidClaimException ex) {
-                throw ex;
-            } catch (SignatureGenerationException ex) {
-                throw ex;
-            } catch (SignatureVerificationException ex) {
-                throw ex;
-            } catch (TokenExpiredException ex) {
-                throw ex;
-            } catch (JWTCreationException ex) {
-                throw ex;
-            } catch (JWTDecodeException ex) {
-                throw ex;
-            } catch (JWTVerificationException ex) {
-                throw ex;
-            } catch (Exception ex) {
-                throw ex;
-            }
-        }
-
-        public static void handleError(JWTVerifier verifier, String token) {
             try {
                 verifier.verify(token.replace(TOKEN_PREFIX, ""));
             } catch (AlgorithmMismatchException ex) {

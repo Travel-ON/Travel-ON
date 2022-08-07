@@ -114,8 +114,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserAchievement> selectUserAchievement(User user, String sidoName) {
         List<UserAchievement> list;
-        if (sidoName == null) list = uarepo.findByUser(user);
-        else list = uarepo.findByUserAndSidoName(user, sidoName);
+        if (sidoName == null){
+            list = uarepo.findByUser(user);
+        } else{
+            list = uarepo.findByUserAndSidoName(user, sidoName);
+        }
 
         return list;
     }
@@ -163,7 +166,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void sendMail(String mail, String title, String content) {
-
         try {
             SimpleMailMessage simpleMessage = new SimpleMailMessage();
 
