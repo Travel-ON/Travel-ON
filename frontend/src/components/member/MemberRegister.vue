@@ -1,12 +1,14 @@
+<!-- eslint-disable no-alert -->
 <template>
   <div class="container">
     <form @submit.prevent="regist(credentials)">
-      <div>
-        <label for="name"
+      <div style="display: flex">
+        <v-text-field label="아이디" v-model="credentials.id" required filled :rules="nameRules"></v-text-field>
+        <!-- <label for="name"
           >아이디
           <input type="text" id="name" v-model="credentials.id" />
-        </label>
-        <button @click.self.prevent="idCheck(credentials.id)">중복 검사</button>
+        </label> -->
+        <v-btn @click="idCheck(credentials.id)">중복 검사</v-btn>
         <span v-if="!idChecked"> 아이디 중복을 확인해 주세요. </span>
       </div>
       <div>
@@ -27,14 +29,14 @@
           email
           <input type="text" id="email" v-model="credentials.email" />
         </label>
-        <span v-if="!emailRules"> 이메일 형식을 확인해 주세요. </span>
+        <span v-if="!isEmail(credentials.email)"> 이메일 형식을 확인해 주세요. </span>
       </div>
       <div>
         <label for="nickname"
           >닉네임
           <input type="text" id="nickname" v-model="credentials.nickname" />
         </label>
-        <button @click.self.prevent="nickCheck(credentials.nickname)">중복 검사</button>
+        <v-btn @click.self.prevent="nickCheck(credentials.nickname)">중복 검사</v-btn>
         <span v-if="!nickChecked"> 닉네임 중복을 확인해 주세요. </span>
       </div>
       <div>
@@ -43,7 +45,7 @@
           <input type="text" id="address" v-model="credentials.address" />
         </label>
       </div>
-      <button type="submit" :disabled="!(idChecked && nickChecked)">회원가입</button>
+      <v-btn type="submit" :disabled="!(idChecked && nickChecked && emailRules(credentials.email))">회원가입</v-btn>
     </form>
   </div>
 </template>
@@ -64,12 +66,19 @@ export default {
         nickname: "",
         address: "",
       },
-      idChecked: false,
-      nickChecked: false,
-      emailRules: (value) =>
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-          value,
-        ),
+      idChecked: "",
+      nickChecked: "",
+      nameRules: [
+        (v) => !!v || "아이디를 입력해주세요.",
+        (v) => this.idChecked === v || "아이디 중복 체크를 해주세요.",
+      ],
+      emailRules: [
+        (v) => !!v || "E-mail을 입력해주세요.",
+        (v) =>
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+            v,
+          ) || "E-mail형식을 확인해주세요.",
+      ],
     };
   },
   computed: {
@@ -95,7 +104,7 @@ export default {
       })
         .then((res) => {
           console.log(res);
-          this.idChecked = true;
+          this.idChecked = id;
           alert("아이디 중복 검사 완료!");
         })
         .catch((err) => {
@@ -112,7 +121,7 @@ export default {
       })
         .then((res) => {
           console.log(res);
-          this.nickChecked = true;
+          this.nickChecked = nickname;
           alert("닉네임 중복 검사 완료!");
         })
         .catch((err) => {
@@ -120,6 +129,10 @@ export default {
           console.log(err);
         });
     },
+    isEmail: (value) =>
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+        value,
+      ),
   },
 };
 </script>
