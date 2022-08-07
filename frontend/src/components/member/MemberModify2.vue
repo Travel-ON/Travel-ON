@@ -23,3 +23,16 @@
     <p>{{ logMessage }}</p>
   </form>
 </template>
+
+<script>
+import { mapActions } from "vuex";
+
+export default {
+  created() {
+    this.detail();
+  },
+  methods: {
+    ...mapActions(["detail"]),
+  },
+};
+</script>
