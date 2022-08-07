@@ -10,16 +10,19 @@ import com.travel.travel_on.model.repo.UserAchievementRepository;
 import com.travel.travel_on.model.repo.UserRepository;
 import com.travel.travel_on.model.repo.VisitationRepository;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -33,6 +36,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     AchievementRepository arepo;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Autowired
     private JavaMailSender javaMailSender;
@@ -55,6 +61,7 @@ public class UserServiceImpl implements UserService {
             return false;
         } else {
             User user = userDto.toEntity();
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             repo.save(user);
             return true;
         }
@@ -65,6 +72,11 @@ public class UserServiceImpl implements UserService {
         Optional<User> result = repo.findByRealId(userDto.getId());
         if (result.isPresent()) {
             User user = userDto.toEntity();
+            if(result.get().getPassword().equals(userDto.getPassword())){
+                user.setPassword(result.get().getPassword());
+            }else{
+                user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            }
             repo.save(user);
             return true;
         } else {
@@ -124,13 +136,11 @@ public class UserServiceImpl implements UserService {
         Optional<Visitation> result = vrepo.findByUserAndSidoName(user, sidoName);
         Visitation visitation;
         if (result.isPresent()) {
-            //업데이트
             visitation = result.get();
             visitation.setCount(visitation.getCount() + 1);
             vrepo.save(visitation);
 
         } else {
-            //생성
             visitation = Visitation.builder()
                     .user(user)
                     .sidoName(sidoName)
@@ -155,18 +165,14 @@ public class UserServiceImpl implements UserService {
     public void sendMail(String mail, String title, String content) {
 
         try {
-            // 텍스트로 구성된 메일을 생성할때
             SimpleMailMessage simpleMessage = new SimpleMailMessage();
 
-            // 받는사람 설정
             simpleMessage.setTo(mail);
-
             simpleMessage.setSubject(title);
             simpleMessage.setText(content);
 
-            System.out.println(javaMailSender);
-            // 메일 발송
             javaMailSender.send(simpleMessage);
+            log.info("메일 전송");
         } catch (MailException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
