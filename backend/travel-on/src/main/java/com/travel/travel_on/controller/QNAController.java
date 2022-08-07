@@ -6,21 +6,21 @@ import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.entity.QNA;
 import com.travel.travel_on.model.service.QNAServiceImpl;
 import com.travel.travel_on.model.service.UserServiceImpl;
+
 import io.swagger.annotations.ApiOperation;
-import lombok.Getter;
-import lombok.Setter;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;

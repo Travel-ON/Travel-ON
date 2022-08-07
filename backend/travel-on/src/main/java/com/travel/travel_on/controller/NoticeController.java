@@ -6,10 +6,13 @@ import com.travel.travel_on.entity.FAQ;
 import com.travel.travel_on.entity.Notice;
 import com.travel.travel_on.model.service.NoticeService;
 import com.travel.travel_on.model.service.UserService;
+
 import io.swagger.annotations.ApiOperation;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,9 +21,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
@@ -41,9 +46,9 @@ public class NoticeController {
     @GetMapping("/page") //페이징 디폴트 10개씩
     public ResponseEntity<?> selectPage(@PageableDefault(sort = "noticeId")Pageable pageable){
         Board result = new Board();
-        result.P = nsvc.findPage(pageable); // 페이징
-        result.previous = pageable.previousOrFirst().getPageNumber(); // 이전버튼용
-        result.next = pageable.next().getPageNumber(); // 다음버튼용
+        result.P = nsvc.findPage(pageable);
+        result.previous = pageable.previousOrFirst().getPageNumber();
+        result.next = pageable.next().getPageNumber();
 
         return new ResponseEntity<Board>(result, HttpStatus.OK);
     }
@@ -145,8 +150,8 @@ public class NoticeController {
     public ResponseEntity<?> searchFAQ(String keyword, @PageableDefault(sort = "faqId")Pageable pageable){
         FAQBoard result = new FAQBoard();
         result.PF = nsvc.search(keyword, pageable);
-        result.previous = pageable.previousOrFirst().getPageNumber(); // 이전 버튼용
-        result.next = pageable.next().getPageNumber(); // 다음 버튼용
+        result.previous = pageable.previousOrFirst().getPageNumber();
+        result.next = pageable.next().getPageNumber();
 
         return new ResponseEntity<FAQBoard>(result, HttpStatus.OK);
     }
@@ -156,40 +161,16 @@ public class NoticeController {
         return new ResponseEntity<String>("Sorry: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @Getter
-    @Setter
     static class Board{
         Page<Notice> P;
         int previous;
         int next;
-
-        public Board() {
-
-        }
-
-        public Board(Page<Notice> P, int previous, int next){
-            P = this.P;
-            previous = this.previous;
-            next = this.next;
-        }
     }
 
-    @Getter
-    @Setter
     static class FAQBoard{
         Page<FAQ> PF;
         int previous;
         int next;
-
-        public  FAQBoard(){
-
-        }
-
-        public FAQBoard(Page<FAQ> PF, int previous, int next){
-            PF = this.PF;
-            previous = this.previous;
-            next = this.next;
-        }
     }
 }
 

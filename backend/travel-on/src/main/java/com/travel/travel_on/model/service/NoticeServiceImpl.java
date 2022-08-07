@@ -4,6 +4,7 @@ import com.travel.travel_on.entity.FAQ;
 import com.travel.travel_on.entity.Notice;
 import com.travel.travel_on.model.repo.FAQRepository;
 import com.travel.travel_on.model.repo.NoticeRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
