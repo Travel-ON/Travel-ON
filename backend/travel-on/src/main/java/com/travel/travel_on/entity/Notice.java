@@ -35,20 +35,10 @@ public class Notice {
     @Column(name = "fixation_flag")
     private boolean fixationFlag;
 
-<<<<<<< HEAD
-    public void Notice(){
-    }
-
-    public void Notice(String title, String content){
-        this.title = title;
-        this.content = content;
-    }
-=======
-
     public Notice(String title, String content){
         this.title = title;
         this.content = content;
     }
 
->>>>>>> 9fb18faf969b58737a8d4392a6abab7f3e75f3f9
+
 }

@@ -31,9 +31,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-resources/**",
 
             // controller
-<<<<<<< HEAD
-            "/api/**",
-=======
             "/api/user/login",
             "/api/user/regist",
             "/api/user/idcheck",
@@ -42,7 +39,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/notice/page",
             "/api/notice/faq",
             "/api/notice/detail/**",
->>>>>>> 9fb18faf969b58737a8d4392a6abab7f3e75f3f9
     };
 
     @Autowired

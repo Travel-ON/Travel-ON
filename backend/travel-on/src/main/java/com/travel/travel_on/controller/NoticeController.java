@@ -53,18 +53,6 @@ public class NoticeController {
 
     @ApiOperation(value = "글쓰기: 공지사항을 작성한다.")
     @PostMapping("/regist")
-<<<<<<< HEAD
-    public ResponseEntity<?> regist(Notice notice){
-        Date time = new Date();
-        String nowTime = format.format(time);
-        try{
-            notice.setHits(0);
-            notice.setNoticeDate(nowTime);
-
-            boolean result = nsvc.write(notice);
-            if(result){
-                return new ResponseEntity<>(HttpStatus.CREATED);
-=======
     public ResponseEntity<?> regist(@ApiIgnore Authentication authentication, @RequestBody Notice notice){
         try{
             log.info("공지사항 글쓰기");
@@ -83,7 +71,6 @@ public class NoticeController {
                 } else {
                     return new ResponseEntity<>(HttpStatus.CONFLICT);
                 }
->>>>>>> 9fb18faf969b58737a8d4392a6abab7f3e75f3f9
             }else{
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
