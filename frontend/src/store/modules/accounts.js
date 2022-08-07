@@ -16,6 +16,7 @@ export const Accounts = {
   }),
   getters: {
     isLoggedIn: (state) => !!state.token, // 로그인 여부
+    token: (state) => state.token,
     currentUser: (state) => state.currentUser,
     admin: (state) => state.currentUser,
     title: (state) => state.title,
@@ -122,6 +123,25 @@ export const Accounts = {
         .catch(err => {
           console.error(err)
           alert("회원가입 실패")
+        });
+    },
+    detail( { getters } ) {
+      const token = getters.token;
+      console.log(token);
+      axios({
+        url: spring.accounts.detail(),
+        method: "get",
+        headers: {
+          // "Access-Control-Allow-Origin": "*",
+          // "Content-Type": "application/json; charset = utf-8",
+          Authorization: `Bearer ${ token }`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
         })
     }
   },

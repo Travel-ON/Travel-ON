@@ -16,7 +16,7 @@ export default {
     regist: () => HOST + USER + "regist", // 회원가입
     idCheck: () => HOST + USER + "idcheck/", // id 중복검사
     nickCheck: () => HOST + USER + "nickcheck/", // 닉네임 중복검사
-    userInfo: (id) => HOST + USER + "detail/" + String(id) + "/", // 회원정보 조회
+    detail: () => HOST + USER + "detail", // 회원정보 조회
     userModify: () => HOST + USER + "modify/", // 회원정보 수정
     userDelete: (id) => HOST + USER + "delete/" + String(id) + "/", // 회원정보 삭제
     userPassInit: () => HOST + USER + "email/", // 비밀번호 찾기(초기화)
