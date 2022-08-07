@@ -1,63 +1,138 @@
+<!-- eslint-disable no-alert -->
 <template>
   <div class="container">
-    <form @submit.prevent="submitForm">
-      <div>
-        <label for="name"
-          >이름
-          <input type="text" id="name" v-model="name" />
-        </label>
+    <form @submit.prevent="regist(credentials)">
+      <div style="display: flex">
+        <v-text-field label="아이디" v-model="credentials.id" required filled :rules="nameRules"></v-text-field>
+        <!-- <label for="name"
+          >아이디
+          <input type="text" id="name" v-model="credentials.id" />
+        </label> -->
+        <v-btn @click="idCheck(credentials.id)">중복 검사</v-btn>
+        <span v-if="!idChecked"> 아이디 중복을 확인해 주세요. </span>
       </div>
       <div>
         <label for="password"
           >비밀번호
-          <input type="password" id="password" v-model="password" />
+          <input type="password" id="password" v-model="credentials.password" />
         </label>
       </div>
       <div>
         <label for="passwordConfirm"
           >비밀번호 확인
-          <input type="password" id="passwordConfirm" v-model="passwordConfirm" />
+          <input type="password" id="passwordConfirm" v-model="credentials.passwordConfirm" />
         </label>
+        <span v-if="!isPassEqual"> 비밀번호가 일치하지 않습니다. </span>
       </div>
       <div>
         <label for="email">
           email
-          <input type="text" id="email" v-model="email" />
+          <input type="text" id="email" v-model="credentials.email" />
         </label>
+        <span v-if="!isEmail(credentials.email)"> 이메일 형식을 확인해 주세요. </span>
       </div>
       <div>
         <label for="nickname"
           >닉네임
-          <input type="text" id="nickname" v-model="nickname" />
+          <input type="text" id="nickname" v-model="credentials.nickname" />
         </label>
+        <v-btn @click.self.prevent="nickCheck(credentials.nickname)">중복 검사</v-btn>
+        <span v-if="!nickChecked"> 닉네임 중복을 확인해 주세요. </span>
       </div>
       <div>
         <label for="address"
           >사는곳
-          <input type="text" id="address" v-model="address" />
+          <input type="text" id="address" v-model="credentials.address" />
         </label>
       </div>
-      <button type="submit">회원가입</button>
+      <v-btn type="submit" :disabled="!(idChecked && nickChecked && emailRules(credentials.email))">회원가입</v-btn>
     </form>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import { mapActions } from "vuex";
+import spring from "@/api/spring_boot";
+
 export default {
   data() {
     return {
-      name: "",
-      password: "",
-      passwordConfirm: "",
-      email: "",
-      nickname: "",
-      address: "",
+      credentials: {
+        id: "",
+        password: "",
+        passwordConfirm: "",
+        email: "",
+        nickname: "",
+        address: "",
+      },
+      idChecked: "",
+      nickChecked: "",
+      nameRules: [
+        (v) => !!v || "아이디를 입력해주세요.",
+        (v) => this.idChecked === v || "아이디 중복 체크를 해주세요.",
+      ],
+      emailRules: [
+        (v) => !!v || "E-mail을 입력해주세요.",
+        (v) =>
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+            v,
+          ) || "E-mail형식을 확인해주세요.",
+      ],
     };
   },
+  computed: {
+    isPassEqual: (credentials) => credentials.password === credentials.passwordConfirm,
+  },
   methods: {
-    submitForm() {
-      console.log("dd");
+    ...mapActions(["regist"]),
+    idCheck(id) {
+      /*
+      id중복검사
+        성공시
+          idChecked 상태값 True
+        실패시
+          -
+        
+        idChecked True일때만 가입 진행
+      */
+      console.log(id);
+      axios({
+        url: spring.accounts.idCheck(),
+        method: "post",
+        params: { id },
+      })
+        .then((res) => {
+          console.log(res);
+          this.idChecked = id;
+          alert("아이디 중복 검사 완료!");
+        })
+        .catch((err) => {
+          alert("이미 있는 아이디 입니다!");
+          console.log(err);
+        });
     },
+    nickCheck(nickname) {
+      console.log(nickname);
+      axios({
+        url: spring.accounts.nickCheck(),
+        method: "post",
+        params: { nickname },
+      })
+        .then((res) => {
+          console.log(res);
+          this.nickChecked = nickname;
+          alert("닉네임 중복 검사 완료!");
+        })
+        .catch((err) => {
+          alert("이미 있는 닉네임 입니다!");
+          console.log(err);
+        });
+    },
+    isEmail: (value) =>
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+        value,
+      ),
   },
 };
 </script>

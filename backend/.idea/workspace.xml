@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9be0f6c1-227c-43bf-90cf-6067f73a0ac9" name="Changes" comment="" />
+    <list default="true" id="9be0f6c1-227c-43bf-90cf-6067f73a0ac9" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../frontend/src/api/spring_boot.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/api/spring_boot.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/member/MemberLogin.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/member/MemberLogin.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/components/member/MemberRegister.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/components/member/MemberRegister.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/src/store/modules/accounts.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/store/modules/accounts.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -55,20 +60,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/travel-on" />
-    <property name="node.js.detected.package.eslint" value="true" />
-    <property name="node.js.detected.package.tslint" value="true" />
-    <property name="node.js.selected.package.eslint" value="(autodetect)" />
-    <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="project.structure.last.edited" value="SDKs" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "C:/Users/Admin/ssafy/공통 프로젝트/SSAFYGit/S07P12B301/backend/travel-on"
+  }
+}]]></component>
   <component name="RunManager">
     <configuration name="travel-on [bootRun]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
