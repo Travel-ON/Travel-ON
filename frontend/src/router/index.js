@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import Member from "../views/Member.vue";
 import MemberLogin from "../components/member/MemberLogin.vue";
 import MemberRegister from "../components/member/MemberRegister.vue";
-import MemberModify1 from "../components/member/MemberModify1.vue";
-// import MemberModify2 from "../components/member/MemberModify2.vue";
+// import MemberModify1 from "../components/member/MemberModify1.vue";
+import MemberModify2 from "../components/member/MemberModify2.vue";
 import MemberSecession from "../components/member/MemberSecession.vue";
 import MemberLogout from "../components/member/MemberLogout.vue";
 import HomeView from "../views/HomeView.vue";
@@ -34,16 +34,16 @@ const routes = [
         name: "MemberRegister",
         component: MemberRegister,
       },
-      {
-        path: "modify",
-        name: "MemberModify1",
-        component: MemberModify1,
-      },
       // {
       //   path: "modify",
-      //   name: "MemberModify2",
-      //   component: MemberModify2,
+      //   name: "MemberModify1",
+      //   component: MemberModify1,
       // },
+      {
+        path: "modify",
+        name: "MemberModify2",
+        component: MemberModify2,
+      },
       {
         path: "secession",
         name: "MemberSecession",
@@ -52,7 +52,7 @@ const routes = [
       {
         path: "logout",
         name: "MemberLogout",
-        compnent: MemberLogout,
+        component: MemberLogout,
       },
     ],
   },
