@@ -1,6 +1,5 @@
 package com.travel.travel_on.model.service;
 
-import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.entity.Alarm;
 import com.travel.travel_on.entity.User;
 
