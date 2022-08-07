@@ -5,9 +5,8 @@ import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.entity.QNA;
 import com.travel.travel_on.entity.User;
 import com.travel.travel_on.model.repo.QNARepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
