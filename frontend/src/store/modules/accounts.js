@@ -82,7 +82,7 @@ export const Accounts = {
           router.push({ name: "login" })
         });
     },
-    logout({ commit }) {
+    logout({ commit, dispatch }) {
       dispatch("removeToken")
       commit("SET_CURRENT_USER", "");
       commit("SET_ADMIN", false);
@@ -132,8 +132,6 @@ export const Accounts = {
         url: spring.accounts.detail(),
         method: "get",
         headers: {
-          // "Access-Control-Allow-Origin": "*",
-          // "Content-Type": "application/json; charset = utf-8",
           Authorization: `Bearer ${ token }`,
         },
       })
