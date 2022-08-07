@@ -1,6 +1,5 @@
 package com.travel.travel_on.entity;
 
-
 import lombok.*;
 
 import javax.persistence.*;
