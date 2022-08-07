@@ -4,6 +4,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.model.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
     private UserService userService;
@@ -45,10 +47,12 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (Exception ex) {
 //            ResponseBodyWriteUtil.sendError(request, response, ex);
+
             filterChain.doFilter(request, response);
             return;
         }
-        filterChain.doFilter(request, response);
+
+       filterChain.doFilter(request, response);
     }
 
     @Transactional(readOnly = true)
@@ -66,6 +70,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             if (userId != null) {
                 // jwt 토큰에 포함된 계정 정보(userId) 통해 실제 디비에 해당 정보의 계정이 있는지 조회.
                 UserDto userDto = userService.select(userId);
+
                     if(userDto != null) {
                         // 식별된 정상 유저인 경우, 요청 context 내에서 참조 가능한 인증 정보(jwtAuthentication) 생성.
                         JwtUserDetails userDetails = new JwtUserDetails(userDto.toEntity());

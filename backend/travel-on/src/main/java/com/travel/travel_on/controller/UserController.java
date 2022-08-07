@@ -36,6 +36,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserController {
 
+    /**
+     * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저 식별.
+     * 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access Denied"}) 발생.
+     */
+
     @Autowired
     private UserService usvc;
 
@@ -66,7 +71,6 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody Map<String, String> param) {
         try {
             UserDto userDto = usvc.select(param.get("id"));
-//            if (userDto != null && userDto.getPassword().equals(param.get("password"))) {
             if (userDto != null && passwordEncoder.matches(param.get("password"), userDto.getPassword())) {
                 Map<String, Object> result=new HashMap<>();
                 result.put("accessToken", JwtTokenProvider.getToken(param.get("id")));
@@ -117,10 +121,6 @@ public class UserController {
     public ResponseEntity<?> detail(@ApiIgnore Authentication authentication) {
         try {
             log.info("회원정보 조회");
-            /**
-             * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저 식별.
-             * 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access Denied"}) 발생.
-             */
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = usvc.select(userId);
@@ -141,10 +141,6 @@ public class UserController {
         try {
             log.info("회원정보 수정");
 
-            /**
-             * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저 식별.
-             * 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access Denied"}) 발생.
-             */
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = usvc.select(userId);
@@ -169,11 +165,15 @@ public class UserController {
     }
 
     @ApiOperation(value = "회원 탈퇴: 사용자 정보를 삭제한다")
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete")
     @Transactional
-    public ResponseEntity<?> delete(@PathVariable String id) {
+    public ResponseEntity<?> delete(@ApiIgnore Authentication authentication) {
         try {
-            boolean result = usvc.delete(id);
+            log.info("회원 탈퇴");
+
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userId = userDetails.getUsername();
+            boolean result = usvc.delete(userId);
             if(result) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }else{
@@ -187,9 +187,12 @@ public class UserController {
     @ApiOperation(value = "칭호 변경: 사용자 칭호를 수정한다")
     @PutMapping("/title")
     @Transactional
-    public ResponseEntity<?> modifyTitle(@RequestBody Map<String, String> param) {
+    public ResponseEntity<?> modifyTitle(@ApiIgnore Authentication authentication, @RequestBody Map<String, String> param) {
         try {
-            UserDto userDto = usvc.select(param.get("id"));
+            log.info("칭호 변경");
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userId = userDetails.getUsername();
+            UserDto userDto = usvc.select(userId);
             if(userDto==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
             userDto.setUserTitle(param.get("title"));
@@ -206,9 +209,12 @@ public class UserController {
 
     @ApiOperation(value = "칭호 조회: 사용자가 얻은 칭호리스트를 조회한다", response = List.class)
     @PostMapping("/title")
-    public ResponseEntity<?> selectTitle(@RequestBody Map<String, String> param) {
+    public ResponseEntity<?> selectTitle(@ApiIgnore Authentication authentication, @RequestBody Map<String, String> param) {
         try {
-            UserDto userDto = usvc.select(param.get("id"));
+            log.info("칭호 조회");
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userId = userDetails.getUsername();
+            UserDto userDto = usvc.select(userId);
             if(userDto==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
             List<UserAchievement> list = usvc.selectUserAchievement(userDto.toEntity(), param.get("sidoName"));
@@ -253,10 +259,13 @@ public class UserController {
     }
 
     @ApiOperation(value = "여행횟수 조회: 사용자의 지역별 여행횟수를 조회한다", response = List.class)
-    @GetMapping("/trophy/{id}")
-    public ResponseEntity<?> selectTrophy(@PathVariable String id) {
+    @GetMapping("/trophy")
+    public ResponseEntity<?> selectTrophy(@ApiIgnore Authentication authentication) {
         try {
-            UserDto userDto = usvc.select(id);
+            log.info("여행횟수 조회");
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userId = userDetails.getUsername();
+            UserDto userDto = usvc.select(userId);
             if(userDto==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
             List<Visitation> list = usvc.selectVisitation(userDto.toEntity());
@@ -273,9 +282,12 @@ public class UserController {
     @ApiOperation(value = "여행횟수 업데이트: 사용자의 위치인증한 지역의 여행횟수를 1 증가시킨다")
     @PostMapping("/trophy")
     @Transactional
-    public ResponseEntity<?> updateTrophy(@RequestBody Map<String, String> param) {
+    public ResponseEntity<?> updateTrophy(@ApiIgnore Authentication authentication, @RequestBody Map<String, String> param) {
         try {
-            UserDto userDto = usvc.select(param.get("id"));
+            log.info("여행횟수 업데이트");
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userId = userDetails.getUsername();
+            UserDto userDto = usvc.select(userId);
             String sidoName = param.get("sidoName");
             if(userDto==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
@@ -303,10 +315,13 @@ public class UserController {
     }
 
     @ApiOperation(value = "신규알림 여부 조회: 신규알림이 생성됐는지 여부를 확인한다", response = Boolean.class)
-    @GetMapping("/alarm/{id}")
-    public ResponseEntity<?> alarmCheck(@PathVariable String id) {
+    @GetMapping("/alarm")
+    public ResponseEntity<?> alarmCheck(@ApiIgnore Authentication authentication) {
         try {
-            UserDto userDto = usvc.select(id);
+            log.info("여행횟수 업데이트");
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userId = userDetails.getUsername();
+            UserDto userDto = usvc.select(userId);
             if(userDto==null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }

@@ -1,5 +1,6 @@
 package com.travel.travel_on.controller;
 
+import com.travel.travel_on.auth.JwtUserDetails;
 import com.travel.travel_on.dto.AlarmDto;
 import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.entity.Alarm;
@@ -13,7 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -32,10 +35,14 @@ public class AlarmController {
     private AlarmService asvc;
 
     @ApiOperation(value = "알림 조회: 사용자가 알림 리스트를 조회한다", response = List.class)
-    @GetMapping("/{id}")
-    public ResponseEntity<?> selectAlarm(@PathVariable String id) {
+    @GetMapping("/")
+    public ResponseEntity<?> selectAlarm(@ApiIgnore Authentication authentication) {
         try {
-            UserDto userDto = usvc.select(id);
+            log.info("알림 조회");
+
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userId = userDetails.getUsername();
+            UserDto userDto = usvc.select(userId);
             if(userDto==null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -52,11 +59,15 @@ public class AlarmController {
     }
 
     @ApiOperation(value = "알림 삭제: 사용자가 알림 리스트를 전체 삭제한다")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/")
     @Transactional
-    public ResponseEntity<?> deleteAlarm(@PathVariable String id) {
+    public ResponseEntity<?> deleteAlarm(@ApiIgnore Authentication authentication) {
         try {
-            UserDto userDto = usvc.select(id);
+            log.info("알림 삭제");
+
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userId = userDetails.getUsername();
+            UserDto userDto = usvc.select(userId);
             if(userDto==null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
