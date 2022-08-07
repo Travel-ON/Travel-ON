@@ -4,23 +4,23 @@ import com.travel.travel_on.auth.JwtUserDetails;
 import com.travel.travel_on.dto.QNADto;
 import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.entity.QNA;
-import com.travel.travel_on.model.service.QNAServiceImpl;
-import com.travel.travel_on.model.service.UserServiceImpl;
+import com.travel.travel_on.model.service.QNAService;
+import com.travel.travel_on.model.service.UserService;
+
 import io.swagger.annotations.ApiOperation;
-import lombok.Getter;
-import lombok.Setter;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -32,32 +32,31 @@ import java.util.stream.Collectors;
 @Slf4j
 public class QNAController {
 
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
-    private UserServiceImpl usvc;
+    private UserService userService;
 
     @Autowired
-    private QNAServiceImpl qsvc;
+    private QNAService qnaService;
 
 
     @ApiOperation(value = "QNA 리스트 조회: QNA 글 조회(검색가능)", response = List.class)
     @GetMapping("/")
     public ResponseEntity<?> searchQNA(@ApiIgnore Authentication authentication, @RequestParam(value = "keyword", required = false)String keyword){
         try {
-            log.info("QNA 리스트 조회");
 
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
 
             if(userDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
             List<QNA> list;
             if(keyword == null || keyword.isEmpty()){
-                list = qsvc.selectAll(userDto.toEntity(), "null");
+                list = qnaService.selectAll(userDto.toEntity(), "null");
             }else{
-                list = qsvc.selectAll(userDto.toEntity(), keyword);
+                list = qnaService.selectAll(userDto.toEntity(), keyword);
             }
             List<QNADto> result = list.stream()
                     .map(r -> new QNADto(r))
@@ -77,16 +76,16 @@ public class QNAController {
 
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
 
             if(userDto == null){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             Date time = new Date();
-            String nowTime = format.format(time);
+            String nowTime = simpleDateFormat.format(time);
             QNADto qnaDto = new QNADto(0,userId,userDto.getNickname(),param.get("title"),param.get("content"),nowTime,false,null,null);
 
-            boolean result = qsvc.write(userDto, qnaDto);
+            boolean result = qnaService.write(userDto, qnaDto);
 
             if(result){
                 return new ResponseEntity<>(HttpStatus.CREATED);
@@ -107,9 +106,9 @@ public class QNAController {
 
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
 
-            QNADto result = qsvc.selectOne(qnaId);
+            QNADto result = qnaService.selectOne(qnaId);
 
             if(!userDto.isAdminFlag() && !userId.equals(result.getRealId())){
                 return  new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -134,7 +133,7 @@ public class QNAController {
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
 
-            QNADto qnaDto = qsvc.selectOne(Integer.parseInt(param.get("qnaId")));
+            QNADto qnaDto = qnaService.selectOne(Integer.parseInt(param.get("qnaId")));
 
             if(!userId.equals(qnaDto.getRealId())){
                 return  new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -145,7 +144,7 @@ public class QNAController {
 
             qnaDto.setTitle(param.get("title"));
             qnaDto.setContent(param.get("content"));
-            boolean result = qsvc.update(qnaDto);
+            boolean result = qnaService.update(qnaDto);
             if(result){
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }else{
@@ -165,13 +164,13 @@ public class QNAController {
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
 
-            QNADto qnaDto = qsvc.selectOne(qnaId);
+            QNADto qnaDto = qnaService.selectOne(qnaId);
 
             if(!userId.equals(qnaDto.getRealId())){
                 return  new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
 
-            boolean result = qsvc.delete(qnaId);
+            boolean result = qnaService.delete(qnaId);
             if(result){
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }else{
@@ -190,7 +189,7 @@ public class QNAController {
 
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
 
             if(!userDto.isAdminFlag()){
                 return  new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -198,9 +197,9 @@ public class QNAController {
 
             List<QNA> list;
             if(keyword == null || keyword.isEmpty()){
-                list = qsvc.adminSelectAll("null");
+                list = qnaService.adminSelectAll("null");
             }else{
-                list = qsvc.adminSelectAll(keyword);
+                list = qnaService.adminSelectAll(keyword);
             }
             List<QNADto> result = list.stream()
                     .map(r -> new QNADto(r))
@@ -220,13 +219,13 @@ public class QNAController {
 
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
 
             if(!userDto.isAdminFlag()){
                 return  new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
 
-            List<QNA> list = qsvc.noneAnswerAll();
+            List<QNA> list = qnaService.noneAnswerAll();
 
             List<QNADto> result = list.stream()
                     .map(r -> new QNADto(r))
@@ -246,23 +245,23 @@ public class QNAController {
 
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
 
             if(!userDto.isAdminFlag()){
                 return  new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
 
-            QNADto qnaDto = qsvc.selectOne(Integer.parseInt(param.get("qnaId")));
+            QNADto qnaDto = qnaService.selectOne(Integer.parseInt(param.get("qnaId")));
             if(qnaDto.isAnswerFlag()){
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
             Date time = new Date();
-            String nowTime = format.format(time);
+            String nowTime = simpleDateFormat.format(time);
             qnaDto.setAnswerFlag(true);
             qnaDto.setAnswer(param.get("answer"));
             qnaDto.setAnswerDate(nowTime);
 
-            boolean result = qsvc.update(qnaDto);
+            boolean result = qnaService.update(qnaDto);
             if(result){
                 return new ResponseEntity<>(HttpStatus.CREATED);
             }else{
@@ -281,20 +280,20 @@ public class QNAController {
 
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
 
             if(!userDto.isAdminFlag()){
                 return  new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
 
-            QNADto qnaDto = qsvc.selectOne(Integer.parseInt(param.get("qnaId")));
+            QNADto qnaDto = qnaService.selectOne(Integer.parseInt(param.get("qnaId")));
             if(!qnaDto.isAnswerFlag()){
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
 
             qnaDto.setAnswer(param.get("answer"));
 
-            boolean result = qsvc.update(qnaDto);
+            boolean result = qnaService.update(qnaDto);
             if(result){
                 return new ResponseEntity<>(HttpStatus.CREATED);
             }else{
@@ -313,13 +312,13 @@ public class QNAController {
 
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
 
             if(!userDto.isAdminFlag()){
                 return  new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
 
-            QNADto qnaDto = qsvc.selectOne(qnaId);
+            QNADto qnaDto = qnaService.selectOne(qnaId);
             if(!qnaDto.isAnswerFlag()){
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
@@ -328,7 +327,7 @@ public class QNAController {
             qnaDto.setAnswer(null);
             qnaDto.setAnswerFlag(false);
 
-            boolean result = qsvc.update(qnaDto);
+            boolean result = qnaService.update(qnaDto);
             if(result){
                 return new ResponseEntity<>(HttpStatus.CREATED);
             }else{

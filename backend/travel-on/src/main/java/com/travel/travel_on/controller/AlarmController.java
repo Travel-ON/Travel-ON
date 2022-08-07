@@ -16,9 +16,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.transaction.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,10 +31,10 @@ import java.util.stream.Collectors;
 public class AlarmController {
 
     @Autowired
-    private UserService usvc;
+    private UserService userService;
 
     @Autowired
-    private AlarmService asvc;
+    private AlarmService alarmService;
 
     @ApiOperation(value = "알림 조회: 사용자가 알림 리스트를 조회한다", response = List.class)
     @GetMapping("/")
@@ -42,12 +44,12 @@ public class AlarmController {
 
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
             if(userDto==null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            List<Alarm> list = asvc.selectAll(userDto.toEntity());
+            List<Alarm> list = alarmService.selectAll(userDto.toEntity());
             List<AlarmDto> result = list.stream()
                     .map(r -> new AlarmDto(r))
                     .collect(Collectors.toList());
@@ -67,11 +69,11 @@ public class AlarmController {
 
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
-            UserDto userDto = usvc.select(userId);
+            UserDto userDto = userService.select(userId);
             if(userDto==null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            asvc.deleteAll(userDto.toEntity());
+            alarmService.deleteAll(userDto.toEntity());
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return exceptionHandling(e);
