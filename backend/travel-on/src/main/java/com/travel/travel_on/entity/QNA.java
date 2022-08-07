@@ -27,13 +27,13 @@ public class QNA implements Serializable {
     @Column(name="id", length = 20,nullable = false)
     private String realId;
 
-    @Column(name="nickname", length = 20,nullable = false)
+    @Column(length = 20,nullable = false)
     private String nickname;
 
-    @Column(name="title", length = 70, nullable = false)
+    @Column(length = 70, nullable = false)
     private String title;
 
-    @Column(name="content", nullable = false)
+    @Column(nullable = false)
     private String content;
 
     @Column(name="qna_date", nullable = false)
@@ -42,10 +42,10 @@ public class QNA implements Serializable {
     @Column(name="answer_flag", nullable = false)
     private boolean answerFlag;
 
-    @Column(name="answer", nullable = true)
+    @Column
     private String answer;
 
-    @Column(name="answer_date", nullable = true)
+    @Column(name="answer_date")
     private String answerDate;
 
     public  void setUser(User user){

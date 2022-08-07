@@ -34,7 +34,6 @@ public class Notice {
     @Column(name = "fixation_flag")
     private boolean fixationFlag;
 
-
     public Notice(String title, String content){
         this.title = title;
         this.content = content;
