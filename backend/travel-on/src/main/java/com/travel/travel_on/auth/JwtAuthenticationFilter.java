@@ -63,7 +63,6 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             String userId = decodedJWT.getSubject();
             if (userId != null) {
                 UserDto userDto = userService.select(userId);
-
                     if(userDto != null) {
                         JwtUserDetails userDetails = new JwtUserDetails(userDto.toEntity());
 

@@ -40,17 +40,17 @@ public class QNAController {
     @Autowired
     private QNAService qnaService;
 
-
     @ApiOperation(value = "QNA 리스트 조회: QNA 글 조회(검색가능)", response = List.class)
     @GetMapping("/")
     public ResponseEntity<?> searchQNA(@ApiIgnore Authentication authentication, @RequestParam(value = "keyword", required = false)String keyword){
         try {
-
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
 
-            if(userDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            if(userDto == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
 
             List<QNA> list;
             if(keyword == null || keyword.isEmpty()){
@@ -61,7 +61,6 @@ public class QNAController {
             List<QNADto> result = list.stream()
                     .map(r -> new QNADto(r))
                     .collect(Collectors.toList());
-            log.info("QNAList : {}", result.toString());
             return new ResponseEntity<List>(result, HttpStatus.OK);
         }catch (Exception e) {
             return exceptionHandling(e);
@@ -72,8 +71,6 @@ public class QNAController {
     @PostMapping("/regist")
     public ResponseEntity<?> regist(@ApiIgnore Authentication authentication, @RequestBody Map<String, String> param){
         try{
-            log.info("QNA 글쓰기");
-
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
@@ -102,8 +99,6 @@ public class QNAController {
     @GetMapping("/detail/{qnaId}")
     public ResponseEntity<?> select(@ApiIgnore Authentication authentication, @PathVariable Integer qnaId){
         try{
-            log.info("QNA 상세 조회");
-
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
@@ -128,8 +123,6 @@ public class QNAController {
     @PutMapping("/modify")
     public ResponseEntity<?> modify(@ApiIgnore Authentication authentication, @RequestBody Map<String, String> param){
         try{
-            log.info("QNA 수정");
-
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
 
@@ -159,8 +152,6 @@ public class QNAController {
     @DeleteMapping("delete/{qnaId}")
     public ResponseEntity<?> delete(@ApiIgnore Authentication authentication, @PathVariable Integer qnaId){
         try{
-            log.info("QNA 삭제");
-
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
 
@@ -185,8 +176,6 @@ public class QNAController {
     @GetMapping("/admin")
     public ResponseEntity<?> adminSelect(@ApiIgnore Authentication authentication, @RequestParam(value = "keyword", required = false)String keyword){
         try{
-            log.info("QNA 관리자모드 리스트 조회");
-
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
@@ -204,7 +193,6 @@ public class QNAController {
             List<QNADto> result = list.stream()
                     .map(r -> new QNADto(r))
                     .collect(Collectors.toList());
-            log.info("QNAList : {}", result.toString());
             return new ResponseEntity<List>(result, HttpStatus.OK);
         }catch (Exception e){
             return exceptionHandling(e);
@@ -215,8 +203,6 @@ public class QNAController {
     @GetMapping("/admin/answer")
     public ResponseEntity<?> adminSelect(@ApiIgnore Authentication authentication){
         try{
-            log.info("QNA 관리자모드 답변대기글 리스트 조회");
-
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
@@ -230,7 +216,6 @@ public class QNAController {
             List<QNADto> result = list.stream()
                     .map(r -> new QNADto(r))
                     .collect(Collectors.toList());
-            log.info("QNAList : {}", result.toString());
             return new ResponseEntity<List>(result, HttpStatus.OK);
         }catch (Exception e){
             return exceptionHandling(e);
@@ -241,8 +226,6 @@ public class QNAController {
     @PutMapping("/admin/regist")
     public ResponseEntity<?> adminRegist(@ApiIgnore Authentication authentication, @RequestBody Map<String, String> param){
         try{
-            log.info("QNA 관리자 답변 등록");
-
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
@@ -276,8 +259,6 @@ public class QNAController {
     @PutMapping("/admin/modify")
     public ResponseEntity<?> adminModify(@ApiIgnore Authentication authentication, @RequestBody Map<String, String> param){
         try{
-            log.info("QNA 관리자 답변 수정");
-
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
@@ -308,8 +289,6 @@ public class QNAController {
     @PutMapping("/admin/delete/{qnaId}")
     public ResponseEntity<?> adminDelete(@ApiIgnore Authentication authentication, @PathVariable Integer qnaId){
         try{
-            log.info("QNA 관리자 답변 삭제");
-
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);

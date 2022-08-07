@@ -21,7 +21,7 @@ public class UserDto {
     private int reportCount;
     private boolean alarmFlag;
 
-    UserDto(String id,String nickname,String password,String email,String address ){
+    public UserDto(String id,String nickname,String password,String email,String address ){
         this.id=id;
         this.nickname=nickname;
         this.password=password;
