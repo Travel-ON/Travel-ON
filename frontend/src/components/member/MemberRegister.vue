@@ -43,7 +43,7 @@
           <input type="text" id="address" v-model="credentials.address" />
         </label>
       </div>
-      <button type="submit" :disabled="!(idChecked && nickChecked && emailRules && isPassEqual)">회원가입</button>
+      <button type="submit" :disabled="!(idChecked && nickChecked)">회원가입</button>
     </form>
   </div>
 </template>
