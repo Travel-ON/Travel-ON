@@ -9,7 +9,7 @@
     <div>
       <label for="password"
         >비밀번호
-        <input id="password" type="text" v-model="credentials.password" />
+        <input id="password" type="password" v-model="credentials.password" />
       </label>
     </div>
     <button type="submit">로그인</button>

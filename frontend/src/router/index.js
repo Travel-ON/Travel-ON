@@ -52,7 +52,7 @@ const routes = [
       {
         path: "logout",
         name: "MemberLogout",
-        compnent: MemberLogout,
+        component: MemberLogout,
       },
     ],
   },
