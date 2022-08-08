@@ -1,72 +1,112 @@
 <!-- eslint-disable no-alert -->
 <template>
-  <v-card style="padding: 80px 15%">
-    <v-form ref="form" v-model="valid" lazy-validation>
-      <div style="display: flex">
-        <div style="width: 70%; margin-right: 20px">
-          <v-text-field label="아이디" v-model="credentials.id" required :rules="nameRules"></v-text-field>
+  <div>
+    <v-card style="padding: 80px 15%; margin-bottom: 40px" color="#e1effd">
+      <v-form ref="form" v-model="valid" lazy-validation>
+        <div style="display: flex">
+          <div style="width: 70%; margin-right: 20px">
+            <v-text-field
+              label="아이디"
+              v-model="credentials.id"
+              required
+              :rules="nameRules"
+              bg-color="#c9deff"
+            ></v-text-field>
+          </div>
+          <div style="width: 30%">
+            <v-btn
+              @click="idCheck(credentials.id)"
+              :disabled="idDisable"
+              :prepend-icon="idChecked ? 'mdi-check-circle' : 'mdi-close-circle'"
+              :color="idChecked ? '#c9deff' : 'red-lighten-4'"
+              style="margin-top: 10px; left: 0"
+              >중복 검사</v-btn
+            >
+            <div v-if="!idChecked" style="margin-top: 12px; font-size: 16px; color: #b00020">
+              아이디 중복을 확인해 주세요.
+            </div>
+          </div>
         </div>
-        <div style="width: 30%">
-          <v-btn
-            @click="idCheck(credentials.id)"
-            :prepend-icon="idChecked ? 'mdi-check-circle' : 'mdi-close-circle'"
-            :color="idChecked ? '#c9deff' : 'red-lighten-4'"
-            style="margin-top: 10px; left: 0"
-            >중복 검사</v-btn
-          >
-          <div v-if="!idChecked" style="margin-top: 12px">아이디 중복을 확인해 주세요.</div>
+        <div style="display: flex">
+          <div style="width: 70%; margin-right: 20px">
+            <v-text-field
+              label="닉네임"
+              v-model="credentials.nickname"
+              required
+              :rules="nicknameRules"
+              bg-color="#c9deff"
+            ></v-text-field>
+          </div>
+          <div style="width: 30%">
+            <v-btn
+              @click="nickCheck(credentials.nickname)"
+              :disabled="nickDisable"
+              :prepend-icon="nickChecked ? 'mdi-check-circle' : 'mdi-close-circle'"
+              :color="nickChecked ? '#c9deff' : 'red-lighten-4'"
+              style="margin-top: 10px; left: 0"
+              >중복 검사</v-btn
+            >
+            <div v-if="!nickChecked" style="margin-top: 12px; font-size: 16px; color: #b00020">
+              닉네임 중복을 확인해 주세요.
+            </div>
+          </div>
         </div>
-      </div>
-      <div style="display: flex">
-        <div style="width: 70%; margin-right: 20px">
-          <v-text-field label="닉네임" v-model="credentials.nickname" required :rules="nicknameRules"></v-text-field>
+        <div>
+          <v-text-field
+            label="비밀번호"
+            v-model="credentials.password"
+            required
+            :rules="passwordRules"
+            @click:append="passwordShow = !passwordShow"
+            type="password"
+            bg-color="#c9deff"
+          ></v-text-field>
         </div>
-        <div style="width: 30%">
-          <v-btn
-            @click="nickCheck(credentials.nickname)"
-            :prepend-icon="nickChecked ? 'mdi-check-circle' : 'mdi-close-circle'"
-            :color="nickChecked ? '#c9deff' : 'red-lighten-4'"
-            style="margin-top: 10px; left: 0"
-            >중복 검사</v-btn
-          >
-          <div v-if="!nickChecked" style="margin-top: 12px">닉네임 중복을 확인해 주세요.</div>
+        <div>
+          <v-text-field
+            label="비밀번호 확인"
+            v-model="credentials.passwordConfirm"
+            required
+            :rules="passwordConfirmRules"
+            @click:append="passwordConfirmShow = !passwordConfirmShow"
+            type="password"
+            bg-color="#c9deff"
+          ></v-text-field>
         </div>
-      </div>
-      <div>
-        <v-text-field
-          label="비밀번호"
-          v-model="credentials.password"
-          required
-          :rules="passwordRules"
-          @click:append="passwordShow = !passwordShow"
-          type="password"
-        ></v-text-field>
-      </div>
-      <div>
-        <v-text-field
-          label="비밀번호 확인"
-          v-model="credentials.passwordConfirm"
-          required
-          :rules="passwordConfirmRules"
-          @click:append="passwordConfirmShow = !passwordConfirmShow"
-          type="password"
-        ></v-text-field>
-      </div>
-      <div>
-        <v-text-field
-          label="e-mail"
-          v-model="credentials.email"
-          required
-          :rules="emailRules"
-          @click:append="passwordConfirmShow = !passwordConfirmShow"
-        ></v-text-field>
-      </div>
-      <div>
-        <v-text-field label="주소" v-model="credentials.address" required :rules="addressRules"></v-text-field>
-      </div>
-      <v-btn :disabled="!valid" @click="regist(credentials)" size="x-large" color="#c9deff">회원가입</v-btn>
-    </v-form>
-  </v-card>
+        <div>
+          <v-text-field
+            label="e-mail"
+            v-model="credentials.email"
+            required
+            :rules="emailRules"
+            @click:append="passwordConfirmShow = !passwordConfirmShow"
+            bg-color="#c9deff"
+          ></v-text-field>
+        </div>
+        <div style="display: flex">
+          <v-select
+            v-model="credentials.sidoCode"
+            :items="sido"
+            item-title="name"
+            item-value="code"
+            label="거주 지역"
+            persistent-hint
+            single-line
+            bg-color="#c9deff"
+          ></v-select>
+        </div>
+      </v-form>
+    </v-card>
+    <v-btn
+      :disabled="!valid"
+      @click="regist(credentials)"
+      size="x-large"
+      color="#c9deff"
+      style="margin-bottom: 40px"
+      bg-color="#c9deff"
+      >회원가입</v-btn
+    >
+  </div>
 </template>
 
 <script>
@@ -83,11 +123,32 @@ export default {
         passwordConfirm: "",
         email: "",
         nickname: "",
-        address: "",
+        sidoCode: "",
       },
+      sido: [
+        { code: "4200000000", name: "강원" },
+        { code: "4100000000", name: "경기" },
+        { code: "4800000000", name: "경남" },
+        { code: "4700000000", name: "경북" },
+        { code: "2900000000", name: "광주" },
+        { code: "2700000000", name: "대구" },
+        { code: "3000000000", name: "대전" },
+        { code: "2600000000", name: "부산" },
+        { code: "1100000000", name: "서울" },
+        { code: "3611000000", name: "세종특별자치시" },
+        { code: "3100000000", name: "울산" },
+        { code: "2800000000", name: "인천" },
+        { code: "4600000000", name: "전남" },
+        { code: "4500000000", name: "전북" },
+        { code: "5000000000", name: "제주특별자치도" },
+        { code: "4400000000", name: "충남" },
+        { code: "4300000000", name: "충북" },
+      ],
       valid: true,
       passwordShow: false,
       passwordConfirmShow: false,
+      idDisable: true,
+      nickDisable: true,
       idChecked: "",
       nickChecked: "",
       nameRules: [
@@ -105,7 +166,10 @@ export default {
         (v) => !!v || "비밀번호를 다시 입력해주세요.",
         (v) => v === this.credentials.password || "비밀번호가 일치하지 않습니다.",
       ],
-      nicknameRules: [(v) => !!v || "닉네임을 입력해주세요."],
+      nicknameRules: [
+        (v) => !!v || "닉네임을 입력해주세요.",
+        (v) => v.length <= 10 || "닉네임은 10자 이내로 생성해주세요.",
+      ],
       emailRules: [
         (v) => !!v || "E-mail을 입력해주세요.",
         (v) =>
@@ -113,25 +177,38 @@ export default {
             v,
           ) || "E-mail형식을 확인해주세요.",
       ],
-      addressRules: [
-        (v) => !!v || "주소를 입력해주세요.",
-        (v) =>
-          /(([가-힣A-Za-z·\d~\-.]{2,}(로|길).[\d]+)|([가-힣A-Za-z·\d~\-.]+(읍|동)))/.test(v) ||
-          "유효한 주소를 입력해주세요.(읍/동까지)",
-      ],
+      // addressRules: [
+      //   (v) => !!v || "주소를 입력해주세요.",
+      //   (v) =>
+      //     /(([가-힣A-Za-z·\d~\-.]{2,}(로|길).[\d]+)|([가-힣A-Za-z·\d~\-.]+(읍|동)))/.test(v) ||
+      //     "유효한 주소를 입력해주세요.(읍/동까지)",
+      // ],
     };
   },
   watch: {
-    // eslint-disable-next-line func-names
+    /* eslint-disable */
     "credentials.id": function () {
       this.idChecked = "";
+      this.idDisable = false;
+      this.nameRules.forEach((element) => {
+        if (typeof element(this.credentials.id) !== "boolean") {
+          this.idDisable = true;
+        }
+      });
     },
     // eslint-disable-next-line func-names
     "credentials.nickname": function () {
       this.nicknameChecked = "";
+      this.nickDisable = false;
+      this.nicknameRules.forEach((element) => {
+        if (typeof element(this.credentials.nickname) !== "boolean") {
+          this.nickDisable = true;
+        }
+      });
     },
   },
   computed: {},
+  mounted() {},
   methods: {
     ...mapActions(["regist"]),
     idCheck(id) {
