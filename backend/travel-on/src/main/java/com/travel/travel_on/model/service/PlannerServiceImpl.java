@@ -74,7 +74,7 @@ public class PlannerServiceImpl implements PlannerService{
                 .user(user)
                 .visitedPlace(visitPlaceDto.getVisitedPlace())
                 .ratePoint(visitPlaceDto.getRatePoint())
-                .reivew(visitPlaceDto.getReivew())
+                .review(visitPlaceDto.getReview())
                 .sidoName(visitPlaceDto.getSidoName())
                 .gugunName(visitPlaceDto.getGugunName())
                 .visitDate(visitPlaceDto.getVisitDate())
@@ -103,6 +103,14 @@ public class PlannerServiceImpl implements PlannerService{
     }
 
     @Override
+    public boolean writePlace(Place place) {
+        if(place == null) return false;
+        System.out.println(place.toString());
+        pRepo.save(place);
+        return true;
+    }
+
+    @Override
     public boolean updateVisit(VisitPlaceDto visitPlaceDto) {
         Optional<VisitPlace> result = vRepo.findById(visitPlaceDto.getVisitPlaceId());
 
@@ -110,7 +118,7 @@ public class PlannerServiceImpl implements PlannerService{
             VisitPlace visitPlace = result.get();
             visitPlace.setVisitedPlace(visitPlaceDto.getVisitedPlace());
             visitPlace.setRatePoint(visitPlaceDto.getRatePoint());
-            visitPlace.setReivew(visitPlaceDto.getReivew());
+            visitPlace.setReview(visitPlaceDto.getReview());
             visitPlace.setSidoName(visitPlaceDto.getSidoName());
             visitPlace.setGugunName(visitPlaceDto.getGugunName());
             visitPlace.setVisitDate(visitPlaceDto.getVisitDate());
@@ -123,26 +131,9 @@ public class PlannerServiceImpl implements PlannerService{
     }
 
     @Override
-    public boolean updateExpected(VisitExpectedDto visitExpectedDto) {
-        Optional<VisitExpected> result = eRepo.findById(visitExpectedDto.getVisitExpectedId());
-
-        if(result.isPresent()){
-            VisitExpected visitExpected = result.get();
-            visitExpected.setVisitExpectedId(visitExpectedDto.getVisitExpectedId());
-            visitExpected.setExpectedPlace(visitExpectedDto.getExpectedPlace());
-            visitExpected.setSidoName(visitExpectedDto.getSidoName());
-            visitExpected.setGugunName(visitExpectedDto.getGugunName());
-            visitExpected.setExpectedDate(visitExpectedDto.getExpectedDate());
-            eRepo.save(visitExpected);
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-    @Override
     public boolean deleteVisit(Integer id) {
         Optional<VisitPlace> result = vRepo.findById(id);
+
         if(result == null){
             return false;
         }else{
@@ -168,11 +159,13 @@ public class PlannerServiceImpl implements PlannerService{
 
     @Override
     public List<Place> autoKeyward(String keyword) {
+
         List<Place> list = pRepo.findByVisitPlaceContaining(keyword);
         List<Place> pList = new ArrayList<>();
 
         int cnt = 0;
         for(Place place : list){
+            System.out.println(place);
             pList.add(place);
             cnt++;
             if(cnt == 4) break;

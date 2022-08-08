@@ -11,6 +11,8 @@ import com.travel.travel_on.entity.VisitPlace;
 import com.travel.travel_on.model.service.PlannerService;
 import com.travel.travel_on.model.service.UserService;
 import io.swagger.annotations.ApiOperation;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,7 +40,7 @@ public class PlannerController {
 
     @ApiOperation(value = "방문장소 조회: 방문장소 리스트 조회", response = List.class)
     @GetMapping("/page")
-    public ResponseEntity<?> searchVisitPlace(@ApiIgnore Authentication authentication){
+    public ResponseEntity<?> searchVisitPlace(@ApiIgnore Authentication authentication, @RequestBody Filter filter){
         try {
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
@@ -85,7 +88,7 @@ public class PlannerController {
     @PostMapping("/regist")
     public ResponseEntity<?> registVisitPlace(@ApiIgnore Authentication authentication, @RequestBody Map<String, String> param){
         try{
-            log.info("QNA 글쓰기");
+            log.info("방문장소 작성하기");
 
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
@@ -95,14 +98,24 @@ public class PlannerController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            Double rate = Double.parseDouble(param.get("ratePoint"));
-            VisitPlaceDto visitPlaceDto = new VisitPlaceDto(0, param.get("visitPlace"), rate, param.get("reivew"), param.get("sidoName"), param.get("gugunName"), param.get("visitDate"));
+            Double rate = null;
+            if(param.get("ratePoint") != null){
+               rate = Double.parseDouble(param.get("ratePoint"));
+            }
+            VisitPlaceDto visitPlaceDto = new VisitPlaceDto(0, param.get("visitedPlace"), rate, param.get("review"), param.get("sidoName"), param.get("gugunName"), param.get("visitDate"));
 
+            Place place = new Place();
+            place.setVisitPlace(param.get("visitedPlace"));
+            place.setSidoName(param.get("sidoName"));
+            place.setGugunName(param.get("gugunName"));
+            plannerService.writePlace(place);
             boolean result = plannerService.writeVisit(userDto, visitPlaceDto);
 
             if(result){
+                System.out.println("suceess");
                 return new ResponseEntity<>(HttpStatus.CREATED);
             }else{
+                System.out.println("fail");
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
 
@@ -127,6 +140,11 @@ public class PlannerController {
 
             VisitExpectedDto visitExpectedDto = new VisitExpectedDto(0, param.get("expectedPlace"), param.get("sidoName"), param.get("gugunName"), param.get("expectedDate"));
 
+            Place place = new Place();
+            place.setVisitPlace(param.get("visitPlace"));
+            place.setSidoName(param.get("sidoName"));
+            place.setGugunName(param.get("gugunName"));
+            plannerService.writePlace(place);
             boolean result = plannerService.writeExpected(userDto, visitExpectedDto);
 
             if(result){
@@ -157,7 +175,7 @@ public class PlannerController {
             VisitPlaceDto result = plannerService.selectVisitOne(visitPlaceId);
 
             if(result == null){
-                return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return  new ResponseEntity<>(HttpStatus.CONFLICT);
             }else{
                 return new ResponseEntity<VisitPlaceDto>(result, HttpStatus.OK);
             }
@@ -211,7 +229,7 @@ public class PlannerController {
             visitPlaceDto.setVisitPlaceId(Integer.parseInt(param.get("visitPlaceId")));
             visitPlaceDto.setVisitedPlace(param.get("visitedPlace"));
             visitPlaceDto.setRatePoint(Double.parseDouble(param.get("ratePoint")));
-            visitPlaceDto.setReivew(param.get("reivew"));
+            visitPlaceDto.setReview(param.get("review"));
             visitPlaceDto.setSidoName(param.get("sidoName"));
             visitPlaceDto.setGugunName(param.get("gugunName"));
             visitPlaceDto.setVisitDate(param.get("visitDate"));
@@ -227,9 +245,9 @@ public class PlannerController {
         }
     }
 
-    @ApiOperation(value = "글 수정: 방문예정장소 글 수정")
-    @PutMapping("/expect/modify")
-    public ResponseEntity<?> modifyExpect(@ApiIgnore Authentication authentication, @RequestBody Map<String, String> param){
+    @ApiOperation(value = "글 수정: 방문예정장소 글 삭제 후 방문장소로 이동")
+    @PutMapping("/expect/modify/{visitExpectedId}")
+    public ResponseEntity<?> modifyExpect(@ApiIgnore Authentication authentication, @PathVariable Integer visitExpectedId){
         try{
             log.info("방문예정장소 수정");
 
@@ -241,14 +259,19 @@ public class PlannerController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            VisitExpectedDto visitExpectedDto = plannerService.selectExpectedOne(Integer.parseInt(param.get("visitExpectedId")));
+            VisitExpectedDto visitExpectedDto = plannerService.selectExpectedOne(visitExpectedId);
 
-            visitExpectedDto.setExpectedPlace(param.get("expectedPlace"));
-            visitExpectedDto.setSidoName(param.get("sidoName"));
-            visitExpectedDto.setGugunName(param.get("gugunName"));
-            visitExpectedDto.setExpectedDate(param.get("expectedDate"));
+            VisitPlaceDto visit = new VisitPlaceDto();
+            visit.setVisitedPlace(visitExpectedDto.getExpectedPlace());
+            visit.setVisitDate(visitExpectedDto.getExpectedDate());
+            visit.setSidoName(visitExpectedDto.getSidoName());
+            visit.setGugunName(visitExpectedDto.getGugunName());
 
-            boolean result = plannerService.updateExpected(visitExpectedDto);
+            if(!plannerService.writeVisit(userDto, visit)){
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+
+            boolean result = plannerService.deleteExpected(visitExpectedId);
             if(result){
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }else{
@@ -260,7 +283,7 @@ public class PlannerController {
     }
 
     @ApiOperation(value = "글 삭제: 방문장소 글 삭제")
-    @DeleteMapping("delete/{visitPlaceId}")
+    @DeleteMapping("/delete/{visitPlaceId}")
     public ResponseEntity<?> deleteVisit(@ApiIgnore Authentication authentication, @PathVariable Integer visitPlaceId){
         try{
             log.info("방문장소 삭제");
@@ -285,7 +308,7 @@ public class PlannerController {
     }
 
     @ApiOperation(value = "글 삭제: 방문예정장소 글 삭제")
-    @DeleteMapping("delete/{visitExpectedId}")
+    @DeleteMapping("/expect/delete/{visitExpectedId}")
     public ResponseEntity<?> deleteExpected(@ApiIgnore Authentication authentication, @PathVariable Integer visitExpectedId){
         try{
             log.info("방문장소 삭제");
@@ -311,8 +334,9 @@ public class PlannerController {
 
     @ApiOperation(value = "글 완성: 키워드 자동완성")
     @PostMapping("/auto")
-    public ResponseEntity<?> deleteExpected(@RequestBody String keyword){
+    public ResponseEntity<?> autoKeyword(@RequestParam(value = "key", required = false) String keyword){
         try{
+            if(keyword == null)  return new ResponseEntity<>(HttpStatus.CONFLICT);
             log.info("자동완성");
 
             List<Place> list = plannerService.autoKeyward(keyword);
@@ -328,4 +352,29 @@ public class PlannerController {
         return new ResponseEntity<String>("Sorry: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Getter
+    @Setter
+    static class Filter{
+        String startDate;
+        String endDate;
+        String sidoName;
+        String gugunName;
+        String visitPlace;
+
+        public Filter() {
+        }
+
+        public Filter(String startDate, String endDate){
+            this.startDate = startDate;
+            this.endDate = endDate;
+        }
+
+        public Filter(String startDate, String endDate, String sidoName, String gugunName, String visitPlace){
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.sidoName = sidoName;
+            this.gugunName = gugunName;
+            this.visitPlace = visitPlace;
+        }
+    }
 }

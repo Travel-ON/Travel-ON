@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface PlaceRepositorty  extends JpaRepository<Place, Integer> {
+public interface PlaceRepositorty extends JpaRepository<Place, Integer> {
     List<Place> findByVisitPlaceContaining(String keyword);
 }
 

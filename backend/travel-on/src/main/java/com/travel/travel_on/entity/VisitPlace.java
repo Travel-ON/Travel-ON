@@ -27,11 +27,11 @@ public class VisitPlace implements Serializable {
     @Column(name = "visited_place", length = 50, nullable = false)
     private String visitedPlace;
 
-    @Column(name = "rate_point", nullable = false)
+    @Column(name = "rate_point", nullable = true)
     private Double ratePoint;
 
-    @Column(name = "reivew", nullable = true)
-    private String reivew;
+    @Column(name = "review", nullable = true)
+    private String review;
 
     @Column(name = "sido_name", length = 20, nullable = false)
     private String sidoName;

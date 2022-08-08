@@ -25,9 +25,9 @@ public interface PlannerService {
 
     boolean writeExpected(UserDto userDto, VisitExpectedDto visitExpectedDto);
 
-    boolean updateVisit(VisitPlaceDto visitPlaceDto);
+    boolean writePlace(Place place);
 
-    boolean updateExpected(VisitExpectedDto visitExpectedDto);
+    boolean updateVisit(VisitPlaceDto visitPlaceDto);
 
     boolean deleteVisit(Integer id);
 

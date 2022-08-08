@@ -14,7 +14,7 @@ public class VisitPlaceDto {
     private Integer visitPlaceId;
     private String visitedPlace;
     private Double ratePoint;
-    private String reivew;
+    private String review;
     private String sidoName;
     private String gugunName;
     private String visitDate;
@@ -23,7 +23,7 @@ public class VisitPlaceDto {
         visitPlaceId = visitPlace.getVisitPlaceId();
         visitedPlace = visitPlace.getVisitedPlace();
         ratePoint = visitPlace.getRatePoint();
-        reivew = visitPlace.getReivew();
+        review = visitPlace.getReview();
         sidoName = visitPlace.getSidoName();
         gugunName = visitPlace.getSidoName();
         visitDate = visitPlace.getVisitDate();
