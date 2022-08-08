@@ -14,11 +14,25 @@ import NoticeDetail from "../components/notice/NoticeDetail.vue";
 import NoticeWrite from "../components/notice/NoticeWrite.vue";
 import NoticeUpdate from "../components/notice/NoticeUpdate.vue";
 
+import Videochat from "../views/Videochat.vue";
+import VideochatMatching from "../components/VideochatMatching.vue";
+
 const routes = [
   {
     path: "/",
     name: "home",
     component: HomeView,
+  },
+  {
+    path: "/videochat",
+    component: Videochat,
+    children: [
+      {
+        path: "",
+        name: "VideochatMatching",
+        component: VideochatMatching,
+      },
+    ],
   },
   {
     path: "/member",
