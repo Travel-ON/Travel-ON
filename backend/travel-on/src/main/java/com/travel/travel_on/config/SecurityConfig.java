@@ -40,6 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/notice/page",
             "/api/notice/faq",
             "/api/notice/detail/**",
+            "/api/plan/**",
+            "/api/qna/**",
     };
 
     @Autowired
