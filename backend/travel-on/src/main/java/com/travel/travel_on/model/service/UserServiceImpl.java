@@ -180,4 +180,39 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public String getRandomString(int i, boolean isSpecialChar) {
+        StringBuilder builder;
+
+        String randoms = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abvdefghijklmnopqrstuvwxyz";
+
+        //create the StringBuffer
+        builder = new StringBuilder(i);
+
+        // generate numeric
+        int myindex
+                = (int)(randoms.length()
+                * Math.random());
+
+        // add the characters
+        builder.append(randoms
+                .charAt(myindex));
+
+        if(isSpecialChar) randoms="0123456789!@?"+randoms+"0123456789!@?";
+        else randoms="0123456789"+randoms+"0123456789";
+        for (int m = 1; m < i; m++) {
+
+            // generate numeric
+            myindex
+                    = (int)(randoms.length()
+                    * Math.random());
+
+            // add the characters
+            builder.append(randoms
+                    .charAt(myindex));
+        }
+
+        return builder.toString();
+    }
 }

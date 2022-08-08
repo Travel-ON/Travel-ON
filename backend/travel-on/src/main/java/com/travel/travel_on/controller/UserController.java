@@ -249,7 +249,8 @@ public class UserController {
         try {
             UserDto userDto = userService.select(param.get("id"));
             if(userDto!=null&&userDto.getEmail().equals(param.get("email"))){
-                String authKey = "A!"+Integer.toString( ThreadLocalRandom.current().nextInt(100000, 1000000) )+"CT@";
+//                String authKey = "A!"+Integer.toString( ThreadLocalRandom.current().nextInt(100000, 1000000) )+"CT@";
+                String authKey = userService.getRandomString(10,true);
                 userDto.setPassword(authKey);
                 boolean result = userService.update(userDto);
                 if(result) {
