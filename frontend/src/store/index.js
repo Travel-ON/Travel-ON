@@ -2,6 +2,7 @@ import { createStore } from "vuex";
 import router from "@/router";
 import { createApi } from "@/api";
 import { Accounts } from "./modules/accounts";
+import { Locations } from "./modules/locations";
 
 const api = createApi();
 
@@ -102,5 +103,6 @@ export default createStore({
   },
   modules: {
     Accounts,
+    Locations,
   },
 });
