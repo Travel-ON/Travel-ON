@@ -154,10 +154,8 @@ public class PlannerController {
             boolean result = plannerService.writeVisit(userDto, visitPlaceDto);
 
             if(result){
-                System.out.println("suceess");
                 return new ResponseEntity<>(HttpStatus.CREATED);
             }else{
-                System.out.println("fail");
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
 

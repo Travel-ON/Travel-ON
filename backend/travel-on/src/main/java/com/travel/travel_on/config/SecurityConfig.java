@@ -19,6 +19,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.firewall.DefaultHttpFirewall;
+import org.springframework.security.web.firewall.HttpFirewall;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -38,8 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/notice/page",
             "/api/notice/faq",
             "/api/notice/detail/**",
-            "/api/plan/**",
-            "/api/qna/**",
+            "/api/plan/auto",
     };
 
     @Autowired
@@ -84,7 +85,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.httpFirewall(defaultHttpFirwall());
     }
 
-        @Bean
+    @Bean
     public HttpFirewall defaultHttpFirwall(){
         return new DefaultHttpFirewall();
     }
