@@ -3,6 +3,7 @@ package com.travel.travel_on.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -38,5 +39,6 @@ public class Notice {
         this.title = title;
         this.content = content;
     }
+
 
 }
