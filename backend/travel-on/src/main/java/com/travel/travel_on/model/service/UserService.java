@@ -31,4 +31,6 @@ public interface UserService {
     String selectAchievement(int count);
 
     void sendMail(String mail, String title, String content);
+
+    String getRandomString(int number, boolean isSpecialChar);
 }

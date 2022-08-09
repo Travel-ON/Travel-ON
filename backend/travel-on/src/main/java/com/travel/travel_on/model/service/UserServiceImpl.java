@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,16 +27,16 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    UserRepository repo;
+    UserRepository userRepository;
 
     @Autowired
-    UserAchievementRepository uarepo;
+    UserAchievementRepository userAchievementRepository;
 
     @Autowired
-    VisitationRepository vrepo;
+    VisitationRepository visitationRepository;
 
     @Autowired
-    AchievementRepository arepo;
+    AchievementRepository achievementRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto select(String id) {
-        Optional<User> result = repo.findByRealId(id);
+        Optional<User> result = userRepository.findByRealId(id);
         if (result.isPresent()) {
             User user = result.get();
             UserDto userDto = new UserDto(user);
@@ -56,20 +57,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean insert(UserDto userDto) {
-        Optional<User> result = repo.findByRealId(userDto.getId());
+        Optional<User> result = userRepository.findByRealId(userDto.getId());
         if (result.isPresent()) {
             return false;
         } else {
             User user = userDto.toEntity();
             user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-            repo.save(user);
+            userRepository.save(user);
             return true;
         }
     }
 
     @Override
     public boolean update(UserDto userDto) {
-        Optional<User> result = repo.findByRealId(userDto.getId());
+        Optional<User> result = userRepository.findByRealId(userDto.getId());
         if (result.isPresent()) {
             User user = userDto.toEntity();
             if(result.get().getPassword().equals(userDto.getPassword())){
@@ -77,7 +78,7 @@ public class UserServiceImpl implements UserService {
             }else{
                 user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             }
-            repo.save(user);
+            userRepository.save(user);
             return true;
         } else {
             return false;
@@ -86,9 +87,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean delete(String id) {
-        Optional<User> result = repo.findByRealId(id);
+        Optional<User> result = userRepository.findByRealId(id);
         if (result.isPresent()) {
-            repo.delete(result.get());
+            userRepository.delete(result.get());
             return true;
         }
         return false;
@@ -96,7 +97,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto selectByNickname(String nickname) {
-        Optional<User> result = repo.findByNickname(nickname);
+        Optional<User> result = userRepository.findByNickname(nickname);
         if (result.isPresent()) {
             User user = result.get();
             UserDto userDto = new UserDto(user);
@@ -108,16 +109,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateAlarm(User user) {
         user.setAlarmFlag(true);
-        repo.save(user);
+        userRepository.save(user);
     }
 
     @Override
     public List<UserAchievement> selectUserAchievement(User user, String sidoName) {
         List<UserAchievement> list;
         if (sidoName == null){
-            list = uarepo.findByUser(user);
+            list = userAchievementRepository.findByUser(user);
         } else{
-            list = uarepo.findByUserAndSidoName(user, sidoName);
+            list = userAchievementRepository.findByUserAndSidoName(user, sidoName);
         }
 
         return list;
@@ -125,23 +126,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void insertUserAchievement(UserAchievement userAchievement) {
-        uarepo.save(userAchievement);
+        userAchievementRepository.save(userAchievement);
     }
 
     @Override
     public List<Visitation> selectVisitation(User user) {
-        List<Visitation> list = vrepo.findByUser(user);
+        List<Visitation> list = visitationRepository.findByUser(user);
         return list;
     }
 
     @Override
     public int updateVisitation(User user, String sidoName) {
-        Optional<Visitation> result = vrepo.findByUserAndSidoName(user, sidoName);
+        Optional<Visitation> result = visitationRepository.findByUserAndSidoName(user, sidoName);
         Visitation visitation;
         if (result.isPresent()) {
             visitation = result.get();
             visitation.setCount(visitation.getCount() + 1);
-            vrepo.save(visitation);
+            visitationRepository.save(visitation);
 
         } else {
             visitation = Visitation.builder()
@@ -149,14 +150,14 @@ public class UserServiceImpl implements UserService {
                     .sidoName(sidoName)
                     .count(1)
                     .build();
-            vrepo.save(visitation);
+            visitationRepository.save(visitation);
         }
         return visitation.getCount();
     }
 
     @Override
     public String selectAchievement(int count) {
-        Optional<Achievement> result = arepo.findByCount(count);
+        Optional<Achievement> result = achievementRepository.findByCount(count);
         if (result.isPresent()) {
             String title = result.get().getTitle();
             return title;
@@ -164,6 +165,7 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    @Async
     @Override
     public void sendMail(String mail, String title, String content) {
         try {
@@ -176,8 +178,29 @@ public class UserServiceImpl implements UserService {
             javaMailSender.send(simpleMessage);
             log.info("메일 전송");
         } catch (MailException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String getRandomString(int i, boolean isSpecialChar) {
+        StringBuilder builder = new StringBuilder(i);
+        String randoms = "ABCDEFGHIJKLMNOPQRSTUVWXYZabvdefghijklmnopqrstuvwxyz";
+
+        int myindex = (int)(randoms.length() * Math.random());
+
+        builder.append(randoms.charAt(myindex));
+
+        if(isSpecialChar) {
+            randoms="0123456789!@?"+randoms+"0123456789!@?";
+        } else {
+            randoms="0123456789"+randoms+"0123456789";
+        }
+        for (int m = 1; m < i; m++) {
+            myindex = (int)(randoms.length() * Math.random());
+            builder.append(randoms.charAt(myindex));
+        }
+
+        return builder.toString();
     }
 }
