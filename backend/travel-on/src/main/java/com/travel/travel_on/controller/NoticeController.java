@@ -55,7 +55,6 @@ public class NoticeController {
     @PostMapping("/regist")
     public ResponseEntity<?> regist(@ApiIgnore Authentication authentication, @RequestBody Notice notice){
         try{
-            log.info("공지사항 글쓰기");
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
@@ -101,7 +100,6 @@ public class NoticeController {
     @PutMapping("/modify")
     public ResponseEntity<?> modify(@ApiIgnore Authentication authentication, @RequestBody Notice notice){
         try{
-            log.info("공지사항 수정");
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
@@ -124,7 +122,6 @@ public class NoticeController {
     @DeleteMapping("delete/{noticeId}")
     public ResponseEntity<?> delete(@ApiIgnore Authentication authentication, @PathVariable Integer noticeId){
         try{
-            log.info("공지사항 삭제");
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
