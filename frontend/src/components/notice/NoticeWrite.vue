@@ -38,7 +38,7 @@ export default {
         title: this.title,
         content: this.content,
       };
-      this.$store.dispatch("writeNotice", newNotice);
+      this.$store.dispatch("Notices/writeNotice", newNotice);
     },
   },
 };
