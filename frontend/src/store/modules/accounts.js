@@ -1,6 +1,5 @@
 import router from "@/router";
 import axios from "axios";
-// import axios from "axios";
 import spring from "@/api/spring_boot";
 
 /* eslint-disable no-return-assign */
@@ -79,10 +78,11 @@ export const Accounts = {
         })
         .catch((err) => {
           console.error(err);
-          router.push({ name: "login" })
+          alert("아이디가 없거나 비밀번호가 일치하지 않습니다!")
+          router.push({ name: "MemberLogin" })
         });
     },
-    logout({ commit }) {
+    logout({ commit, dispatch }) {
       dispatch("removeToken")
       commit("SET_CURRENT_USER", "");
       commit("SET_ADMIN", false);
@@ -132,8 +132,6 @@ export const Accounts = {
         url: spring.accounts.detail(),
         method: "get",
         headers: {
-          // "Access-Control-Allow-Origin": "*",
-          // "Content-Type": "application/json; charset = utf-8",
           Authorization: `Bearer ${ token }`,
         },
       })
