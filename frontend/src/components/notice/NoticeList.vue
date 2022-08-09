@@ -10,7 +10,7 @@
         <v-col>작성날짜</v-col>
         <v-col>조회수</v-col>
       </v-row>
-      <v-row v-for="notice in notices" :key="notice.notice_id">
+      <v-row v-for="notice in notices" :key="notice.noticeId">
         <v-col v-if="notice.fixationFlag">notice</v-col>
         <v-col v-else>{{ notice.noticeId }}</v-col>
         <v-col @click="moveToDetail(notice.noticeId)">{{ notice.title }}</v-col>
@@ -53,9 +53,7 @@ export default {
   methods: {
     handlePage() {
       console.log(this.page - 1);
-      this.$store.dispatch("getNotices", {
-        page: this.page - 1,
-      });
+      this.$store.dispatch("getNotices", this.page - 1);
     },
     moveToDetail(id) {
       this.$router.push({

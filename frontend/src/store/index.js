@@ -49,9 +49,7 @@ export default createStore({
       api({
         url: `/notice/page`,
         method: "GET",
-        params: {
-          page: params,
-        },
+        params: { page: params },
       })
         .then((res) => {
           console.log(res.data.p.content);
