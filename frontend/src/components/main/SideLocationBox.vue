@@ -8,6 +8,7 @@
       border-radius: 8px;
       position: relative;
       display: flex;
+      margin-bottom: 32px;
     "
   >
     <div

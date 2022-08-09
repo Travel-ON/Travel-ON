@@ -9,7 +9,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import MainSpacingHome from "../components/main/MainSpacingHome.vue";
 
 export default defineComponent({
@@ -17,11 +17,16 @@ export default defineComponent({
   components: {
     MainSpacingHome,
   },
+  computed: {
+    ...mapGetters(["isLocation"]),
+  },
   methods: {
     ...mapActions(["getLocation"]),
   },
   mounted() {
-    this.getLocation();
+    if (this.isLocation) {
+      this.getLocation();
+    }
   },
 });
 </script>

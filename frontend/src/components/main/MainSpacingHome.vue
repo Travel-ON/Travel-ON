@@ -7,6 +7,7 @@
     </div>
     <div class="right-space">
       <SideLocationBox />
+      <SideWeatherBox />
     </div>
   </div>
 </template>
@@ -15,10 +16,11 @@
 import HomeMainButtons from "./HomeMainButtons.vue";
 import MainServices from "./MainServices.vue";
 import SideLocationBox from "./SideLocationBox.vue";
+import SideWeatherBox from "./SideWeatherBox.vue";
 
 export default {
   name: "MainSpacing",
-  components: { HomeMainButtons, MainServices, SideLocationBox },
+  components: { HomeMainButtons, MainServices, SideLocationBox, SideWeatherBox },
 };
 </script>
 
