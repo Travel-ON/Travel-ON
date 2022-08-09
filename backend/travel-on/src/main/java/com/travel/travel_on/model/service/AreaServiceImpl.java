@@ -2,7 +2,6 @@ package com.travel.travel_on.model.service;
 
 import com.travel.travel_on.entity.Gugun;
 import com.travel.travel_on.entity.Sido;
-import com.travel.travel_on.model.repo.DongRepository;
 import com.travel.travel_on.model.repo.GugunRepository;
 import com.travel.travel_on.model.repo.SidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +17,6 @@ public class AreaServiceImpl implements AreaService {
 
     @Autowired
     GugunRepository gugunRepository;
-
-    @Autowired
-    DongRepository dongRepository;
 
     @Autowired
     UserService userService;

@@ -178,41 +178,27 @@ public class UserServiceImpl implements UserService {
             javaMailSender.send(simpleMessage);
             log.info("메일 전송");
         } catch (MailException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
     @Override
     public String getRandomString(int i, boolean isSpecialChar) {
-        StringBuilder builder;
+        StringBuilder builder = new StringBuilder(i);
+        String randoms = "ABCDEFGHIJKLMNOPQRSTUVWXYZabvdefghijklmnopqrstuvwxyz";
 
-        String randoms = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abvdefghijklmnopqrstuvwxyz";
+        int myindex = (int)(randoms.length() * Math.random());
 
-        //create the StringBuffer
-        builder = new StringBuilder(i);
+        builder.append(randoms.charAt(myindex));
 
-        // generate numeric
-        int myindex
-                = (int)(randoms.length()
-                * Math.random());
-
-        // add the characters
-        builder.append(randoms
-                .charAt(myindex));
-
-        if(isSpecialChar) randoms="0123456789!@?"+randoms+"0123456789!@?";
-        else randoms="0123456789"+randoms+"0123456789";
+        if(isSpecialChar) {
+            randoms="0123456789!@?"+randoms+"0123456789!@?";
+        } else {
+            randoms="0123456789"+randoms+"0123456789";
+        }
         for (int m = 1; m < i; m++) {
-
-            // generate numeric
-            myindex
-                    = (int)(randoms.length()
-                    * Math.random());
-
-            // add the characters
-            builder.append(randoms
-                    .charAt(myindex));
+            myindex = (int)(randoms.length() * Math.random());
+            builder.append(randoms.charAt(myindex));
         }
 
         return builder.toString();
