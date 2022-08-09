@@ -172,9 +172,7 @@ public class NoticeController {
         int previous;
         int next;
 
-        public Board() {
-
-        }
+        public Board() {}
 
         public Board(Page<Notice> P, int previous, int next){
             P = this.P;
@@ -189,6 +187,16 @@ public class NoticeController {
         Page<FAQ> PF;
         int previous;
         int next;
+
+        public  FAQBoard(){}
+
+        public FAQBoard(Page<FAQ> PF, int previous, int next){
+            PF = this.PF;
+            previous = this.previous;
+            next = this.next;
+        }
+    }
+}
 
         public  FAQBoard(){
 

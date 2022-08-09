@@ -5,10 +5,12 @@ import com.travel.travel_on.auth.JwtUserDetails;
 import com.travel.travel_on.dto.UserAchievementDto;
 import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.dto.VisitationDto;
+import com.travel.travel_on.entity.Sido;
 import com.travel.travel_on.entity.User;
 import com.travel.travel_on.entity.UserAchievement;
 import com.travel.travel_on.entity.Visitation;
 import com.travel.travel_on.model.service.AlarmService;
+import com.travel.travel_on.model.service.AreaService;
 import com.travel.travel_on.model.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
@@ -24,10 +26,10 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.transaction.Transactional;
+import java.awt.geom.Area;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
@@ -41,6 +43,9 @@ public class UserController {
 
     @Autowired
     private AlarmService alarmService;
+
+    @Autowired
+    private AreaService areaService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -164,8 +169,8 @@ public class UserController {
             if(modifyUser.getEmail()!=null) {
                 userDto.setEmail(modifyUser.getEmail());
             }
-            if(modifyUser.getAddress()!=null) {
-                userDto.setAddress(modifyUser.getAddress());
+            if(modifyUser.getSidoCode()!=null) {
+                userDto.setSidoCode(modifyUser.getSidoCode());
             }
 
             boolean result = userService.update(userDto);
@@ -249,16 +254,19 @@ public class UserController {
         try {
             UserDto userDto = userService.select(param.get("id"));
             if(userDto!=null&&userDto.getEmail().equals(param.get("email"))){
-                String authKey = "A!"+Integer.toString( ThreadLocalRandom.current().nextInt(100000, 1000000) )+"CT@";
+                String authKey = userService.getRandomString(10,true);
                 userDto.setPassword(authKey);
                 boolean result = userService.update(userDto);
                 if(result) {
+
                     userService.sendMail(userDto.getEmail(),
-                            "[Travel-ON] 비밀번호 초기화",
-                            "안녕하세요 Travel-ON 입니다\n" +
-                                    "인증번호는 " + authKey + " 입니다.\n" +
-                                    "로그인 후 비밀번호를 변경해주세요.\n"+
-                                    "Travel-ON을 이용해주셔서 감사합니다."
+                            "[Travel-ON] 임시 비밀번호 안내",
+                           "✈️ Travel-ON 임시 비밀번호 안내 ✈️\n\n" +
+                                   "비밀번호 찾기 요청에 따라, 비밀번호가 임시 비밀번호로 재설정되었습니다.\n" +
+                                   "아래 임시 비밀번호를 확인해주세요.\n\n"+
+                                    authKey+
+                                    "\n\n로그인 후 바로 비밀번호를 변경해주시길 바랍니다."+
+                                    "\nTravel-ON을 이용해주셔서 감사합니다."
                     );
                     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 }else{
@@ -300,22 +308,26 @@ public class UserController {
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
-            String sidoName = param.get("sidoName");
-            if(userDto==null) {
+            String dongCode = param.get("dongCode");
+            Sido sido = areaService.selectSidoName(dongCode.substring(0,2));
+            if(userDto==null || sido==null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
             User user = userDto.toEntity();
-            int count = userService.updateVisitation(userDto.toEntity(), sidoName);
+            int count = userService.updateVisitation(userDto.toEntity(), sido.getSidoName());
             String title = userService.selectAchievement(count);
             if (title != null) {
                 UserAchievement userAchievement = UserAchievement.builder()
                         .user(user)
-                        .sidoName(sidoName)
+                        .sidoName(sido.getSidoName())
                         .title(title)
                         .build();
                 userService.insertUserAchievement(userAchievement);
-                alarmService.insert(user,"칭호획득: ["+sidoName+" "+title+"]");
+                alarmService.insert(user,"칭호획득: ["+sido.getSidoName()+" "+title+"]");
+            }
+            if(user.getSidoCode().equals(sido.getSidoCode())){
+                return new ResponseEntity<String>("현지인",HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {

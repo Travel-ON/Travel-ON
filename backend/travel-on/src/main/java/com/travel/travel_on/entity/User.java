@@ -20,7 +20,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"alarms"})
+@ToString(exclude = {"alarms","userAchievements","visitations","qnas","userVideoChattingRooms"})
 @Builder
 @Table(name="user")
 @Entity
@@ -43,8 +43,8 @@ public class User implements UserDetails {
     @Column(length = 50, nullable = false)
     private String email;
 
-    @Column(length = 150, nullable = false)
-    private String address;
+    @Column(name="sido_code", length = 10, nullable = false)
+    private String sidoCode;
 
     @Column(name = "admin_flag",nullable = false)
     private boolean adminFlag;
@@ -73,6 +73,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default
     private List<QNA> qnas = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<UserVideoChattingRoom> userVideoChattingRooms = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default
