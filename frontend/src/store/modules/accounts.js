@@ -1,6 +1,5 @@
 import router from "@/router";
 import axios from "axios";
-// import axios from "axios";
 import spring from "@/api/spring_boot";
 
 /* eslint-disable no-return-assign */

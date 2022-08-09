@@ -9,12 +9,19 @@
 
 <script>
 import { defineComponent } from "vue";
+import { mapActions } from "vuex";
 import MainSpacingHome from "../components/main/MainSpacingHome.vue";
 
 export default defineComponent({
   name: "HomeView;",
   components: {
     MainSpacingHome,
+  },
+  methods: {
+    ...mapActions(["getLocation"]),
+  },
+  mounted() {
+    this.getLocation();
   },
 });
 </script>
