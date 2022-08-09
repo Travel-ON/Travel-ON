@@ -10,6 +10,7 @@
 
 <script>
 import { reactive } from "vue";
+import { mapActions } from "vuex";
 import MainNav from "./components/common/MainNav.vue";
 
 export default {
@@ -23,7 +24,13 @@ export default {
       state,
     };
   },
+  methods: {
+    ...mapActions(["fetchCurrentUser"]),
+  },
   components: { MainNav },
+  mounted() {
+    this.fetchCurrentUser();
+  },
 };
 </script>
 
