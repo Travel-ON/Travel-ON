@@ -1,6 +1,5 @@
 import router from "@/router";
 import axios from "axios";
-// import axios from "axios";
 import spring from "@/api/spring_boot";
 
 /* eslint-disable no-return-assign */
@@ -79,7 +78,8 @@ export const Accounts = {
         })
         .catch((err) => {
           console.error(err);
-          router.push({ name: "login" })
+          alert("아이디가 없거나 비밀번호가 일치하지 않습니다!")
+          router.push({ name: "MemberLogin" })
         });
     },
     logout({ commit, dispatch }) {
