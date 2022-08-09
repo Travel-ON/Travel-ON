@@ -11,12 +11,23 @@
         <v-col>조회수</v-col>
       </v-row>
       <v-row v-for="notice in notices" :key="notice.notice_id">
-        <v-col v-if="notice.fixation_flag">notice</v-col>
-        <v-col v-else>{{ notice.notice_id }}</v-col>
-        <v-col @click="moveToDetail(notice.notice_id)">{{ notice.title }}</v-col>
-        <v-col>{{ notice.notice_date }}</v-col>
+        <v-col v-if="notice.fixationFlag">notice</v-col>
+        <v-col v-else>{{ notice.noticeId }}</v-col>
+        <v-col @click="moveToDetail(notice.noticeId)">{{ notice.title }}</v-col>
+        <v-col>{{ notice.noticeDate }}</v-col>
         <v-col>{{ notice.hits }}</v-col>
       </v-row>
+      <div class="text-center">
+        <v-container>
+          <v-row justify="center">
+            <v-col cols="8">
+              <v-container class="max-width">
+                <v-pagination v-model="page" class="my-4" :length="15"></v-pagination>
+              </v-container>
+            </v-col>
+          </v-row>
+        </v-container>
+      </div>
     </v-container>
   </div>
 </template>
@@ -26,15 +37,26 @@ import { mapState } from "vuex";
 
 export default {
   computed: {
-    ...mapState("Notices", ["notices"]),
+    ...mapState(["notices"]),
+  },
+  watch: {
+    page(num) {
+      this.handlePage(num);
+    },
   },
   data() {
-    return {};
+    return { page: 1 };
   },
-  created() {
-    this.$store.dispatch("Notices/getNotices");
+  mounted() {
+    this.$store.dispatch("getNotices");
   },
   methods: {
+    handlePage() {
+      console.log(this.page - 1);
+      this.$store.dispatch("getNotices", {
+        page: this.page - 1,
+      });
+    },
     moveToDetail(id) {
       this.$router.push({
         path: `/notice/detail/${id}`,
@@ -54,7 +76,6 @@ export default {
   text-align: center;
   color: #2c3e50;
   justify-content: center;
-  font-family: "Inter";
   font-style: normal;
   font-weight: 700;
   font-size: 40px;

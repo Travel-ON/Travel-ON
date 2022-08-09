@@ -6,11 +6,11 @@
           <v-btn depressed color="yellow" @click="moveToList"> 뒤로가기 </v-btn>
         </v-col>
       </v-row>
-      <v-row class="mb-6" no-gutters>
+      <v-row class="mb-6">
         <v-col
           ><v-card>
             {{ notice.title }}
-            <div>작성일 {{ notice.notice_date }}</div>
+            <div>작성일 {{ notice.noticeDate }}</div>
             <div>조회수 {{ notice.hits }}</div></v-card
           >
         </v-col>
@@ -56,16 +56,16 @@ export default {
       });
     },
     fixedToggle() {
-      this.notice.fixation_flag = !this.notice.fixation_flag;
+      this.notice.fixationFlag = !this.notice.fixationFlag;
       this.$store.dispatch("modifyNotice", this.notice);
     },
     moveToUpdate() {
       this.$router.push({
-        path: `/notice/update/${this.notice.notice_id}`,
+        path: `/notice/update/${this.notice.noticeId}`,
       });
     },
     NoticeDelete() {
-      this.$store.dispatch("deleteNotice", this.notice.notice_id);
+      this.$store.dispatch("deleteNotice", this.notice.noticeId);
     },
   },
 };

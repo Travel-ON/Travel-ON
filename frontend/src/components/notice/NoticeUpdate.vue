@@ -20,9 +20,7 @@
           ></v-col>
         </v-row>
         <div class="d-flex justify-end mb-6">
-          <v-btn :disabled="!valid" color="success" class="d-flex justify-end" @click="[validate(), updateNotice()]">
-            수정
-          </v-btn>
+          <v-btn color="success" class="d-flex justify-end" @click="[validate(), updateNotice()]"> 수정 </v-btn>
         </div>
       </v-container>
     </v-form>
@@ -58,12 +56,12 @@ export default {
       this.$refs.form.validate();
     },
     updateNotice() {
-      const newNotice = {
-        notice_id: this.notice.notice_id,
-        title: this.notice.title,
-        content: this.notice.content,
-      };
-      this.$store.dispatch("modifyNotice", newNotice);
+      // 날짜 포맷 ( yyyy-mm-ddThh:MM:ss )
+      const today = new Date();
+      today.setHours(today.getHours() + 9);
+      this.notice.noticeDate = today.toISOString().replace("T", " ").substring(0, 19);
+      console.log(this.notice);
+      this.$store.dispatch("modifyNotice", this.notice);
     },
   },
 };
