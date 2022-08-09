@@ -4,10 +4,7 @@ import com.travel.travel_on.dto.FilterDto;
 import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.dto.VisitExpectedDto;
 import com.travel.travel_on.dto.VisitPlaceDto;
-import com.travel.travel_on.entity.Place;
-import com.travel.travel_on.entity.User;
-import com.travel.travel_on.entity.VisitExpected;
-import com.travel.travel_on.entity.VisitPlace;
+import com.travel.travel_on.entity.*;
 
 import java.util.List;
 
@@ -37,6 +34,8 @@ public interface PlannerService {
     boolean deleteVisit(Integer id);
 
     boolean deleteExpected(Integer id);
+
+    List<Gugun> loadGugun(String sidoName);
 
     List<Place> autoKeyward(String keyword);
 }

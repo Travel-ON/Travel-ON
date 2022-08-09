@@ -2,9 +2,7 @@ package com.travel.travel_on.controller;
 
 import com.travel.travel_on.auth.JwtUserDetails;
 import com.travel.travel_on.dto.*;
-import com.travel.travel_on.entity.Place;
-import com.travel.travel_on.entity.VisitExpected;
-import com.travel.travel_on.entity.VisitPlace;
+import com.travel.travel_on.entity.*;
 import com.travel.travel_on.model.service.PlannerService;
 import com.travel.travel_on.model.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -386,6 +384,16 @@ public class PlannerController {
             return exceptionHandling(e);
         }
     }
+
+    @ApiOperation(value = "구군 불러오기 : 시도 선택시 구군 데이터 가져오기")
+    @GetMapping("/load/{sido}")
+    public ResponseEntity<?> roadGugun(@PathVariable("sido") String sidoName){
+
+        List<Gugun> list = plannerService.loadGugun(sidoName);
+
+        return new ResponseEntity<List>(list, HttpStatus.OK);
+    }
+
 
     private ResponseEntity<String> exceptionHandling(Exception e) {
         e.printStackTrace();
