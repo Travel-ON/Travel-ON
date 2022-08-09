@@ -3,14 +3,17 @@ const { defineConfig } = require("@vue/cli-service");
 module.exports = defineConfig({
   transpileDependencies: true,
   
-  devServer: {
+    devServer: {
+         host: '0.0.0.0',
+         port: 8080,
+         open: true,
          allowedHosts:'all',
-         proxy: {
-		'/api': {
-			target: 'http://i7b301.p.ssafy.io:3000/api',
-			changeOrigin:true
-		}
-	} 
+         client: {
+            webSocketURL: 'wss://i7b301.p.ssafy.io:443/ws',         
+         },
+         headers: {
+            'Access-Control-Allow-Origin' : '*',
+         }
   },
 
   pluginOptions: {
