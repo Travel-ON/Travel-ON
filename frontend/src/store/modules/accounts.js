@@ -141,6 +141,29 @@ export const Accounts = {
         .catch((err) => {
           console.log(err);
         })
+    },
+    fetchCurrentUser({ commit, getters, dispatch }) {
+      if (getters.isLoggedIn) {
+        axios({
+          url: spring.accounts.detail(),
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${ getters.token }`,
+          },
+        })
+          .then((res) => {
+            const nickName = res.data.nickname;
+            const userTitle = res.data.userTitle;
+            const adminFlag = res.data.adminFlag;
+            commit("SET_CURRENT_USER", nickName);
+            commit("SET_ADMIN", adminFlag);
+            commit("SET_TITLE", userTitle);
+          })
+          .catch((err) => {
+            console.log(err);
+            dispatch("removeToken");
+          })
+      }
     }
-  },
-};
+  }
+}
