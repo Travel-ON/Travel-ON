@@ -2,7 +2,7 @@
   <form @submit.prevent="submitForm">
     <div>
       <label for="usernamemodify"
-        >이메일 입력
+        >이메일
         <input id="usernamemodify" type="text" v-model="usernamemodify" />
       </label>
     </div>
