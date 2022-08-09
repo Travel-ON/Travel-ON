@@ -13,19 +13,26 @@
       <div style="margin: auto">오늘의 {{ sido !== "" ? sido : "서울" }} 날씨는</div>
     </div>
     <div style="height: 250px; background-color: #acf; color: #fff; border-radius: 0 0 8px 8px">
-      <div style="height: 100px"></div>
-      <div style="height: 50px"></div>
-      <div style="height: 100px"></div>
+      <div style="height: 175px">
+        <v-img :src="'http://openweathermap.org/img/wn/' + icon + '@2x.png'"></v-img>
+      </div>
+      <div style="height: 75px; font-size: 48px; font-weight: bold">{{ temp + "ºC" }}</div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   computed: {
-    ...mapGetters(["sido", "latitude", "longitude"]),
+    ...mapGetters(["sido", "latitude", "longitude", "temp", "icon"]),
+  },
+  methods: {
+    ...mapActions(["getWeather"]),
+  },
+  mounted() {
+    this.getWeather();
   },
 };
 </script>

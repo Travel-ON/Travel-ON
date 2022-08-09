@@ -24,7 +24,7 @@ export default defineComponent({
     ...mapActions(["getLocation"]),
   },
   mounted() {
-    if (this.isLocation) {
+    if (!this.isLocation) {
       this.getLocation();
     }
   },
