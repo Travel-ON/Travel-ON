@@ -3,6 +3,7 @@ import { Notices } from "@/store/modules/notices";
 import { Accounts } from "./modules/accounts";
 import { QnAs } from "./modules/qnas";
 import { Locations } from "./modules/locations";
+import { Weather } from "./modules/weather";
 
 export default createStore({
   state: {},
@@ -14,5 +15,6 @@ export default createStore({
     QnAs,
     Notices,
     Locations,
+    Weather,
   },
 });

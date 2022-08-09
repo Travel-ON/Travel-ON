@@ -64,7 +64,7 @@
         <v-menu open-on-hover style="z-index: 3500">
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props">
-              <div style="font-size: x-small">대전 풋내기</div>
+              <div style="font-size: x-small">{{ title }}</div>
               <div>{{ currentUser }}</div>
               <v-icon>mdi-chevron-down</v-icon>
             </v-btn>
@@ -107,6 +107,7 @@ export default {
     ...mapGetters({
       isLoggedIn: "isLoggedIn",
       currentUser: "currentUser",
+      title: "title",
     }),
   },
 };

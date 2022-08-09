@@ -25,7 +25,7 @@
       <v-col id="video-container" class="col-md-6">
         <!--자기 얼굴-->
         <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
-        <!-- 너매 얼굴  -->
+        <!-- 너매 얼굴 -->
         <user-video
           v-for="sub in subscribers"
           :key="sub.stream.connection.connectionId"
