@@ -40,20 +40,16 @@ public class AlarmController {
     @GetMapping("/")
     public ResponseEntity<?> selectAlarm(@ApiIgnore Authentication authentication) {
         try {
-            log.info("알림 조회");
-
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
             if(userDto==null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-
             List<Alarm> list = alarmService.selectAll(userDto.toEntity());
             List<AlarmDto> result = list.stream()
                     .map(r -> new AlarmDto(r))
                     .collect(Collectors.toList());
-            log.info("AlarmList : {}", result.toString());
             return new ResponseEntity<List>(result, HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
@@ -65,8 +61,6 @@ public class AlarmController {
     @Transactional
     public ResponseEntity<?> deleteAlarm(@ApiIgnore Authentication authentication) {
         try {
-            log.info("알림 삭제");
-
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);

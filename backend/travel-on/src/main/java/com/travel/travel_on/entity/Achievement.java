@@ -23,5 +23,6 @@ public class Achievement implements Serializable {
     @Column(name="title", length = 20, nullable = false, unique = true)
     private String title;
 
+    @Column
     private int count;
 }

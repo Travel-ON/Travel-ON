@@ -1,11 +1,11 @@
 <template>
   <div>
     <svg
-      style="background: #eaeaea; overflow: visible"
-      height="550px"
+      style="background: #fff; overflow: visible; border-radius: 0 0 16px 16px"
+      height="482px"
       width="450px"
       preserveAspectRatio="none"
-      viewBox="-250 -50 1000 1200"
+      viewBox="-125 -50 1000 1200"
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
@@ -194,7 +194,7 @@ export default {
 .TEXT {
   fill: #ffffff;
   font-size: 16;
-  font-weight: bold;
+  font-weight: normal;
   text-anchor: middle;
   alignment-baseline: middle;
 }

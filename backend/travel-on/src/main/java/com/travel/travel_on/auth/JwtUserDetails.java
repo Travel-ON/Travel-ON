@@ -26,7 +26,7 @@ public class JwtUserDetails implements UserDetails {
     }
     
     public User getUser() {
-    		return this.user;
+		return this.user;
     }
 	@Override
 	public String getPassword() {
@@ -55,8 +55,5 @@ public class JwtUserDetails implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return this.roles;
-	}
-	public void setAuthorities(List<GrantedAuthority> roles) {
-		this.roles = roles;
 	}
 }

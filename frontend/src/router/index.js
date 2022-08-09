@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Member from "../views/Member.vue";
 import MemberLogin from "../components/member/MemberLogin.vue";
-import MemberRegister from "../components/member/MemberRegister.vue";
+import MemberRegisterView from "../views/MemberRegisterView.vue";
 // import MemberModify1 from "../components/member/MemberModify1.vue";
 import MemberModify2 from "../components/member/MemberModify2.vue";
 import MemberSecession from "../components/member/MemberSecession.vue";
@@ -52,7 +52,7 @@ const routes = [
       {
         path: "register",
         name: "MemberRegister",
-        component: MemberRegister,
+        component: MemberRegisterView,
       },
       // {
       //   path: "modify",
@@ -72,7 +72,7 @@ const routes = [
       {
         path: "logout",
         name: "MemberLogout",
-        compnent: MemberLogout,
+        component: MemberLogout,
       },
     ],
   },

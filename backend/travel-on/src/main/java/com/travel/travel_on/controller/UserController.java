@@ -111,11 +111,25 @@ public class UserController {
         }
     }
 
+    @ApiOperation(value = "비밀번호 체크: 사용자의 비밀번호가 올바른지 확인한다")
+    @PostMapping("/check")
+    public ResponseEntity<?> passwordCheck(@ApiIgnore Authentication authentication, @RequestBody Map<String, String> param) {
+        try {
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userPassword = userDetails.getPassword();
+            if(passwordEncoder.matches(param.get("password"), userPassword)){
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return exceptionHandling(e);
+        }
+    }
+
     @ApiOperation(value = "회원정보 조회: 사용자 정보를 조회한다", response = UserDto.class)
     @GetMapping("/detail")
     public ResponseEntity<?> detail(@ApiIgnore Authentication authentication) {
         try {
-            log.info("회원정보 조회");
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
@@ -134,8 +148,6 @@ public class UserController {
     @Transactional
     public ResponseEntity<?> modify(@ApiIgnore Authentication authentication, @RequestBody UserDto modifyUser) {
         try {
-            log.info("회원정보 수정");
-
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
@@ -143,10 +155,18 @@ public class UserController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            if(modifyUser.getNickname()!=null) userDto.setNickname(modifyUser.getNickname());
-            if(modifyUser.getPassword()!=null) userDto.setPassword(modifyUser.getPassword());
-            if(modifyUser.getEmail()!=null) userDto.setEmail(modifyUser.getEmail());
-            if(modifyUser.getAddress()!=null) userDto.setAddress(modifyUser.getAddress());
+            if(modifyUser.getNickname()!=null) {
+                userDto.setNickname(modifyUser.getNickname());
+            }
+            if(modifyUser.getPassword()!=null) {
+                userDto.setPassword(modifyUser.getPassword());
+            }
+            if(modifyUser.getEmail()!=null) {
+                userDto.setEmail(modifyUser.getEmail());
+            }
+            if(modifyUser.getAddress()!=null) {
+                userDto.setAddress(modifyUser.getAddress());
+            }
 
             boolean result = userService.update(userDto);
             if(result) {
@@ -164,8 +184,6 @@ public class UserController {
     @Transactional
     public ResponseEntity<?> delete(@ApiIgnore Authentication authentication) {
         try {
-            log.info("회원 탈퇴");
-
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             boolean result = userService.delete(userId);
@@ -184,11 +202,12 @@ public class UserController {
     @Transactional
     public ResponseEntity<?> modifyTitle(@ApiIgnore Authentication authentication, @RequestBody Map<String, String> param) {
         try {
-            log.info("칭호 변경");
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
-            if(userDto==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            if(userDto==null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
 
             userDto.setUserTitle(param.get("title"));
             boolean result = userService.update(userDto);
@@ -206,17 +225,17 @@ public class UserController {
     @PostMapping("/title")
     public ResponseEntity<?> selectTitle(@ApiIgnore Authentication authentication, @RequestBody Map<String, String> param) {
         try {
-            log.info("칭호 조회");
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
-            if(userDto==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            if(userDto==null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
 
             List<UserAchievement> list = userService.selectUserAchievement(userDto.toEntity(), param.get("sidoName"));
             List<UserAchievementDto> result = list.stream()
                     .map(r -> new UserAchievementDto(r))
                     .collect(Collectors.toList());
-            log.info("UserAchievementList : {}", result.toString());
             return new ResponseEntity<List>(result, HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
@@ -230,8 +249,7 @@ public class UserController {
         try {
             UserDto userDto = userService.select(param.get("id"));
             if(userDto!=null&&userDto.getEmail().equals(param.get("email"))){
-                // 인증키 6자리 랜덤으로 생성 후 초기화
-                String authKey = Integer.toString( ThreadLocalRandom.current().nextInt(100000, 1000000) );
+                String authKey = "A!"+Integer.toString( ThreadLocalRandom.current().nextInt(100000, 1000000) )+"CT@";
                 userDto.setPassword(authKey);
                 boolean result = userService.update(userDto);
                 if(result) {
@@ -257,17 +275,17 @@ public class UserController {
     @GetMapping("/trophy")
     public ResponseEntity<?> selectTrophy(@ApiIgnore Authentication authentication) {
         try {
-            log.info("여행횟수 조회");
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
-            if(userDto==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            if(userDto==null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
 
             List<Visitation> list = userService.selectVisitation(userDto.toEntity());
             List<VisitationDto> result = list.stream()
                     .map(r -> new VisitationDto(r))
                     .collect(Collectors.toList());
-            log.info("VisitationList : {}", result.toString());
             return new ResponseEntity<List>(result, HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
@@ -279,12 +297,13 @@ public class UserController {
     @Transactional
     public ResponseEntity<?> updateTrophy(@ApiIgnore Authentication authentication, @RequestBody Map<String, String> param) {
         try {
-            log.info("여행횟수 업데이트");
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
             String sidoName = param.get("sidoName");
-            if(userDto==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            if(userDto==null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
 
             User user = userDto.toEntity();
             int count = userService.updateVisitation(userDto.toEntity(), sidoName);
@@ -308,7 +327,6 @@ public class UserController {
     @GetMapping("/alarm")
     public ResponseEntity<?> alarmCheck(@ApiIgnore Authentication authentication) {
         try {
-            log.info("여행횟수 업데이트");
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
