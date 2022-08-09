@@ -1,5 +1,6 @@
 package com.travel.travel_on.model.service;
 
+import com.travel.travel_on.dto.FilterDto;
 import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.dto.VisitExpectedDto;
 import com.travel.travel_on.dto.VisitPlaceDto;
@@ -15,7 +16,11 @@ public interface PlannerService {
 
     List<VisitPlace> selectVisitAll(User user);
 
+    List<VisitPlace> selectVisitFilter(FilterDto filterDto);
+
     List<VisitExpected> selectExpectedAll(User user);
+
+    List<VisitExpected> selectExpectedFilter(FilterDto filterDto);
 
     VisitPlaceDto selectVisitOne(Integer id);
 

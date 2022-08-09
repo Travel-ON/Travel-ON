@@ -21,7 +21,7 @@ public class VisitExpectedDto {
         visitExpectedId = visitExpected.getVisitExpectedId();
         expectedPlace = visitExpected.getExpectedPlace();
         sidoName = visitExpected.getSidoName();
-        gugunName = visitExpected.getSidoName();
+        gugunName = visitExpected.getGugunName();
         expectedDate = visitExpected.getExpectedDate();
     }
 }

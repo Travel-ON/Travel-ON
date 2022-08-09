@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface VisitPlaceRepository  extends JpaRepository<VisitPlace, Integer> {
     List<VisitPlace> findByUser(User user);
+    List<VisitPlace> findByVisitDateBetween(String start, String end);
 }
 

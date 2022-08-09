@@ -1,5 +1,6 @@
 package com.travel.travel_on.model.service;
 
+import com.travel.travel_on.dto.FilterDto;
 import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.dto.VisitExpectedDto;
 import com.travel.travel_on.dto.VisitPlaceDto;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,10 +36,98 @@ public class PlannerServiceImpl implements PlannerService{
     }
 
     @Override
+    public List<VisitPlace> selectVisitFilter(FilterDto filterDto) {
+        List<VisitPlace> list;
+        List<VisitPlace> vlist = new LinkedList<>();
+
+        if(filterDto.getVisitPlace() == null && filterDto.getGugunName() == null && filterDto.getSidoName() == null){
+            list = vRepo.findByVisitDateBetween(filterDto.getStartDate(), filterDto.getEndDate());
+
+            return list;
+        }else if(filterDto.getVisitPlace() == null && filterDto.getGugunName() == null){
+            list = vRepo.findByVisitDateBetween(filterDto.getStartDate(), filterDto.getEndDate());
+
+            for(VisitPlace visitPlace : list){
+                if(visitPlace.getSidoName().contains(filterDto.getSidoName())){
+                    vlist.add(visitPlace);
+                }
+            }
+            return vlist;
+        }else if(filterDto.getVisitPlace() == null){
+            list = vRepo.findByVisitDateBetween(filterDto.getStartDate(), filterDto.getEndDate());
+
+            for(VisitPlace visitPlace : list){
+                if(visitPlace.getGugunName().contains(filterDto.getGugunName())
+                        && visitPlace.getSidoName().contains(filterDto.getSidoName())){
+                    vlist.add(visitPlace);
+                }
+            }
+            return vlist;
+        }else{
+            list = vRepo.findByVisitDateBetween(filterDto.getStartDate(), filterDto.getEndDate());
+
+            for(VisitPlace visitPlace : list){
+                System.out.println("visit : " + visitPlace.getVisitedPlace() + " / " + filterDto.getVisitPlace());
+                System.out.println("gugun : " + visitPlace.getGugunName() + " / " + filterDto.getGugunName());
+                System.out.println("sido : " + visitPlace.getSidoName() + " / " + filterDto.getSidoName());
+                if(visitPlace.getVisitedPlace().contains(filterDto.getVisitPlace())
+                        && visitPlace.getGugunName().contains(filterDto.getGugunName())
+                        && visitPlace.getSidoName().contains(filterDto.getSidoName())){
+                    vlist.add(visitPlace);
+                }
+            }
+            return vlist;
+        }
+
+    }
+
+    @Override
     public List<VisitExpected> selectExpectedAll(User user) {
         List<VisitExpected> list = eRepo.findByUser(user);
 
         return list;
+    }
+
+    @Override
+    public List<VisitExpected> selectExpectedFilter(FilterDto filterDto) {
+        List<VisitExpected> list;
+        List<VisitExpected> vlist = new LinkedList<>();
+
+        if(filterDto.getVisitPlace() == null && filterDto.getGugunName() == null && filterDto.getSidoName() == null){
+            list = eRepo.findByExpectedDateBetween(filterDto.getStartDate(), filterDto.getEndDate());
+
+            return list;
+        }else if(filterDto.getVisitPlace() == null && filterDto.getGugunName() == null){
+            list = eRepo.findByExpectedDateBetween(filterDto.getStartDate(), filterDto.getEndDate());
+
+            for(VisitExpected visitExpected : list){
+                if(visitExpected.getSidoName().contains(filterDto.getSidoName())){
+                    vlist.add(visitExpected);
+                }
+            }
+            return vlist;
+        }else if(filterDto.getVisitPlace() == null){
+            list = eRepo.findByExpectedDateBetween(filterDto.getStartDate(), filterDto.getEndDate());
+
+            for(VisitExpected visitExpected : list){
+                if(visitExpected.getGugunName().contains(filterDto.getGugunName())
+                        && visitExpected.getSidoName().contains(filterDto.getSidoName())){
+                    vlist.add(visitExpected);
+                }
+            }
+            return vlist;
+        }else{
+            list = eRepo.findByExpectedDateBetween(filterDto.getStartDate(), filterDto.getEndDate());
+
+            for(VisitExpected visitExpected : list){
+                if(visitExpected.getExpectedPlace().contains(filterDto.getVisitPlace())
+                        && visitExpected.getGugunName().contains(filterDto.getGugunName())
+                        && visitExpected.getSidoName().contains(filterDto.getSidoName())){
+                    vlist.add(visitExpected);
+                }
+            }
+            return vlist;
+        }
     }
 
     @Override
@@ -105,9 +195,13 @@ public class PlannerServiceImpl implements PlannerService{
     @Override
     public boolean writePlace(Place place) {
         if(place == null) return false;
-        System.out.println(place.toString());
-        pRepo.save(place);
-        return true;
+        Optional<Place> result = pRepo.findFirstByVisitPlaceContaining(place.getVisitPlace());
+        if(result.isPresent()){
+            return true;
+        }else{
+            pRepo.save(place);
+            return true;
+        }
     }
 
     @Override
@@ -165,10 +259,10 @@ public class PlannerServiceImpl implements PlannerService{
 
         int cnt = 0;
         for(Place place : list){
-            System.out.println(place);
+
             pList.add(place);
-            cnt++;
             if(cnt == 4) break;
+            cnt++;
         }
         return pList;
     }

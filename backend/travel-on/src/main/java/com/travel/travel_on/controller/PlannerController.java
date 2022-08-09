@@ -1,18 +1,13 @@
 package com.travel.travel_on.controller;
 
 import com.travel.travel_on.auth.JwtUserDetails;
-import com.travel.travel_on.dto.QNADto;
-import com.travel.travel_on.dto.UserDto;
-import com.travel.travel_on.dto.VisitExpectedDto;
-import com.travel.travel_on.dto.VisitPlaceDto;
+import com.travel.travel_on.dto.*;
 import com.travel.travel_on.entity.Place;
 import com.travel.travel_on.entity.VisitExpected;
 import com.travel.travel_on.entity.VisitPlace;
 import com.travel.travel_on.model.service.PlannerService;
 import com.travel.travel_on.model.service.UserService;
 import io.swagger.annotations.ApiOperation;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -40,7 +34,7 @@ public class PlannerController {
 
     @ApiOperation(value = "방문장소 조회: 방문장소 리스트 조회", response = List.class)
     @GetMapping("/page")
-    public ResponseEntity<?> searchVisitPlace(@ApiIgnore Authentication authentication, @RequestBody Filter filter){
+    public ResponseEntity<?> searchVisitPlace(@ApiIgnore Authentication authentication){
         try {
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
@@ -49,7 +43,32 @@ public class PlannerController {
             if(userDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
             List<VisitPlace> list;
+
             list = plannerService.selectVisitAll(userDto.toEntity());
+
+
+            List<VisitPlaceDto> result = list.stream()
+                    .map(r -> new VisitPlaceDto(r))
+                    .collect(Collectors.toList());
+            log.info("VisitPlaceList : {}", result.toString());
+            return new ResponseEntity<List>(result, HttpStatus.OK);
+        }catch (Exception e) {
+            return exceptionHandling(e);
+        }
+    }
+
+    @ApiOperation(value = "방문장소 조회: 방문장소 필터 리스트 조회", response = List.class)
+    @PostMapping("/page/filter")
+    public ResponseEntity<?> searchVisitFilter(@ApiIgnore Authentication authentication, @RequestBody FilterDto filter){
+        try {
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userId = userDetails.getUsername();
+            UserDto userDto = userService.select(userId);
+
+            if(userDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            List<VisitPlace> list;
+            list = plannerService.selectVisitFilter(filter);
 
             List<VisitPlaceDto> result = list.stream()
                     .map(r -> new VisitPlaceDto(r))
@@ -73,6 +92,29 @@ public class PlannerController {
 
             List<VisitExpected> list;
             list = plannerService.selectExpectedAll(userDto.toEntity());
+
+            List<VisitExpectedDto> result = list.stream()
+                    .map(r -> new VisitExpectedDto(r))
+                    .collect(Collectors.toList());
+            log.info("VisitExpectedList : {}", result.toString());
+            return new ResponseEntity<List>(result, HttpStatus.OK);
+        }catch (Exception e) {
+            return exceptionHandling(e);
+        }
+    }
+
+    @ApiOperation(value = "방문예정장소 조회: 방문예정장소 필터 리스트 조회", response = List.class)
+    @PostMapping("expect/page/filter")
+    public ResponseEntity<?> searchExpectedFilter(@ApiIgnore Authentication authentication, @RequestBody FilterDto filter){
+        try {
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userId = userDetails.getUsername();
+            UserDto userDto = userService.select(userId);
+
+            if(userDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            List<VisitExpected> list;
+            list = plannerService.selectExpectedFilter(filter);
 
             List<VisitExpectedDto> result = list.stream()
                     .map(r -> new VisitExpectedDto(r))
@@ -141,7 +183,7 @@ public class PlannerController {
             VisitExpectedDto visitExpectedDto = new VisitExpectedDto(0, param.get("expectedPlace"), param.get("sidoName"), param.get("gugunName"), param.get("expectedDate"));
 
             Place place = new Place();
-            place.setVisitPlace(param.get("visitPlace"));
+            place.setVisitPlace(param.get("expectedPlace"));
             place.setSidoName(param.get("sidoName"));
             place.setGugunName(param.get("gugunName"));
             plannerService.writePlace(place);
@@ -352,29 +394,4 @@ public class PlannerController {
         return new ResponseEntity<String>("Sorry: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @Getter
-    @Setter
-    static class Filter{
-        String startDate;
-        String endDate;
-        String sidoName;
-        String gugunName;
-        String visitPlace;
-
-        public Filter() {
-        }
-
-        public Filter(String startDate, String endDate){
-            this.startDate = startDate;
-            this.endDate = endDate;
-        }
-
-        public Filter(String startDate, String endDate, String sidoName, String gugunName, String visitPlace){
-            this.startDate = startDate;
-            this.endDate = endDate;
-            this.sidoName = sidoName;
-            this.gugunName = gugunName;
-            this.visitPlace = visitPlace;
-        }
-    }
 }

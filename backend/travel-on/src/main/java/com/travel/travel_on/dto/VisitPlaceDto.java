@@ -25,7 +25,7 @@ public class VisitPlaceDto {
         ratePoint = visitPlace.getRatePoint();
         review = visitPlace.getReview();
         sidoName = visitPlace.getSidoName();
-        gugunName = visitPlace.getSidoName();
+        gugunName = visitPlace.getGugunName();
         visitDate = visitPlace.getVisitDate();
     }
 }
