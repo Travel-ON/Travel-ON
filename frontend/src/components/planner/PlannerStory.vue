@@ -7,7 +7,7 @@
 </template>
 
 <script>
-// import ModalView from "./components/planner/ModalView";
+import ModalView from "./components/planner/ModalView";
 
 export default {
   name: "PlannerStory",
