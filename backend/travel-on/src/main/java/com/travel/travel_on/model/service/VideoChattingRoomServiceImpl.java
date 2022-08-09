@@ -1,13 +1,7 @@
 package com.travel.travel_on.model.service;
 
-import com.travel.travel_on.dto.UserDto;
-import com.travel.travel_on.dto.VideoChattingRoomDto;
-import com.travel.travel_on.entity.User;
-import com.travel.travel_on.entity.UserVideoChattingRoom;
-import com.travel.travel_on.entity.VideoChattingRoom;
-import com.travel.travel_on.model.repo.UserRepository;
-import com.travel.travel_on.model.repo.UserVideoChattingRoomRepository;
-import com.travel.travel_on.model.repo.VideoChattingRoomRepository;
+import com.travel.travel_on.entity.*;
+import com.travel.travel_on.model.repo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +23,12 @@ public class VideoChattingRoomServiceImpl implements VideoChattingRoomService{
     @Autowired
     UserVideoChattingRoomRepository userVideoChattingRoomRepository;
 
+    @Autowired
+    ReportRepository reportRepository;
+
+    @Autowired
+    LiarRepository liarRepository;
+
     @Override
     public boolean checkRoomNumber(String roomCode) {
         VideoChattingRoom result = videoChattingRoomRepository.findByRoomCode(roomCode);
@@ -39,17 +39,16 @@ public class VideoChattingRoomServiceImpl implements VideoChattingRoomService{
     @Override
     public boolean insert(VideoChattingRoom videoChattingRoom) {
         User user = videoChattingRoom.getUser();
+
         if(userVideoChattingRoomRepository.findByUser(user)!=null) {
             return false;
         }
         VideoChattingRoom result = videoChattingRoomRepository.save(videoChattingRoom);
 
-        UserVideoChattingRoom userVideoChattingRoom = UserVideoChattingRoom.builder()
-                .userId(user.getUserId())
-                .videoChattingRoom(result)
-                .nickname(user.getNickname())
-                .userTitle(user.getUserTitle())
-                .build();
+        UserVideoChattingRoom userVideoChattingRoom = new UserVideoChattingRoom();
+        userVideoChattingRoom.setUser(user);
+        userVideoChattingRoom.setVideoChattingRoom(result);
+
         userVideoChattingRoomRepository.save(userVideoChattingRoom);
         return true;
     }
@@ -63,7 +62,8 @@ public class VideoChattingRoomServiceImpl implements VideoChattingRoomService{
 
         List<VideoChattingRoom> videoChattingRooms = videoChattingRoomRepository.findByAreaCode(areaCode);
         VideoChattingRoom videoChattingRoom = null;
-        while(videoChattingRooms!=null && videoChattingRoom==null){
+
+        while(videoChattingRooms!=null && 0 < videoChattingRooms.size() && videoChattingRoom==null){
             int index = ThreadLocalRandom.current().nextInt(0, videoChattingRooms.size());
             videoChattingRoom = videoChattingRooms.get(index);
             if(videoChattingRoom.getCount()==userVideoChattingRoomRepository.findByVideoChattingRoom(videoChattingRoom).size()){
@@ -72,12 +72,10 @@ public class VideoChattingRoomServiceImpl implements VideoChattingRoomService{
             }
         }
         if(videoChattingRoom!=null){
-            UserVideoChattingRoom userVideoChattingRoom = UserVideoChattingRoom.builder()
-                    .userId(user.getUserId())
-                    .videoChattingRoom(videoChattingRoom)
-                    .nickname(user.getNickname())
-                    .userTitle(user.getUserTitle())
-                    .build();
+            UserVideoChattingRoom userVideoChattingRoom = new UserVideoChattingRoom();
+            userVideoChattingRoom.setUser(user);
+            userVideoChattingRoom.setVideoChattingRoom(videoChattingRoom);
+
             userVideoChattingRoomRepository.save(userVideoChattingRoom);
         }
         return videoChattingRoom;
@@ -95,12 +93,9 @@ public class VideoChattingRoomServiceImpl implements VideoChattingRoomService{
         if(videoChattingRoom.getCount()==userVideoChattingRoomRepository.findByVideoChattingRoom(videoChattingRoom).size()){
             return false;
         }
-        UserVideoChattingRoom userVideoChattingRoom = UserVideoChattingRoom.builder()
-                .userId(user.getUserId())
-                .videoChattingRoom(videoChattingRoom)
-                .nickname(user.getNickname())
-                .userTitle(user.getUserTitle())
-                .build();
+        UserVideoChattingRoom userVideoChattingRoom = new UserVideoChattingRoom();
+        userVideoChattingRoom.setUser(user);
+        userVideoChattingRoom.setVideoChattingRoom(videoChattingRoom);
         userVideoChattingRoomRepository.save(userVideoChattingRoom);
         return true;
     }
@@ -114,7 +109,8 @@ public class VideoChattingRoomServiceImpl implements VideoChattingRoomService{
 
         UserVideoChattingRoom userVideoChattingRoom = userVideoChattingRoomRepository.findByUser(user);
         if(userVideoChattingRoomRepository.findByUser(user)==null ||
-                !userVideoChattingRoom.getVideoChattingRoom().getRoomCode().equals(roomCode)) {
+                !userVideoChattingRoom.getVideoChattingRoom().getRoomCode().equals(roomCode) ||
+                videoChattingRoom.getUser().getUserId()==user.getUserId()){
             return false;
         }
 
@@ -132,11 +128,38 @@ public class VideoChattingRoomServiceImpl implements VideoChattingRoomService{
         UserVideoChattingRoom userVideoChattingRoom = userVideoChattingRoomRepository.findByUser(user);
         if(userVideoChattingRoomRepository.findByUser(user)==null ||
                 !userVideoChattingRoom.getVideoChattingRoom().getRoomCode().equals(roomCode) ||
-                videoChattingRoom.getUser()!=user) {
+                videoChattingRoom.getUser().getUserId()!=user.getUserId()) {
             return false;
         }
-
         userVideoChattingRoomRepository.delete(userVideoChattingRoom);
+        videoChattingRoomRepository.delete(videoChattingRoom);
         return true;
+    }
+
+    @Override
+    public boolean report(Report report) {
+        Optional<User> result = userRepository.findByRealId(report.getReportedId());
+        if (result.isPresent()) {
+            reportRepository.save(report);
+            User user = result.get();
+            user.setReportCount(user.getReportCount()+1);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public List<String> selectTopic() {
+        return liarRepository.findDistinctAll();
+    }
+
+    @Override
+    public List<String> selectKeyword(String topic) {
+        Optional<List<String>> result = liarRepository.findDistinctByTopic(topic);
+        if(result.isPresent()){
+            return result.get();
+        }
+        return null;
     }
 }

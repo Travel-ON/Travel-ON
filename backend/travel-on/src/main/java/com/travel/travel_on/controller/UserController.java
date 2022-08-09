@@ -27,7 +27,6 @@ import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
@@ -164,8 +163,9 @@ public class UserController {
             if(modifyUser.getEmail()!=null) {
                 userDto.setEmail(modifyUser.getEmail());
             }
-            if(modifyUser.getAddress()!=null) {
-                userDto.setAddress(modifyUser.getAddress());
+            /****수정해야함*****/
+            if(modifyUser.getSidoCode()!=null) {
+                userDto.setSidoCode(modifyUser.getSidoCode());
             }
 
             boolean result = userService.update(userDto);
@@ -249,7 +249,6 @@ public class UserController {
         try {
             UserDto userDto = userService.select(param.get("id"));
             if(userDto!=null&&userDto.getEmail().equals(param.get("email"))){
-//                String authKey = "A!"+Integer.toString( ThreadLocalRandom.current().nextInt(100000, 1000000) )+"CT@";
                 String authKey = userService.getRandomString(10,true);
                 userDto.setPassword(authKey);
                 boolean result = userService.update(userDto);

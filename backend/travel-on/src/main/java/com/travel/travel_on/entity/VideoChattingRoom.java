@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = {"userVideoChattingRooms"})
 @Builder
 @Table(name="video_chatting_room")
 @Entity

@@ -2,8 +2,7 @@ package com.travel.travel_on.controller;
 
 import com.travel.travel_on.auth.JwtUserDetails;
 import com.travel.travel_on.dto.UserDto;
-import com.travel.travel_on.dto.VideoChattingRoomDto;
-import com.travel.travel_on.entity.UserVideoChattingRoom;
+import com.travel.travel_on.entity.Report;
 import com.travel.travel_on.entity.VideoChattingRoom;
 import com.travel.travel_on.model.service.UserService;
 import com.travel.travel_on.model.service.VideoChattingRoomService;
@@ -17,14 +16,19 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
 @RequestMapping("/api/videochat")
 @Slf4j
 public class VideoChatController {
+
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     private UserService userService;
@@ -58,9 +62,10 @@ public class VideoChatController {
                     .count(Integer.parseInt(param.get("count")))
                     .roomCode(roomCode)
                     .build();
-            videoChattingRoomService.insert(newRoom);
-
-            return new ResponseEntity<String>(roomCode,HttpStatus.OK);
+            if(videoChattingRoomService.insert(newRoom)) {
+                return new ResponseEntity<String>(roomCode,HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return exceptionHandling(e);
         }
@@ -81,28 +86,17 @@ public class VideoChatController {
             String areaCode = param.get("areaName"); /******* 코드 가져오기 ******/
 
             VideoChattingRoom videoChattingRoom = videoChattingRoomService.match(userDto.toEntity(), areaCode);
-            if(videoChattingRoom==null)  return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            if(videoChattingRoom==null)  {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
             return new ResponseEntity<String>(videoChattingRoom.getRoomCode(), HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
         }
     }
 
-//    @ApiOperation(value = "화상채팅방 입장")
-//    @GetMapping("/{room_code}")
-//    public ResponseEntity<?> enter(@ApiIgnore Authentication authentication) {
-//        try {
-//            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
-//            String userId = userDetails.getUsername();
-//            UserDto userDto = userService.select(userId);
-//
-//            return new ResponseEntity<>(HttpStatus.OK);
-//        } catch (Exception e) {
-//            return exceptionHandling(e);
-//        }
-//    }
-
-    @ApiOperation(value = "비공개 화상채팅방 입장")
+    @ApiOperation(value = "공유코드로 화상채팅방 입장")
+    @Transactional
     @GetMapping("/{roomCode}")
     public ResponseEntity<?> enterSecretRoom(@ApiIgnore Authentication authentication, @PathVariable String roomCode) {
         try {
@@ -112,7 +106,9 @@ public class VideoChatController {
             if(userDto==null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            if(videoChattingRoomService.enter(userDto.toEntity(),roomCode))  return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            if(videoChattingRoomService.enter(userDto.toEntity(),roomCode))  {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return exceptionHandling(e);
@@ -120,7 +116,8 @@ public class VideoChatController {
     }
 
     @ApiOperation(value = "화상채팅방 종료")
-    @DeleteMapping("/{room_code}")
+    @Transactional
+    @DeleteMapping("/{roomCode}")
     public ResponseEntity<?> close(@ApiIgnore Authentication authentication, @PathVariable String roomCode) {
         try {
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
@@ -129,7 +126,9 @@ public class VideoChatController {
             if(userDto==null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            if(videoChattingRoomService.close(userDto.toEntity(),roomCode)) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            if(videoChattingRoomService.close(userDto.toEntity(),roomCode)) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return exceptionHandling(e);
@@ -138,6 +137,7 @@ public class VideoChatController {
 
 
     @ApiOperation(value = "화상채팅방 나가기")
+    @Transactional
     @GetMapping("/leave/{roomCode}")
     public ResponseEntity<?> leave(@ApiIgnore Authentication authentication, @PathVariable String roomCode) {
         try {
@@ -148,7 +148,9 @@ public class VideoChatController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            if(videoChattingRoomService.leave(userDto.toEntity(),roomCode)) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            if(videoChattingRoomService.leave(userDto.toEntity(),roomCode)) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return exceptionHandling(e);
@@ -156,14 +158,29 @@ public class VideoChatController {
     }
 
     @ApiOperation(value = "신고하기")
+    @Transactional
     @PostMapping("/report")
-    public ResponseEntity<?> report(@ApiIgnore Authentication authentication) {
+    public ResponseEntity<?> report(@ApiIgnore Authentication authentication, @RequestBody Map<String, String> param) {
         try {
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
+            if(userDto==null||userService.select(param.get("reportedId"))==null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
 
-            return new ResponseEntity<>(HttpStatus.OK);
+            Date time = new Date();
+            String nowTime = simpleDateFormat.format(time);
+            Report report = Report.builder()
+                    .reportingId(userId)
+                    .reportedId(param.get("reportedId"))
+                    .reportDate(nowTime)
+                    .reportContent(param.get("reportContent"))
+                    .build();
+            if(videoChattingRoomService.report(report)) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return exceptionHandling(e);
         }
@@ -176,22 +193,32 @@ public class VideoChatController {
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
+            if(userDto==null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
 
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<List>(videoChattingRoomService.selectTopic(),HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
         }
     }
 
     @ApiOperation(value = "라이어게임 - 주제 선택 후 키워드 조회")
-    @GetMapping("/liargame/{subject}")
-    public ResponseEntity<?> selectKeyword(@ApiIgnore Authentication authentication) {
+    @GetMapping("/liargame/{topic}")
+    public ResponseEntity<?> selectKeyword(@ApiIgnore Authentication authentication, @PathVariable String topic) {
         try {
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
+            if(userDto==null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            List<String> result = videoChattingRoomService.selectKeyword(topic);
+            if(result==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-            return new ResponseEntity<>(HttpStatus.OK);
+            int index = ThreadLocalRandom.current().nextInt(0, result.size());
+
+            return new ResponseEntity<String>(result.get(index),HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
         }

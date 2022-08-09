@@ -15,11 +15,11 @@ import java.io.Serializable;
 @Entity
 public class UserVideoChattingRoom implements Serializable {
     @Id
-    @Column(name = "user_id", nullable = false)
-    private int userId;
+    @Column(name="user_video_chatting_room_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer UserVideoChattingRoomId;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @MapsId
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
 
@@ -27,14 +27,9 @@ public class UserVideoChattingRoom implements Serializable {
     @JoinColumn(name="video_chatting_room_id")
     private VideoChattingRoom videoChattingRoom;
 
-    @Column(length = 20, nullable = false)
-    private String nickname;
-
-    @Column(length = 20)
-    private String userTitle;
-
     public void setUser(User user){
         this.user = user;
+        this.user.getUserVideoChattingRooms().add(this);
     }
 
     public void setVideoChattingRoom(VideoChattingRoom videoChattingRoom){
