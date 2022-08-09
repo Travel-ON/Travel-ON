@@ -15,18 +15,19 @@ public class UserDto {
     private String nickname;
     private String password;
     private String email;
-    private String address;
+    private String sidoCode;
     private boolean adminFlag;
     private String userTitle;
     private int reportCount;
     private boolean alarmFlag;
 
-    public UserDto(String id,String nickname,String password,String email,String address ){
+
+    public UserDto(String id,String nickname,String password,String email,String sidoCode ){
         this.id=id;
         this.nickname=nickname;
         this.password=password;
         this.email=email;
-        this.address=address;
+        this.sidoCode=sidoCode;
     }
 
     public User toEntity() {
@@ -36,7 +37,7 @@ public class UserDto {
                 .nickname(this.nickname)
                 .password(this.password)
                 .email(this.email)
-                .address(this.address)
+                .sidoCode(this.sidoCode)
                 .adminFlag(this.adminFlag)
                 .userTitle(this.userTitle)
                 .reportCount(this.reportCount)
@@ -50,7 +51,7 @@ public class UserDto {
         this.nickname = user.getNickname();
         this.password = user.getPassword();
         this.email = user.getEmail();
-        this.address = user.getAddress();
+        this.sidoCode = user.getSidoCode();
         this.adminFlag = user.isAdminFlag();
         this.userTitle = user.getUserTitle();
         this.reportCount = user.getReportCount();
