@@ -258,12 +258,15 @@ public class UserController {
                 userDto.setPassword(authKey);
                 boolean result = userService.update(userDto);
                 if(result) {
+
                     userService.sendMail(userDto.getEmail(),
-                            "[Travel-ON] 비밀번호 초기화",
-                            "안녕하세요 Travel-ON 입니다\n" +
-                                    "인증번호는 " + authKey + " 입니다.\n" +
-                                    "로그인 후 비밀번호를 변경해주세요.\n"+
-                                    "Travel-ON을 이용해주셔서 감사합니다."
+                            "[Travel-ON] 임시 비밀번호 안내",
+                           "✈️ Travel-ON 임시 비밀번호 안내 ✈️\n\n" +
+                                   "비밀번호 찾기 요청에 따라, 비밀번호가 임시 비밀번호로 재설정되었습니다.\n" +
+                                   "아래 임시 비밀번호를 확인해주세요.\n\n"+
+                                    authKey+
+                                    "\n\n로그인 후 바로 비밀번호를 변경해주시길 바랍니다."+
+                                    "\nTravel-ON을 이용해주셔서 감사합니다."
                     );
                     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 }else{
