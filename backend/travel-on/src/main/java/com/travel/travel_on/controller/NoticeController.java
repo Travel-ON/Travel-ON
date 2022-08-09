@@ -49,9 +49,13 @@ public class NoticeController {
     @GetMapping("/page") //페이징 디폴트 10개씩
     public ResponseEntity<?> selectPage(@PageableDefault(sort = "noticeId")Pageable pageable){
         Board result = new Board();
+        System.out.println("투스트링 : " + pageable.toString() );
         result.P = noticeService.findPage(pageable);
         result.previous = pageable.previousOrFirst().getPageNumber();
         result.next = pageable.next().getPageNumber();
+        System.out.println("P : " + result.P);
+        System.out.println("previous : " + result.previous);
+        System.out.println("next : " + result.next);
 
         return new ResponseEntity<Board>(result, HttpStatus.OK);
     }
