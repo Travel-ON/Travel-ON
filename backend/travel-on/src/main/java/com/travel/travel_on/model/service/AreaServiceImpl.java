@@ -1,0 +1,33 @@
+package com.travel.travel_on.model.service;
+
+import com.travel.travel_on.entity.Sido;
+import com.travel.travel_on.model.repo.DongRepository;
+import com.travel.travel_on.model.repo.GugunRepository;
+import com.travel.travel_on.model.repo.SidoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class AreaServiceImpl implements AreaService {
+
+    @Autowired
+    SidoRepository sidoRepository;
+
+    @Autowired
+    GugunRepository gugunRepository;
+
+    @Autowired
+    DongRepository dongRepository;
+
+    @Autowired
+    UserService userService;
+
+    @Override
+    public Sido selectSidoName(String splitCode) {
+        List<Sido> result = sidoRepository.findBySidoCodeStartsWith(splitCode);
+        if(result==null || result.size()==0) return null;
+        return result.get(0);
+    }
+}
