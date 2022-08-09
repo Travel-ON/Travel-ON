@@ -17,11 +17,11 @@ import java.util.Optional;
 public class QNAServiceImpl implements QNAService{
 
     @Autowired
-    QNARepository qRepo;
+    QNARepository qnaRepository;
 
     @Override
     public List<QNA> selectAll(User user, String keyword) {
-        List<QNA> list = qRepo.findByUser(user);
+        List<QNA> list = qnaRepository.findByUser(user);
 
         if(keyword.equals("null")){
             return list;
@@ -38,7 +38,7 @@ public class QNAServiceImpl implements QNAService{
 
     @Override
     public QNADto selectOne(Integer id) {
-        Optional<QNA> result = qRepo.findById(id);
+        Optional<QNA> result = qnaRepository.findById(id);
         if(result.isPresent()){
             QNA qna = result.get();
             QNADto qnaDto = new QNADto(qna);
@@ -65,13 +65,13 @@ public class QNAServiceImpl implements QNAService{
                 .answerDate(qnaDto.getAnswerDate())
                 .build();
         qna.setUser(user);
-        qRepo.save(qna);
+        qnaRepository.save(qna);
         return true;
     }
 
     @Override
     public boolean update(QNADto qnaDto) {
-        Optional<QNA> result = qRepo.findById(qnaDto.getQNAId());
+        Optional<QNA> result = qnaRepository.findById(qnaDto.getQNAId());
 
         if (result.isPresent()){
             QNA qna = result.get();
@@ -83,7 +83,7 @@ public class QNAServiceImpl implements QNAService{
             qna.setRealId(qnaDto.getRealId());
             qna.setNickname(qnaDto.getNickname());
             qna.setAnswerFlag(qnaDto.isAnswerFlag());
-            qRepo.save(qna);
+            qnaRepository.save(qna);
             return true;
         }else{
             return false;
@@ -92,12 +92,12 @@ public class QNAServiceImpl implements QNAService{
 
     @Override
     public boolean delete(Integer id) {
-        Optional<QNA> result = qRepo.findById(id);
+        Optional<QNA> result = qnaRepository.findById(id);
         if(result == null){
             return false;
         }else{
             result.ifPresent(qna -> {
-                qRepo.delete(qna);
+                qnaRepository.delete(qna);
             });
             return true;
         }
@@ -105,7 +105,7 @@ public class QNAServiceImpl implements QNAService{
 
     @Override
     public List<QNA> adminSelectAll(String keyword) {
-        List<QNA> list = qRepo.findAll();
+        List<QNA> list = qnaRepository.findAll();
 
         if(keyword.equals("null")){
             return list;
@@ -122,7 +122,7 @@ public class QNAServiceImpl implements QNAService{
 
     @Override
     public List<QNA> noneAnswerAll() {
-        List<QNA> list = qRepo.findAll();
+        List<QNA> list = qnaRepository.findAll();
 
         List<QNA> alist = new LinkedList<>();
         for (QNA qna:list){

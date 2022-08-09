@@ -1,8 +1,8 @@
 import { createStore } from "vuex";
 import { Notices } from "@/store/modules/notices";
 import { Accounts } from "./modules/accounts";
-// eslint-disable-next-line import/named
 import { QnAs } from "./modules/qnas";
+import { Locations } from "./modules/locations";
 
 export default createStore({
   state: {},
@@ -13,5 +13,6 @@ export default createStore({
     Accounts,
     QnAs,
     Notices,
+    Locations,
   },
 });

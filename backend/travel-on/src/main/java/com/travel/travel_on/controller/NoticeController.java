@@ -9,6 +9,8 @@ import com.travel.travel_on.model.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import java.text.SimpleDateFormat;
 
+import java.util.Date;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
@@ -156,17 +161,38 @@ public class NoticeController {
         return new ResponseEntity<String>("Sorry: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Getter
+    @Setter
     static class Board{
         Page<Notice> P;
         int previous;
         int next;
+
+        public Board() {}
+
+        public Board(Page<Notice> P, int previous, int next){
+            P = this.P;
+            previous = this.previous;
+            next = this.next;
+        }
     }
 
+    @Getter
+    @Setter
     static class FAQBoard{
         Page<FAQ> PF;
         int previous;
         int next;
+
+        public  FAQBoard(){}
+
+        public FAQBoard(Page<FAQ> PF, int previous, int next){
+            PF = this.PF;
+            previous = this.previous;
+            next = this.next;
+        }
     }
 }
+
 
 
