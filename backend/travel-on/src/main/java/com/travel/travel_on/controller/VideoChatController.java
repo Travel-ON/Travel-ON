@@ -4,6 +4,7 @@ import com.travel.travel_on.auth.JwtUserDetails;
 import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.entity.Report;
 import com.travel.travel_on.entity.VideoChattingRoom;
+import com.travel.travel_on.model.service.AreaService;
 import com.travel.travel_on.model.service.UserService;
 import com.travel.travel_on.model.service.VideoChattingRoomService;
 import io.swagger.annotations.ApiOperation;
@@ -36,6 +37,9 @@ public class VideoChatController {
     @Autowired
     private VideoChattingRoomService videoChattingRoomService;
 
+    @Autowired
+    private AreaService areaService;
+
 
     @ApiOperation(value = "화상채팅방 생성")
     @Transactional
@@ -55,17 +59,30 @@ public class VideoChatController {
                 if(!videoChattingRoomService.checkRoomNumber(roomCode))roomCode=null;
             }
 
+            String dongCode = param.get("dongCode");
+            String areaScope = param.get("areaScope");
+            String areaCode;
+            if(areaScope.equals("sido")){
+                areaCode=areaService.selectSidoName(dongCode.substring(0,2)).getSidoCode();
+            }else if(areaScope.equals("gugun")){
+                areaCode=areaService.selectGugunName(dongCode.substring(0,2)).getGugunCode();
+            }else if(areaScope.equals("dong")){
+                areaCode=dongCode;
+            }else{
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
             VideoChattingRoom newRoom = VideoChattingRoom.builder()
                     .user(userDto.toEntity())
-                    .areaCode(param.get("areaCode"))
+                    .areaCode(areaCode)
                     .privateFlag(param.get("privateFlag").equals("true"))
                     .count(Integer.parseInt(param.get("count")))
                     .roomCode(roomCode)
                     .build();
             if(videoChattingRoomService.insert(newRoom)) {
-                return new ResponseEntity<String>(roomCode,HttpStatus.OK);
+                return new ResponseEntity<String>(roomCode,HttpStatus.CREATED);
             }
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         } catch (Exception e) {
             return exceptionHandling(e);
         }
@@ -83,11 +100,22 @@ public class VideoChatController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            String areaCode = param.get("areaName"); /******* 코드 가져오기 ******/
+            String dongCode = param.get("dongCode");
+            String areaScope = param.get("areaScope");
+            String areaCode;
+            if(areaScope.equals("sido")){
+                areaCode=areaService.selectSidoName(dongCode.substring(0,2)).getSidoCode();
+            }else if(areaScope.equals("gugun")){
+                areaCode=areaService.selectGugunName(dongCode.substring(0,2)).getGugunCode();
+            }else if(areaScope.equals("dong")){
+                areaCode=dongCode;
+            }else{
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
 
             VideoChattingRoom videoChattingRoom = videoChattingRoomService.match(userDto.toEntity(), areaCode);
             if(videoChattingRoom==null)  {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
             return new ResponseEntity<String>(videoChattingRoom.getRoomCode(), HttpStatus.OK);
         } catch (Exception e) {
@@ -109,7 +137,7 @@ public class VideoChatController {
             if(videoChattingRoomService.enter(userDto.toEntity(),roomCode))  {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         } catch (Exception e) {
             return exceptionHandling(e);
         }
@@ -129,7 +157,7 @@ public class VideoChatController {
             if(videoChattingRoomService.close(userDto.toEntity(),roomCode)) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         } catch (Exception e) {
             return exceptionHandling(e);
         }
@@ -151,7 +179,7 @@ public class VideoChatController {
             if(videoChattingRoomService.leave(userDto.toEntity(),roomCode)) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         } catch (Exception e) {
             return exceptionHandling(e);
         }
@@ -180,7 +208,7 @@ public class VideoChatController {
             if(videoChattingRoomService.report(report)) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         } catch (Exception e) {
             return exceptionHandling(e);
         }

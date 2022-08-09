@@ -1,5 +1,6 @@
 package com.travel.travel_on.model.service;
 
+import com.travel.travel_on.entity.Gugun;
 import com.travel.travel_on.entity.Sido;
 import com.travel.travel_on.model.repo.DongRepository;
 import com.travel.travel_on.model.repo.GugunRepository;
@@ -27,6 +28,13 @@ public class AreaServiceImpl implements AreaService {
     @Override
     public Sido selectSidoName(String splitCode) {
         List<Sido> result = sidoRepository.findBySidoCodeStartsWith(splitCode);
+        if(result==null || result.size()==0) return null;
+        return result.get(0);
+    }
+
+    @Override
+    public Gugun selectGugunName(String splitCode) {
+        List<Gugun> result = gugunRepository.findByGugunCodeStartsWith(splitCode);
         if(result==null || result.size()==0) return null;
         return result.get(0);
     }
