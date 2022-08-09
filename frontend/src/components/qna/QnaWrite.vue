@@ -5,7 +5,7 @@
         <v-text-field v-model="title" :counter="10" :rules="titleRules" label="제목" required></v-text-field>
         <v-textarea v-model="content" :counter="300" label="내용" :rules="contentRules" required></v-textarea>
         <div class="d-flex justify-end mb-6">
-          <v-btn :disabled="!valid" color="success" class="d-flex justify-end" @click="[validate(), writeNotice()]">
+          <v-btn :disabled="!valid" color="success" class="d-flex justify-end" @click="[validate(), writeQna()]">
             등록
           </v-btn>
         </div>
@@ -16,6 +16,7 @@
 
 <script>
 export default {
+  name: "QnaWrite",
   data() {
     return {
       valid: true,
@@ -28,20 +29,19 @@ export default {
       contentRules: [(v) => !!v || "내용을 입력하세요", (v) => (v && v.length <= 300) || "내용은 최대 200글자입니다."],
     };
   },
-
   methods: {
     validate() {
       this.$refs.form.validate();
     },
-    writeNotice() {
-      const newNotice = {
+    writeQna() {
+      const newQna = {
         title: this.title,
         content: this.content,
       };
-      this.$store.dispatch("Notices/writeNotice", newNotice);
+      this.$store.dispatch("QnAs/writeQna", newQna);
     },
   },
 };
 </script>
 
-<style></style>
+<style scoped></style>

@@ -14,6 +14,12 @@ import NoticeDetail from "../components/notice/NoticeDetail.vue";
 import NoticeWrite from "../components/notice/NoticeWrite.vue";
 import NoticeUpdate from "../components/notice/NoticeUpdate.vue";
 
+import Qna from "../views/Qna.vue";
+import QnaList from "../components/qna/QnaList.vue";
+import QnaWrite from "../components/qna/QnaWrite.vue";
+import QnaDetail from "../components/qna/QnaDetail.vue";
+import QnaUpdate from "../components/qna/QnaUpdate.vue";
+
 import Videochat from "../views/Videochat.vue";
 import VideochatMatching from "../components/VideochatMatching.vue";
 
@@ -67,6 +73,33 @@ const routes = [
         path: "logout",
         name: "MemberLogout",
         compnent: MemberLogout,
+      },
+    ],
+  },
+  {
+    path: "/qna",
+    component: Qna,
+    name: "Qna",
+    children: [
+      {
+        path: "",
+        name: "QnaList",
+        component: QnaList,
+      },
+      {
+        path: "write",
+        name: "QnaWrite",
+        component: QnaWrite,
+      },
+      {
+        path: "detail/:qnaid",
+        name: "QnaDetail",
+        component: QnaDetail,
+      },
+      {
+        path: "update/:id",
+        name: "QnaUpdate",
+        component: QnaUpdate,
       },
     ],
   },
