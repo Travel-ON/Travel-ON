@@ -67,9 +67,6 @@ public class PlannerServiceImpl implements PlannerService{
             list = vRepo.findByVisitDateBetween(filterDto.getStartDate(), filterDto.getEndDate());
 
             for(VisitPlace visitPlace : list){
-                System.out.println("visit : " + visitPlace.getVisitedPlace() + " / " + filterDto.getVisitPlace());
-                System.out.println("gugun : " + visitPlace.getGugunName() + " / " + filterDto.getGugunName());
-                System.out.println("sido : " + visitPlace.getSidoName() + " / " + filterDto.getSidoName());
                 if(visitPlace.getVisitedPlace().contains(filterDto.getVisitPlace())
                         && visitPlace.getGugunName().contains(filterDto.getGugunName())
                         && visitPlace.getSidoName().contains(filterDto.getSidoName())){
