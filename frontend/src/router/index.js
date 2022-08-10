@@ -16,6 +16,7 @@ import NoticeUpdate from "../components/notice/NoticeUpdate.vue";
 
 import Videochat from "../views/Videochat.vue";
 import VideochatMatching from "../components/VideochatMatching.vue";
+import VideochatCreate from "../components/VideochatCreate.vue";
 
 const routes = [
   {
@@ -31,6 +32,11 @@ const routes = [
         path: "",
         name: "VideochatMatching",
         component: VideochatMatching,
+      },
+      {
+        path: "create",
+        name: "VideochatCreate",
+        component: VideochatCreate,
       },
     ],
   },

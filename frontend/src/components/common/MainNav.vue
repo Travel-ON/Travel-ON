@@ -19,7 +19,9 @@
         <!-- </div> -->
         <!-- </v-btn> -->
       </router-link>
-      <v-btn>방만들기</v-btn>
+      <router-link :to="{ name: 'VideochatCreate' }">
+        <v-btn>방만들기</v-btn>
+      </router-link>
       <router-link to="/videochat">방매칭하기</router-link>
       <v-btn>여행플래너</v-btn>
       <v-menu open-on-hover style="z-index: 3500">
