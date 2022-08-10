@@ -9,16 +9,21 @@
             width="150px"
           />
         </v-btn>
+        <!-- <v-btn> -->
+        <!-- <div width="100px"> -->
+        <!-- <img
+          src="https://user-images.githubusercontent.com/97648026/182758932-c401e00f-c153-4a48-9186-b16491197fa1.png"
+          alt="logo"
+          width="100%"
+        /> -->
+        <!-- </div> -->
+        <!-- </v-btn> -->
       </router-link>
       <router-link :to="{ name: 'VideochatCreate' }">
         <v-btn>방만들기</v-btn>
       </router-link>
-      <router-link to="/videochat">
-        <v-btn>방매칭하기</v-btn>
-      </router-link>
-      <router-link :to="{ name: 'Planner' }">
-        <v-btn>여행플래너</v-btn>
-      </router-link>
+      <router-link to="/videochat">방매칭하기</router-link>
+      <v-btn>여행플래너</v-btn>
       <v-menu open-on-hover style="z-index: 3500">
         <template v-slot:activator="{ props }">
           <v-btn v-bind="props"> 커뮤니티 </v-btn>

@@ -150,8 +150,72 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "KoreaMap",
+  data: () => ({
+    trophyList: {
+      // 각 지역 업적 리스트
+      seoul: 0,
+      busan: 0,
+      daegu: 0,
+      incheon: 0,
+      gwangju: 0,
+      daejeon: 0,
+      ulsan: 0,
+      sejong: 0,
+      gyeonggi: 0,
+      gangwon: 0,
+      chungcheongbuk: 0,
+      chungcheongnam: 0,
+      jeollabuk: 0,
+      jeollanam: 0,
+      gyeongsangbuk: 0,
+      gyeongsangnam: 0,
+      jeju: 0,
+    },
+  }),
   computed: {
-    ...mapGetters(["trophy", "trophyList"]),
+    ...mapGetters(["trophy"]),
+    check_trophy() {
+      return this.$store.getters.trophy;
+    },
+  },
+  watch: {
+    check_trophy(val) {
+      val.forEach((element) => {
+        const sido = element.sidoName;
+        const sidoCount = element.count;
+        if (sidoCount >= 10) {
+          this.trophyList[sido] = 5;
+        } else if (sidoCount >= 7) {
+          this.trophyList[sido] = 4;
+        } else if (sidoCount >= 5) {
+          this.trophyList[sido] = 3;
+        } else if (sidoCount >= 3) {
+          this.trophyList[sido] = 2;
+        } else if (sidoCount >= 1) {
+          this.trophyList[sido] = 1;
+        }
+      });
+    },
+  },
+  mounted() {
+    console.log(this.trophy);
+    const trophyLists = this.trophy; // 업적 변환
+    console.log(trophyLists);
+    trophyLists.forEach((element) => {
+      const sido = element.sidoName;
+      const sidoCount = element.count;
+      if (sidoCount >= 10) {
+        this.trophyList[sido] = 5;
+      } else if (sidoCount >= 7) {
+        this.trophyList[sido] = 4;
+      } else if (sidoCount >= 5) {
+        this.trophyList[sido] = 3;
+      } else if (sidoCount >= 3) {
+        this.trophyList[sido] = 2;
+      } else if (sidoCount >= 1) {
+        this.trophyList[sido] = 1;
+      }
+    });
   },
 };
 </script>

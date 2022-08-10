@@ -8,8 +8,6 @@ import MemberSecession from "../components/member/MemberSecession.vue";
 import MemberLogout from "../components/member/MemberLogout.vue";
 import HomeView from "../views/HomeView.vue";
 
-import PlannerView from "../views/PlannerView.vue";
-
 import Notice from "../views/Notice.vue";
 import NoticeList from "../components/notice/NoticeList.vue";
 import NoticeDetail from "../components/notice/NoticeDetail.vue";
@@ -103,11 +101,6 @@ const routes = [
         component: NoticeWrite,
       },
     ],
-  },
-  {
-    path: "/planner",
-    name: "Planner",
-    component: PlannerView,
   },
 ];
 
