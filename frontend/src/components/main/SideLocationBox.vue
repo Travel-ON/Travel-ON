@@ -19,7 +19,7 @@
     <div style="margin: auto; padding-top: 10px; color: #fff; text-align: left; font-size: 14px">
       <div>현재 접속중인 지역은</div>
       <div>
-        <span style="color: #f4a84d">{{ sido + " " }} </span><span style="color: #03dac5">{{ sigungu + " " }} </span
+        <span style="color: #f4a84d">{{ sido + " " }} </span><span style="color: #03dac5">{{ gugun + " " }} </span
         ><span style="color: #b1e3ff">{{ dong }} </span>입니다.
       </div>
     </div>
@@ -46,7 +46,7 @@
       <div>위치인증 버튼을 눌러주세요.</div>
     </div>
     <div style="position: absolute; bottom: 12px; left: 50%; transform: translate(-50%, 0)">
-      <v-btn rounded="pill" bg-color="#fff" @click="getLocation()"
+      <v-btn rounded="pill" bg-color="#fff" @click="getLocation()" :disabled="!isLoggedIn"
         ><span style="font-weight: bold">위치인증하기</span></v-btn
       >
     </div>
@@ -59,7 +59,7 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   data() {},
   computed: {
-    ...mapGetters(["isLocation", "dong", "sigungu", "sido"]),
+    ...mapGetters(["isLocation", "dong", "gugun", "sido", "isLoggedIn"]),
   },
   methods: {
     ...mapActions(["getLocation"]),
