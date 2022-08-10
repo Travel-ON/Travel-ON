@@ -8,6 +8,8 @@ import MemberSecession from "../components/member/MemberSecession.vue";
 import MemberLogout from "../components/member/MemberLogout.vue";
 import HomeView from "../views/HomeView.vue";
 
+import PlannerView from "../views/PlannerView.vue";
+
 import Notice from "../views/Notice.vue";
 import NoticeList from "../components/notice/NoticeList.vue";
 import NoticeDetail from "../components/notice/NoticeDetail.vue";
@@ -16,6 +18,7 @@ import NoticeUpdate from "../components/notice/NoticeUpdate.vue";
 
 import Videochat from "../views/Videochat.vue";
 import VideochatMatching from "../components/VideochatMatching.vue";
+import VideochatCreate from "../components/VideochatCreate.vue";
 
 const routes = [
   {
@@ -31,6 +34,11 @@ const routes = [
         path: "",
         name: "VideochatMatching",
         component: VideochatMatching,
+      },
+      {
+        path: "create",
+        name: "VideochatCreate",
+        component: VideochatCreate,
       },
     ],
   },
@@ -95,6 +103,11 @@ const routes = [
         component: NoticeWrite,
       },
     ],
+  },
+  {
+    path: "/planner",
+    name: "Planner",
+    component: PlannerView,
   },
 ];
 
