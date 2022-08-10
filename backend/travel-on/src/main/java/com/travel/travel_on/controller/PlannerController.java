@@ -386,12 +386,27 @@ public class PlannerController {
     }
 
     @ApiOperation(value = "구군 불러오기 : 시도 선택시 구군 데이터 가져오기")
-    @GetMapping("/load/{sido}")
-    public ResponseEntity<?> roadGugun(@PathVariable("sido") String sidoName){
+    @GetMapping("/load/{sidoName}")
+    public ResponseEntity<?> roadGugun(@ApiIgnore Authentication authentication, @PathVariable String sidoName){
+        try {
+            log.info("구군 리스트 불러오기");
 
-        List<Gugun> list = plannerService.loadGugun(sidoName);
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userId = userDetails.getUsername();
+            UserDto userDto = userService.select(userId);
 
-        return new ResponseEntity<List>(list, HttpStatus.OK);
+            if(userDto == null){
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            System.out.println(sidoName);
+            List<Gugun> list = plannerService.loadGugun(sidoName);
+
+            return new ResponseEntity<List>(list, HttpStatus.OK);
+        }catch (Exception e){
+            return exceptionHandling(e);
+        }
+
     }
 
 

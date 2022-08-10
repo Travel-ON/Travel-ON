@@ -255,6 +255,7 @@ public class PlannerServiceImpl implements PlannerService{
     @Override
     public List<Gugun> loadGugun(String sidoName) {
         Optional<Sido> value = sRepo.findFirstBySidoNameContaining(sidoName);
+        System.out.println(value);
         if(value.isPresent()){
             Sido sido = value.get();
             String splitCode = sido.getSidoCode().charAt(0) + "" + sido.getSidoCode().charAt(1);

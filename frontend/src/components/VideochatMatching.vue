@@ -45,7 +45,7 @@ import UserVideo from "./openvidu/UserVideo.vue";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
-const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+const OPENVIDU_SERVER_SECRET = "ssafy";
 
 export default {
   name: "VideochatMatching",
