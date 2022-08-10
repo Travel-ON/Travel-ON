@@ -30,16 +30,4 @@ public class VideoChattingRoomDto {
         this.count=videoChattingRoom.getCount();
         this.roomCode=videoChattingRoom.getRoomCode();
     }
-
-//    public VideoChattingRoomDto toEntity() {
-//        return VideoChattingRoom.builder()
-//                .videoChattingRoomId(this.videoChattingRoomId)
-//                .user(this.nickname)
-//                .areaCode(this.areaCode)
-//                .privateFlag(this.privateFlag)
-//                .password(this.password)
-//                .count(this.count)
-//                .roomCode(this.roomCode)
-//                .build();
-//    }
 }
