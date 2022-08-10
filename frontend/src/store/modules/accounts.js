@@ -119,8 +119,7 @@ export const Accounts = {
       commit("SET_TITLE", "");
       commit("SET_RESIDENT", false);
       commit("SET_TROPHY", []);
-      commit("SET_TROPHYLIST", )
-      dispatch("removeLocation", {
+      commit("SET_TROPHYLIST", {
         seoul: 0,
         busan: 0,
         daegu: 0,
@@ -139,6 +138,8 @@ export const Accounts = {
         gyeongsangnam: 0,
         jeju: 0,
       });
+      dispatch("removeLocation");
+      
       alert("성공적으로 로그아웃 했습니다!");
       router.push({ name: "home" });
     },
@@ -280,9 +281,10 @@ export const Accounts = {
         data: {dongCode: getters.dongCode}
       })
         .then((res)=> {
-          console.log("지역 카운트값 증가!")
-          if(res.response.status === 200) {
+          console.log("지역 카운트값 증가!");
+          if(res.status === 200) {
             commit("SET_RESIDENT", true);
+            console.log("현지인 확인 완료!")
           }
         })
         .catch((err)=> {
