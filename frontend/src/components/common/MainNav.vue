@@ -10,7 +10,9 @@
           />
         </v-btn>
       </router-link>
-      <v-btn>방만들기</v-btn>
+      <router-link :to="{ name: 'VideochatCreate' }">
+        <v-btn>방만들기</v-btn>
+      </router-link>
       <router-link to="/videochat">
         <v-btn>방매칭하기</v-btn>
       </router-link>
