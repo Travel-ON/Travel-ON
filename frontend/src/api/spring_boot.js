@@ -24,4 +24,7 @@ export default {
     userTrophy: () => HOST + USER + "trophy/" + String(id) + "/", // 업적지도용 여행횟수 가져오기
     userTrophyUpdate: () => HOST + USER + "trophy", // 여행횟수 업데이트
   },
+  location: {
+    trophy: () => HOST + USER + "trophy", // 업적 지도용 카운트수
+  }
 };

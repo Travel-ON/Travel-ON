@@ -174,9 +174,33 @@ export default {
   }),
   computed: {
     ...mapGetters(["trophy"]),
+    check_trophy() {
+      return this.$store.getters.trophy;
+    },
+  },
+  watch: {
+    check_trophy(val) {
+      val.forEach((element) => {
+        const sido = element.sidoName;
+        const sidoCount = element.count;
+        if (sidoCount >= 10) {
+          this.trophyList[sido] = 5;
+        } else if (sidoCount >= 7) {
+          this.trophyList[sido] = 4;
+        } else if (sidoCount >= 5) {
+          this.trophyList[sido] = 3;
+        } else if (sidoCount >= 3) {
+          this.trophyList[sido] = 2;
+        } else if (sidoCount >= 1) {
+          this.trophyList[sido] = 1;
+        }
+      });
+    },
   },
   mounted() {
+    console.log(this.trophy);
     const trophyLists = this.trophy; // 업적 변환
+    console.log(trophyLists);
     trophyLists.forEach((element) => {
       const sido = element.sidoName;
       const sidoCount = element.count;
