@@ -14,6 +14,26 @@ export const Accounts = {
     title: "", // 유저 타이틀
     trophy: [], // 여행 횟수 리스트
     resident: false, // 현지인 여부
+    trophyList: {
+      // 각 지역 업적 리스트
+      seoul: 0,
+      busan: 0,
+      daegu: 0,
+      incheon: 0,
+      gwangju: 0,
+      daejeon: 0,
+      ulsan: 0,
+      sejong: 0,
+      gyeonggi: 0,
+      gangwon: 0,
+      chungcheongbuk: 0,
+      chungcheongnam: 0,
+      jeollabuk: 0,
+      jeollanam: 0,
+      gyeongsangbuk: 0,
+      gyeongsangnam: 0,
+      jeju: 0,
+    },
   }),
   getters: {
     isLoggedIn: (state) => !!state.token, // 로그인 여부
@@ -23,6 +43,7 @@ export const Accounts = {
     title: (state) => state.title,
     trophy: (state) => state.trophy,
     resident: (state) => state.resident,
+    trophyList: (state) => state.trophyList,
   },
   mutations: {
     SET_CURRENT_USER: (state, user) => (state.currentUser = user),
@@ -31,6 +52,7 @@ export const Accounts = {
     SET_TITLE: (state, title) => (state.title = title),
     SET_TROPHY: (state, trophy) => (state.trophy = trophy),
     SET_RESIDENT: (state, resident) => (state.resident = resident),
+    SET_TROPHYLIST: (state, trophyList) => (state.trophyList = trophyList),
   },
   actions: {
     saveToken({ commit }, token) {
@@ -97,7 +119,26 @@ export const Accounts = {
       commit("SET_TITLE", "");
       commit("SET_RESIDENT", false);
       commit("SET_TROPHY", []);
-      dispatch("removeLocation");
+      commit("SET_TROPHYLIST", )
+      dispatch("removeLocation", {
+        seoul: 0,
+        busan: 0,
+        daegu: 0,
+        incheon: 0,
+        gwangju: 0,
+        daejeon: 0,
+        ulsan: 0,
+        sejong: 0,
+        gyeonggi: 0,
+        gangwon: 0,
+        chungcheongbuk: 0,
+        chungcheongnam: 0,
+        jeollabuk: 0,
+        jeollanam: 0,
+        gyeongsangbuk: 0,
+        gyeongsangnam: 0,
+        jeju: 0,
+      });
       alert("성공적으로 로그아웃 했습니다!");
       router.push({ name: "home" });
     },
@@ -169,6 +210,7 @@ export const Accounts = {
             commit("SET_CURRENT_USER", nickName);
             commit("SET_ADMIN", adminFlag);
             commit("SET_TITLE", userTitle);
+            dispatch("getLocation", false);
             dispatch("getTrophy");
           })
           .catch((err) => {
@@ -208,6 +250,23 @@ export const Accounts = {
             trophyList[index].sidoName = trophyEngToKor[element.sidoName];
           });
           commit("SET_TROPHY", trophyList);
+          const trophyListTemp = getters.trophyList;
+          trophyList.forEach((element) => {
+            const sido = element.sidoName;
+            const sidoCount = element.count;
+            if (sidoCount >= 10) {
+              trophyListTemp[sido] = 5;
+            } else if (sidoCount >= 7) {
+              trophyListTemp[sido] = 4;
+            } else if (sidoCount >= 5) {
+              trophyListTemp[sido] = 3;
+            } else if (sidoCount >= 3) {
+              trophyListTemp[sido] = 2;
+            } else if (sidoCount >= 1) {
+              trophyListTemp[sido] = 1;
+            }
+          });
+          commit("SET_TROPHYLIST", trophyListTemp);
         })
         .catch((err) => {
           console.log(err);
