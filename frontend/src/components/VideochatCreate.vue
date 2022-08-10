@@ -1,37 +1,25 @@
 <template>
   <v-container id="main-container" class="container">
-    <v-row id="join" v-if="!session">
+    <v-row id="join">
       <v-col id="join-dialog" class="jumbotron vertical-center">
-        <h1>매칭 설정 화면</h1>
-        <div class="form-group">
-          <v-text-field label="Participant" v-model="myUserName" class="form-control" type="text" required />
-          <v-text-field label="session" v-model="mySessionId" class="form-control" type="text" required />
-          <p class="text-center">
-            <v-btn class="btn btn-lg btn-success" @click="joinSession()">Join!</v-btn>
-            <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
-          </p>
-        </div>
-      </v-col>
-    </v-row>
-
-    <v-row id="session" v-if="session">
-      <v-col id="session-header">
-        <h1 id="session-title">{{ mySessionId }}</h1>
-        <v-btn class="btn btn-large btn-danger" id="buttonLeaveSession" @click="leaveSession">Leave session</v-btn>
-        <v-btn class="btn mr-2" @click="clickMuteVideo">비디오설정</v-btn>
-        <v-btn class="btn mr-2" @click="clickMuteAudio">음소거설정</v-btn>
-      </v-col>
-      <v-col>
-        <v-row id="video-container">
-          <!--자기 얼굴-->
-          <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
-          <!-- 너매 얼굴 -->
-          <user-video
-            v-for="sub in subscribers"
-            :key="sub.stream.connection.connectionId"
-            :stream-manager="sub"
-            @click="$emit(updateMainVideoStreamManager(sub))"
-          />
+        <h1>방 만들기 화면</h1>
+        <v-row style="margin-top: 20px">
+          <v-col style="background-color: skyblue">
+            <h3>설정</h3>
+            <div class="setting" style="background-color: white">dsklfjkldsfjlksdjflkjsdfklsdfjkljdsklfjklsdjfl</div>
+          </v-col>
+          <v-col>
+            <div class="form-group">
+              <!-- <v-text-field label="Participant" v-model="myUserName" class="form-control" type="text" required /> -->
+              <!-- <v-text-field label="session" v-model="mySessionId" class="form-control" type="text" required /> -->
+              <p class="text-center">
+                <!-- <v-btn class="btn btn-lg btn-success" @click="joinSession()">Join!</v-btn> -->
+                <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
+                <v-btn class="btn mr-2" @click="clickMuteVideo">비디오설정</v-btn>
+                <v-btn class="btn mr-2" @click="clickMuteAudio">음소거설정</v-btn>
+              </p>
+            </div>
+          </v-col>
         </v-row>
       </v-col>
     </v-row>
@@ -63,11 +51,13 @@ export default {
       publisher: undefined,
       subscribers: [],
 
-      mySessionId: "SessionA",
-      myUserName: `Participant${Math.floor(Math.random() * 100)}`,
+      mySessionId: "impermanent_session",
+      myUserName: `닉네임들어갈곳`,
     };
   },
-
+  created() {
+    this.joinSession();
+  },
   methods: {
     joinSession() {
       // 오픈비두 세션 초기화
@@ -165,6 +155,7 @@ export default {
         this.publisher.publishAudio(true);
       }
     },
+
     // yuna end
 
     /**
