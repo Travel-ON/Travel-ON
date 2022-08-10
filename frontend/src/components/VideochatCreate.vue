@@ -1,22 +1,64 @@
 <template>
-  <v-container id="main-container" class="container">
+  <v-container v-if="publisher" id="main-container" class="container">
     <v-row id="join">
       <v-col id="join-dialog" class="jumbotron vertical-center">
         <h1>방 만들기 화면</h1>
         <v-row style="margin-top: 20px">
           <v-col style="background-color: skyblue">
-            <h3>설정</h3>
-            <div class="setting" style="background-color: white">dsklfjkldsfjlksdjflkjsdfklsdfjkljdsklfjklsdjfl</div>
+            <div>현위치: {{ sido }} {{ gugun }} {{ dong }} <v-icon x-small>mdi-map-marker-radius</v-icon></div>
+            <h3 class="mt-3">설정</h3>
+            <v-row class="setting" style="background-color: white; margin: 5px">
+              <v-container fluid>
+                <v-container class="px-0" fluid>
+                  <v-checkbox v-model="secretRoom" label="비공개 설정"></v-checkbox>
+                </v-container>
+                <v-container class="px-0" fluid>
+                  <v-select v-model="select" :items="counts" label="최대 인원"></v-select>
+                </v-container>
+                <div>지역범위 설정</div>
+                <v-radio-group v-model="areaScope" mandatory>
+                  <v-radio :label="`시: ${sido}`" value="sido"></v-radio>
+                  <v-radio :label="`구: ${gugun}`" value="gugun"></v-radio>
+                  <v-radio :label="`동: ${dong}`" value="dong"></v-radio>
+                </v-radio-group>
+                <!-- <p>{{ areaScope }}</p> -->
+
+                <div v-if="resident">
+                  <v-container class="px-0" fluid>
+                    <v-checkbox v-model="residentMark" label="현지인 마크 표시하기"></v-checkbox>
+                  </v-container>
+                </div>
+              </v-container>
+            </v-row>
+            <!-- </div> -->
           </v-col>
           <v-col>
             <div class="form-group">
               <!-- <v-text-field label="Participant" v-model="myUserName" class="form-control" type="text" required /> -->
               <!-- <v-text-field label="session" v-model="mySessionId" class="form-control" type="text" required /> -->
+              <p>[미리보기 화면]</p>
               <p class="text-center">
                 <!-- <v-btn class="btn btn-lg btn-success" @click="joinSession()">Join!</v-btn> -->
+
                 <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
-                <v-btn class="btn mr-2" @click="clickMuteVideo">비디오설정</v-btn>
-                <v-btn class="btn mr-2" @click="clickMuteAudio">음소거설정</v-btn>
+                <v-container class="px-0" fluid>
+                  <div v-if="title && title != ''">{{ title }}</div>
+                  <div v-if="resident && residentMark">현지인</div>
+                </v-container>
+                <v-btn id="btn_video" class="btn mr-2" style="background-color: #6499ff" @click="clickMuteVideo">
+                  <div v-if="publisher.stream.videoActive">
+                    <v-icon color="white">mdi-video-outline</v-icon> 비디오 중지
+                  </div>
+                  <div v-else><v-icon color="white">mdi-video-off-outline</v-icon> 비디오 시작</div>
+                </v-btn>
+
+                <v-btn id="btn_audio" class="btn mr-2" style="background-color: #6499ff" @click="clickMuteAudio"
+                  ><div v-if="publisher.stream.audioActive">
+                    <v-icon color="white">mdi-microphone-outline</v-icon> 음소거 설정
+                  </div>
+                  <div v-else><v-icon color="white">mdi-microphone-off</v-icon> 음소거 해제</div></v-btn
+                >
+                <v-btn class="btn mr-2" @click="clickCreateRoom">방 만들기</v-btn>
               </p>
             </div>
           </v-col>
@@ -27,6 +69,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "./openvidu/UserVideo.vue";
@@ -42,6 +85,18 @@ export default {
   components: {
     UserVideo,
   },
+  computed: {
+    ...mapGetters({
+      sido: "sido",
+      gugun: "gugun",
+      dong: "dong",
+      dongCode: "dongCode",
+      resident: "resident",
+      currentUser: "currentUser",
+      token: "token",
+      title: "title",
+    }),
+  },
 
   data() {
     return {
@@ -50,9 +105,14 @@ export default {
       mainStreamManager: undefined,
       publisher: undefined,
       subscribers: [],
+      areaScope: null,
+      residentMark: true,
+      select: 4,
+      counts: [4, 6, 8],
+      secretRoom: false,
 
       mySessionId: "impermanent_session",
-      myUserName: `닉네임들어갈곳`,
+      // myUserName: `닉네임들어갈곳`,
     };
   },
   created() {
@@ -93,7 +153,7 @@ export default {
       // 'token' parameter should be retrieved and returned by your own backend
       this.getToken(this.mySessionId).then((token) => {
         this.session
-          .connect(token, { clientData: this.myUserName })
+          .connect(token, { clientData: this.currentUser })
           .then(() => {
             // --- Get your own camera stream with the desired properties ---
 
@@ -142,18 +202,53 @@ export default {
     },
     // yuna start
     clickMuteVideo() {
+      const bodyTag = document.getElementById("btn_video");
       if (this.publisher.stream.videoActive) {
         this.publisher.publishVideo(false);
+        bodyTag.style.backgroundColor = "#979797";
       } else {
         this.publisher.publishVideo(true);
+        bodyTag.style.backgroundColor = "#6499FF";
       }
     },
     clickMuteAudio() {
+      const bodyTag = document.getElementById("btn_audio");
       if (this.publisher.stream.audioActive) {
         this.publisher.publishAudio(false);
+        bodyTag.style.backgroundColor = "#979797";
       } else {
         this.publisher.publishAudio(true);
+        bodyTag.style.backgroundColor = "#6499FF";
       }
+    },
+    // 지역 범위
+    // 비디오 중지
+    // 음소거 설정
+    clickCreateRoom() {
+      axios({
+        url: "http://localhost:3000/api/videochat/",
+        method: "post",
+        headers: { Authorization: `Bearer ${this.token}` },
+        data: {
+          dongCode: this.dongCode,
+          areaScope: this.areaScope,
+          privateFlag: this.secretRoom,
+          count: this.select,
+        },
+      })
+        .then((res) => {
+          // console.log(res);
+          // console.log("res.data:  ", res.data);
+          // this.idChecked = id;
+          alert("방만들기 완료!");
+          this.leaveSession();
+          this.mySessionId = res.data;
+          // this.joinSession();
+        })
+        .catch((err) => {
+          // alert("이미 있는 아이디 입니다!");
+          console.log(err);
+        });
     },
 
     // yuna end
