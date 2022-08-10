@@ -9,19 +9,16 @@
             width="150px"
           />
         </v-btn>
-        <!-- <v-btn> -->
-        <!-- <div width="100px"> -->
-        <!-- <img
-          src="https://user-images.githubusercontent.com/97648026/182758932-c401e00f-c153-4a48-9186-b16491197fa1.png"
-          alt="logo"
-          width="100%"
-        /> -->
-        <!-- </div> -->
-        <!-- </v-btn> -->
       </router-link>
-      <v-btn>방만들기</v-btn>
-      <router-link to="/videochat">방매칭하기</router-link>
-      <v-btn>여행플래너</v-btn>
+      <router-link :to="{ name: 'VideochatCreate' }">
+        <v-btn>방만들기</v-btn>
+      </router-link>
+      <router-link to="/videochat">
+        <v-btn>방매칭하기</v-btn>
+      </router-link>
+      <router-link :to="{ name: 'Planner' }">
+        <v-btn>여행플래너</v-btn>
+      </router-link>
       <v-menu open-on-hover style="z-index: 3500">
         <template v-slot:activator="{ props }">
           <v-btn v-bind="props"> 커뮤니티 </v-btn>
@@ -64,7 +61,7 @@
         <v-menu open-on-hover style="z-index: 3500">
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props">
-              <div style="font-size: x-small">대전 풋내기</div>
+              <div style="font-size: x-small">{{ title }}</div>
               <div>{{ currentUser }}</div>
               <v-icon>mdi-chevron-down</v-icon>
             </v-btn>
@@ -91,7 +88,7 @@ export default {
     // items_메뉴
     items_community: [
       { title: "공지사항", name: "NoticeList" },
-      { title: "FAQ", name: "faq" },
+      { title: "FAQ", name: "faqList" },
       { title: "Q&A", name: "qna" },
     ],
     items_user: [
@@ -107,6 +104,7 @@ export default {
     ...mapGetters({
       isLoggedIn: "isLoggedIn",
       currentUser: "currentUser",
+      title: "title",
     }),
   },
 };
