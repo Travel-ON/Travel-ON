@@ -6,8 +6,9 @@ export const Locations = {
   /* eslint-disable */
   state: () => ({
     dong: "", // 동
-    sigungu: "", // 시군구
+    sigungu: "", // 구군
     sido: "", // 시도
+    dongCode: "",
     latitude: 37.5666805, // 위도 (Default: 서울 시청)
     longitude: 126.9784147, // 경도 (Default: 서울 시청)
   }),
