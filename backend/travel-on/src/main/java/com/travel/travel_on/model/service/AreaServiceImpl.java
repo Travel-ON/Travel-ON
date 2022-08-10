@@ -18,9 +18,6 @@ public class AreaServiceImpl implements AreaService {
     @Autowired
     GugunRepository gugunRepository;
 
-    @Autowired
-    UserService userService;
-
     @Override
     public Sido selectSidoName(String splitCode) {
         List<Sido> result = sidoRepository.findBySidoCodeStartsWith(splitCode);

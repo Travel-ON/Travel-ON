@@ -1,6 +1,5 @@
 import router from "@/router";
 import axios from "axios";
-// import axios from "axios";
 import spring from "@/api/spring_boot";
 
 /* eslint-disable no-return-assign */
@@ -13,6 +12,16 @@ export const Accounts = {
     currentUser: "", // 현재 유저 닉네임
     admin: false, // 관리자 여부
     title: "", // 유저 타이틀
+    trophy: [
+      {
+        sidoName: "seoul",
+        count: 1,
+      },
+      {
+        sidoName: "busan",
+        count: 7,
+      },
+    ], // 여행 횟수 리스트
   }),
   getters: {
     isLoggedIn: (state) => !!state.token, // 로그인 여부
@@ -20,12 +29,14 @@ export const Accounts = {
     currentUser: (state) => state.currentUser,
     admin: (state) => state.currentUser,
     title: (state) => state.title,
+    trophy: (state) => state.trophy,
   },
   mutations: {
     SET_CURRENT_USER: (state, user) => (state.currentUser = user),
     SET_TOKEN: (state, token) => (state.token = token),
     SET_ADMIN: (state, admin) => (state.admin = admin),
     SET_TITLE: (state, title) => (state.title = title),
+    SET_TROPHY: (state, trophy) => (state.trophy = trophy),
   },
   actions: {
     saveToken({ commit }, token) {
@@ -79,7 +90,8 @@ export const Accounts = {
         })
         .catch((err) => {
           console.error(err);
-          router.push({ name: "login" })
+          alert("아이디가 없거나 비밀번호가 일치하지 않습니다!")
+          router.push({ name: "MemberLogin" })
         });
     },
     logout({ commit, dispatch }) {
@@ -141,6 +153,29 @@ export const Accounts = {
         .catch((err) => {
           console.log(err);
         })
+    },
+    fetchCurrentUser({ commit, getters, dispatch }) {
+      if (getters.isLoggedIn) {
+        axios({
+          url: spring.accounts.detail(),
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${ getters.token }`,
+          },
+        })
+          .then((res) => {
+            const nickName = res.data.nickname;
+            const userTitle = res.data.userTitle;
+            const adminFlag = res.data.adminFlag;
+            commit("SET_CURRENT_USER", nickName);
+            commit("SET_ADMIN", adminFlag);
+            commit("SET_TITLE", userTitle);
+          })
+          .catch((err) => {
+            console.log(err);
+            dispatch("removeToken");
+          })
+      }
     }
-  },
-};
+  }
+}

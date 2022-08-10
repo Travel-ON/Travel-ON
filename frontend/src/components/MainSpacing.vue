@@ -18,6 +18,5 @@ export default {
 .main-space {
   width: 1128px;
   padding: 30px, 20px;
-  background-color: skyblue;
 }
 </style>

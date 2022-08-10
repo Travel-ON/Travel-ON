@@ -13,7 +13,7 @@
     >
       <div>내가 여행가본 지역들은? - 업적</div>
     </div>
-    <div style="height: 490px; width: 100%">
+    <div style="height: 490px; width: 100%; border: 4px solid #6499ff; border-radius: 18px">
       <KoreaMap />
     </div>
   </div>
