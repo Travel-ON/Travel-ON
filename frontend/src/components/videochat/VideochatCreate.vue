@@ -72,7 +72,7 @@
 import { mapGetters } from "vuex";
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
-import UserVideo from "./openvidu/UserVideo.vue";
+import UserVideo from "./UserVideo.vue";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -80,7 +80,7 @@ const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
-  name: "VideochatMatching",
+  name: "VideochatCreate",
 
   components: {
     UserVideo,
@@ -110,6 +110,8 @@ export default {
       select: 4,
       counts: [4, 6, 8],
       secretRoom: false,
+      video: true,
+      audio: true,
 
       mySessionId: "impermanent_session",
       // myUserName: `닉네임들어갈곳`,
@@ -206,9 +208,13 @@ export default {
       if (this.publisher.stream.videoActive) {
         this.publisher.publishVideo(false);
         bodyTag.style.backgroundColor = "#979797";
+        this.video = false;
+        console.log("this.video");
+        console.log(this.video);
       } else {
         this.publisher.publishVideo(true);
         bodyTag.style.backgroundColor = "#6499FF";
+        this.video = true;
       }
     },
     clickMuteAudio() {
@@ -216,9 +222,11 @@ export default {
       if (this.publisher.stream.audioActive) {
         this.publisher.publishAudio(false);
         bodyTag.style.backgroundColor = "#979797";
+        this.audio = false;
       } else {
         this.publisher.publishAudio(true);
         bodyTag.style.backgroundColor = "#6499FF";
+        this.audio = true;
       }
     },
     // 지역 범위
@@ -241,8 +249,18 @@ export default {
           // console.log("res.data:  ", res.data);
           // this.idChecked = id;
           alert("방만들기 완료!");
+          console.log(this.video);
           this.leaveSession();
-          this.mySessionId = res.data;
+          this.$router.push({
+            name: "VideochatRoom",
+            params: {
+              residentMark: this.residentMark,
+              video: this.video,
+              audio: this.audio,
+              roomCode: res.data.roomCode,
+              hostName: res.data.hostName,
+            },
+          });
           // this.joinSession();
         })
         .catch((err) => {
