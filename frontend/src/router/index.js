@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Member from "../views/Member.vue";
 import MemberLogin from "../components/member/MemberLogin.vue";
-import MemberRegister from "../components/member/MemberRegister.vue";
+import MemberRegisterView from "../views/MemberRegisterView.vue";
 // import MemberModify1 from "../components/member/MemberModify1.vue";
 import MemberModify2 from "../components/member/MemberModify2.vue";
 import MemberSecession from "../components/member/MemberSecession.vue";
@@ -14,11 +14,31 @@ import NoticeDetail from "../components/notice/NoticeDetail.vue";
 import NoticeWrite from "../components/notice/NoticeWrite.vue";
 import NoticeUpdate from "../components/notice/NoticeUpdate.vue";
 
+import Videochat from "../views/Videochat.vue";
+import VideochatMatching from "../components/VideochatMatching.vue";
+import VideochatCreate from "../components/VideochatCreate.vue";
+
 const routes = [
   {
     path: "/",
     name: "home",
     component: HomeView,
+  },
+  {
+    path: "/videochat",
+    component: Videochat,
+    children: [
+      {
+        path: "",
+        name: "VideochatMatching",
+        component: VideochatMatching,
+      },
+      {
+        path: "create",
+        name: "VideochatCreate",
+        component: VideochatCreate,
+      },
+    ],
   },
   {
     path: "/member",
@@ -32,7 +52,7 @@ const routes = [
       {
         path: "register",
         name: "MemberRegister",
-        component: MemberRegister,
+        component: MemberRegisterView,
       },
       // {
       //   path: "modify",
