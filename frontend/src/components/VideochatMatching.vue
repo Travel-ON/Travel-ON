@@ -18,20 +18,21 @@
       <v-col id="session-header">
         <h1 id="session-title">{{ mySessionId }}</h1>
         <v-btn class="btn btn-large btn-danger" id="buttonLeaveSession" @click="leaveSession">Leave session</v-btn>
+        <v-btn class="btn mr-2" @click="clickMuteVideo">비디오설정</v-btn>
+        <v-btn class="btn mr-2" @click="clickMuteAudio">음소거설정</v-btn>
       </v-col>
-      <!--      <v-col id="main-video" class="col-md-6">-->
-      <!--        <user-video :stream-manager="mainStreamManager" />-->
-      <!--      </v-col>-->
-      <v-col id="video-container" class="col-md-6">
-        <!--자기 얼굴-->
-        <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
-        <!-- 너매 얼굴 -->
-        <user-video
-          v-for="sub in subscribers"
-          :key="sub.stream.connection.connectionId"
-          :stream-manager="sub"
-          @click="$emit(updateMainVideoStreamManager(sub))"
-        />
+      <v-col>
+        <v-row id="video-container">
+          <!--자기 얼굴-->
+          <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
+          <!-- 너매 얼굴 -->
+          <user-video
+            v-for="sub in subscribers"
+            :key="sub.stream.connection.connectionId"
+            :stream-manager="sub"
+            @click="$emit(updateMainVideoStreamManager(sub))"
+          />
+        </v-row>
       </v-col>
     </v-row>
   </v-container>
@@ -149,6 +150,22 @@ export default {
       if (this.mainStreamManager === stream) return;
       this.mainStreamManager = stream;
     },
+    // yuna start
+    clickMuteVideo() {
+      if (this.publisher.stream.videoActive) {
+        this.publisher.publishVideo(false);
+      } else {
+        this.publisher.publishVideo(true);
+      }
+    },
+    clickMuteAudio() {
+      if (this.publisher.stream.audioActive) {
+        this.publisher.publishAudio(false);
+      } else {
+        this.publisher.publishAudio(true);
+      }
+    },
+    // yuna end
 
     /**
      * --------------------------
