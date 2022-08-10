@@ -55,13 +55,14 @@ export const Notices = {
           console.log(err);
         });
     },
-    writeNotice({ commit }, newNotice) {
+    writeNotice({ commit, getters }, newNotice) {
+      console.log("오지?");
       api({
         url: `/notice/regist`,
         method: "POST",
         data: newNotice,
         headers: {
-          Authorization: `Bearer ${this.$store.getters.token()}`,
+          Authorization: `Bearer ${getters.token}`,
         },
       })
         .then(() => {
@@ -72,13 +73,13 @@ export const Notices = {
           console.log(err);
         });
     },
-    modifyNotice({ commit }, payload) {
+    modifyNotice({ commit, getters }, payload) {
       api({
         url: `/notice/modify`,
         method: "PUT",
         data: payload,
         headers: {
-          Authorization: `Bearer ${this.$store.getters.token()}`,
+          Authorization: `Bearer ${getters.token()}`,
         },
       }).then(() => {
         commit("MODIFY_NOTICE", payload);
@@ -90,7 +91,7 @@ export const Notices = {
         });
       });
     },
-    deleteNotice({ commit }, payload) {
+    deleteNotice({ commit, getters }, payload) {
       // eslint-disable-next-line no-unused-expressions
       commit;
       console.log(payload);
@@ -98,7 +99,7 @@ export const Notices = {
         url: `/notice/delete/${payload}`,
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${this.$store.getters.token()}`,
+          Authorization: `Bearer ${getters.token}`,
         },
       }).then(() => {
         router.push({ name: "NoticeList" });

@@ -179,8 +179,18 @@ export default {
     const trophyLists = this.trophy; // 업적 변환
     trophyLists.forEach((element) => {
       const sido = element.sidoName;
-      // const sidoCount = element.count;
-      this.trophyList[sido] = element.count;
+      const sidoCount = element.count;
+      if (sidoCount >= 10) {
+        this.trophyList[sido] = 5;
+      } else if (sidoCount >= 7) {
+        this.trophyList[sido] = 4;
+      } else if (sidoCount >= 5) {
+        this.trophyList[sido] = 3;
+      } else if (sidoCount >= 3) {
+        this.trophyList[sido] = 2;
+      } else if (sidoCount >= 1) {
+        this.trophyList[sido] = 1;
+      }
     });
   },
 };
