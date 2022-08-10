@@ -19,7 +19,7 @@ export const Accounts = {
       },
       {
         sidoName: "busan",
-        count: 2,
+        count: 7,
       },
     ], // 여행 횟수 리스트
   }),
