@@ -13,7 +13,7 @@ export const Accounts = {
     admin: false, // 관리자 여부
     title: "", // 유저 타이틀
     trophy: [], // 여행 횟수 리스트
-    resident: false, // 현지인 여부
+    resident: localStorage.getItem("resident") || false, // 현지인 여부
     trophyList: {
       // 각 지역 업적 리스트
       seoul: 0,
@@ -71,6 +71,14 @@ export const Accounts = {
       commit("SET_TOKEN", "");
       localStorage.setItem("token", "");
     },
+    saveResident({ commit }, resident) {
+      commit("SET_RESIDENT", resident);
+      localStorage.setItem("resident", resident, Date.now() + 1);
+    },
+    removeResident({ commit }) {
+      commit("SET_RESIDENT", false);
+      localStorage.setItem("resident", false)
+    },
     login({ commit, dispatch }, credentials) {
       /*
       POST: 사용자 입력정보를 login URL로 보내기
@@ -117,7 +125,7 @@ export const Accounts = {
       commit("SET_CURRENT_USER", "");
       commit("SET_ADMIN", false);
       commit("SET_TITLE", "");
-      commit("SET_RESIDENT", false);
+      dispatch("removeResident");
       commit("SET_TROPHY", []);
       commit("SET_TROPHYLIST", {
         seoul: 0,
@@ -273,7 +281,7 @@ export const Accounts = {
           console.log(err);
         })
     },
-    fetchTrophy({ commit, getters }) {
+    fetchTrophy({ commit, getters, dispatch }) {
       axios({ // 업적 업데이트
         url: spring.location.trophy(),
         method: "post",
@@ -283,7 +291,7 @@ export const Accounts = {
         .then((res)=> {
           console.log("지역 카운트값 증가!");
           if(res.status === 200) {
-            commit("SET_RESIDENT", true);
+            dispatch("saveResident", true);
             console.log("현지인 확인 완료!")
           }
         })
