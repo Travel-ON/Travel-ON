@@ -9,6 +9,8 @@ import MemberLogout from "../components/member/MemberLogout.vue";
 import MemberTitle from "../components/member/MemberTitle.vue";
 import HomeView from "../views/HomeView.vue";
 
+import PlannerView from "../views/PlannerView.vue";
+
 import Notice from "../views/Notice.vue";
 import NoticeList from "../components/notice/NoticeList.vue";
 import NoticeDetail from "../components/notice/NoticeDetail.vue";
@@ -107,6 +109,11 @@ const routes = [
         component: NoticeWrite,
       },
     ],
+  },
+  {
+    path: "/planner",
+    name: "Planner",
+    component: PlannerView,
   },
 ];
 
