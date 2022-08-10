@@ -35,7 +35,6 @@ export const Weather = {
           units: "metric",
         }
       }).then((res) => {
-        console.log(res)
         const temp = res.data.main.temp;
         const icon = res.data.weather[0].icon;
         commit("SET_TEMP", temp);
