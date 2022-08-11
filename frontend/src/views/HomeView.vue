@@ -18,14 +18,14 @@ export default defineComponent({
     MainSpacingHome,
   },
   computed: {
-    ...mapGetters(["isLocation"]),
+    ...mapGetters(["isLocation", "isLoggedIn"]),
   },
   methods: {
     ...mapActions(["getLocation"]),
   },
   mounted() {
-    if (!this.isLocation) {
-      this.getLocation();
+    if (!this.isLocation && this.isLoggedIn) {
+      this.getLocation(false);
     }
   },
 });

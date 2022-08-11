@@ -145,9 +145,20 @@ public class NoticeController {
         }
     }
 
+    @ApiOperation(value = "FAQ 리스트 조회: FAQ 글 조회 및 페이징", response = FAQBoard.class)
+    @GetMapping("/faq")
+    public ResponseEntity<?> searchFAQ(@PageableDefault(sort = "faqId")Pageable pageable){
+        FAQBoard result = new FAQBoard();
+        result.PF = noticeService.faqPage(pageable);
+        result.previous = pageable.previousOrFirst().getPageNumber();
+        result.next = pageable.next().getPageNumber();
+
+        return new ResponseEntity<FAQBoard>(result, HttpStatus.OK);
+    }
+
     @ApiOperation(value = "FAQ 리스트 조회: FAQ 글 조회 및 페이징, 검색", response = FAQBoard.class)
-    @PostMapping("/faq")
-    public ResponseEntity<?> searchFAQ(String keyword, @PageableDefault(sort = "faqId")Pageable pageable){
+    @PostMapping("/faq/search")
+    public ResponseEntity<?> searchFAQ(@RequestParam("key") String keyword, @PageableDefault(sort = "faqId")Pageable pageable){
         FAQBoard result = new FAQBoard();
         result.PF = noticeService.search(keyword, pageable);
         result.previous = pageable.previousOrFirst().getPageNumber();
