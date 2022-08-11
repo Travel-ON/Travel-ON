@@ -54,8 +54,10 @@ import UserVideo from "./UserVideo.vue";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
-const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8443`;
+const OPENVIDU_SERVER_SECRET = "ssafy";
+// const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
+// const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
   name: "VideochatRoom",
@@ -210,7 +212,8 @@ export default {
     },
     clickCloseRoom() {
       axios({
-        url: `http://localhost:3000/api/videochat/${this.roomCode}`,
+        url: `http://i7b301.p.ssafy.io:3000/api/videochat/${this.roomCode}`,
+        // url: `http://localhost:3000/api/videochat/${this.roomCode}`,
         method: "delete",
         headers: { Authorization: `Bearer ${this.token}` },
       })
@@ -226,7 +229,8 @@ export default {
     },
     clickLeaveRoom() {
       axios({
-        url: `http://localhost:3000/api/videochat/leave/${this.roomCode}`,
+        url: `http://i7b301.p.ssafy.io:3000/api/videochat/leave/${this.roomCode}`,
+        // url: `http://localhost:3000/api/videochat/leave/${this.roomCode}`,
         method: "get",
         headers: { Authorization: `Bearer ${this.token}` },
       })

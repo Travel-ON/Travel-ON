@@ -68,8 +68,10 @@ import UserVideo from "./UserVideo.vue";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
-const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8443`;
+const OPENVIDU_SERVER_SECRET = "ssafy";
+// const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
+// const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
   name: "VideochatMa",
@@ -221,7 +223,8 @@ export default {
     // 음소거 설정
     clickMatchingRoom() {
       axios({
-        url: "http://localhost:3000/api/videochat/match",
+        // url: "http://localhost:3000/api/videochat/match",
+        url: "http://i7b301.p.ssafy.io:3000/api/videochat/match",
         method: "post",
         headers: { Authorization: `Bearer ${this.token}` },
         data: {

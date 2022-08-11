@@ -76,8 +76,10 @@ import UserVideo from "./UserVideo.vue";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
-const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8443`;
+const OPENVIDU_SERVER_SECRET = "ssafy";
+// const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
+// const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
   name: "VideochatCreate",
@@ -231,10 +233,11 @@ export default {
     },
     // 지역 범위
     // 비디오 중지
-    // 음소거 설정
+    // 음소거 설정//
     clickCreateRoom() {
       axios({
-        url: "http://localhost:3000/api/videochat/",
+        // url: "http://localhost:3000/api/videochat/",
+        url: "http://i7b301.p.ssafy.io:3000/api/videochat/",
         method: "post",
         headers: { Authorization: `Bearer ${this.token}` },
         data: {
