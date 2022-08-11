@@ -4,6 +4,7 @@
     <main-nav v-if="!state.exceptList.includes($route.name)" />
     <v-main>
       <router-view />
+      <footer-view></footer-view>
     </v-main>
   </v-app>
 </template>
@@ -12,6 +13,7 @@
 import { reactive } from "vue";
 import { mapActions } from "vuex";
 import MainNav from "./components/common/MainNav.vue";
+import FooterView from "./components/common/FooterView.vue";
 
 export default {
   name: "App",
@@ -27,7 +29,7 @@ export default {
   methods: {
     ...mapActions(["fetchCurrentUser"]),
   },
-  components: { MainNav },
+  components: { MainNav, FooterView },
   mounted() {
     this.fetchCurrentUser();
   },
