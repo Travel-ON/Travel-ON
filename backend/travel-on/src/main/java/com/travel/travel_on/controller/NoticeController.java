@@ -63,6 +63,8 @@ public class NoticeController {
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
+            System.out.println(userDto.isAdminFlag());
+            System.out.println(userId);
             if(userDto.isAdminFlag()) {
                 Date time = new Date();
                 String nowTime = simpleDateFormat.format(time);
@@ -156,7 +158,7 @@ public class NoticeController {
         return new ResponseEntity<FAQBoard>(result, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "FAQ 리스트 조회: FAQ 글 조회 및 페이징, 검색", response = FAQBoard.class)
+    @ApiOperation(value = "FAQ 리스트 조회: FAQ 글 조회 및 검색", response = FAQBoard.class)
     @PostMapping("/faq/search")
     public ResponseEntity<?> searchFAQ(@RequestParam("key") String keyword, @PageableDefault(sort = "faqId")Pageable pageable){
         FAQBoard result = new FAQBoard();

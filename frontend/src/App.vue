@@ -1,9 +1,12 @@
 <template>
   <v-app>
-    <v-main>
+    <v-app-bar app>
       <!-- main-nav는 기본적으로 모든 페이지에 포함, 제외시 하단 exceptList에 포함시킬것 -->
       <main-nav v-if="!state.exceptList.includes($route.name)" />
+    </v-app-bar>
+    <v-main>
       <router-view />
+      <footer-view></footer-view>
     </v-main>
   </v-app>
 </template>
@@ -12,6 +15,7 @@
 import { reactive } from "vue";
 import { mapActions } from "vuex";
 import MainNav from "./components/common/MainNav.vue";
+import FooterView from "./components/common/FooterView.vue";
 
 export default {
   name: "App",
@@ -27,7 +31,7 @@ export default {
   methods: {
     ...mapActions(["fetchCurrentUser"]),
   },
-  components: { MainNav },
+  components: { MainNav, FooterView },
   mounted() {
     this.fetchCurrentUser();
   },

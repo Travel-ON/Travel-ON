@@ -37,7 +37,7 @@ import { mapState } from "vuex";
 
 export default {
   computed: {
-    ...mapState(["notices", "totalPage"]),
+    ...mapState("Notices", ["notices", "totalPage"]),
   },
   watch: {
     page(num) {
@@ -48,12 +48,11 @@ export default {
     return { page: 1 };
   },
   mounted() {
-    this.$store.dispatch("getNotices");
+    this.$store.dispatch("Notices/getNotices");
   },
   methods: {
     handlePage() {
-      console.log(this.page - 1);
-      this.$store.dispatch("getNotices", this.page - 1);
+      this.$store.dispatch("Notices/getNotices", this.page - 1);
     },
     moveToDetail(id) {
       this.$router.push({
