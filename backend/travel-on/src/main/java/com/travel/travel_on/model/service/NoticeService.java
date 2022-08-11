@@ -18,6 +18,8 @@ public interface NoticeService {
 
     boolean delete(Integer id);
 
+    Page<FAQ> faqPage(Pageable pageable);
+
     Page<FAQ> search(String keyword, Pageable pageable);
 
 }

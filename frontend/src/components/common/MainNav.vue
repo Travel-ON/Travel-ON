@@ -91,7 +91,7 @@ export default {
     // items_메뉴
     items_community: [
       { title: "공지사항", name: "NoticeList" },
-      { title: "FAQ", name: "faq" },
+      { title: "FAQ", name: "faqList" },
       { title: "Q&A", name: "qna" },
     ],
     items_user: [

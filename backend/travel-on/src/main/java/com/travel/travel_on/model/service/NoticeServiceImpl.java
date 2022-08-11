@@ -71,6 +71,11 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
+    public Page<FAQ> faqPage(Pageable pageable) {
+        return faqRepository.findAll(pageable);
+    }
+
+    @Override
     public Page<FAQ> search(String keyword, Pageable pageable) {
         return faqRepository.findByQuestionContaining(keyword, pageable);
     }
