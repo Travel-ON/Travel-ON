@@ -39,7 +39,7 @@ export const Accounts = {
     isLoggedIn: (state) => !!state.token, // 로그인 여부
     token: (state) => state.token,
     currentUser: (state) => state.currentUser,
-    admin: (state) => state.currentUser,
+    admin: (state) => state.admin,
     title: (state) => state.title,
     trophy: (state) => state.trophy,
     resident: (state) => state.resident,
@@ -77,7 +77,7 @@ export const Accounts = {
     },
     removeResident({ commit }) {
       commit("SET_RESIDENT", false);
-      localStorage.setItem("resident", false)
+      localStorage.setItem("resident", false);
     },
     login({ commit, dispatch }, credentials) {
       /*
@@ -147,7 +147,7 @@ export const Accounts = {
         jeju: 0,
       });
       dispatch("removeLocation");
-      
+
       alert("성공적으로 로그아웃 했습니다!");
       router.push({ name: "home" });
     },
@@ -193,7 +193,7 @@ export const Accounts = {
         url: spring.accounts.detail(),
         method: "get",
         headers: {
-          Authorization: `Bearer ${ token }`,
+          Authorization: `Bearer ${token}`,
         },
       })
         .then((res) => {
@@ -201,7 +201,7 @@ export const Accounts = {
         })
         .catch((err) => {
           console.log(err);
-        })
+        });
     },
     fetchCurrentUser({ commit, getters, dispatch }) {
       if (getters.isLoggedIn) {
@@ -209,7 +209,7 @@ export const Accounts = {
           url: spring.accounts.detail(),
           method: "get",
           headers: {
-            Authorization: `Bearer ${ getters.token }`,
+            Authorization: `Bearer ${getters.token}`,
           },
         })
           .then((res) => {
@@ -225,18 +225,19 @@ export const Accounts = {
           .catch((err) => {
             console.log(err);
             dispatch("removeToken");
-          })
+          });
       }
     },
     getTrophy({ commit, getters }) {
       axios({
         url: spring.location.trophy(),
         method: "get",
-        headers: {Authorization: `Bearer ${ getters.token }`},
+        headers: { Authorization: `Bearer ${getters.token}` },
       })
         .then((res) => {
           const trophyList = res.data;
-          const trophyEngToKor = { // 지역명 한글 -> 영문 변환
+          const trophyEngToKor = {
+            // 지역명 한글 -> 영문 변환
             서울: "seoul",
             부산: "busan",
             대구: "daegu",
@@ -254,7 +255,7 @@ export const Accounts = {
             경북: "gyeongsangbuk",
             경남: "gyeongsangnam",
             제주특별자치도: "jeju",
-          }
+          };
           trophyList.forEach((element, index) => {
             trophyList[index].sidoName = trophyEngToKor[element.sidoName];
           });
@@ -279,25 +280,26 @@ export const Accounts = {
         })
         .catch((err) => {
           console.log(err);
-        })
+        });
     },
     fetchTrophy({ commit, getters, dispatch }) {
-      axios({ // 업적 업데이트
+      axios({
+        // 업적 업데이트
         url: spring.location.trophy(),
         method: "post",
-        headers: {Authorization: `Bearer ${getters.token}`},
-        data: {dongCode: getters.dongCode}
+        headers: { Authorization: `Bearer ${getters.token}` },
+        data: { dongCode: getters.dongCode },
       })
-        .then((res)=> {
+        .then((res) => {
           console.log("지역 카운트값 증가!");
-          if(res.status === 200) {
+          if (res.status === 200) {
             dispatch("saveResident", true);
-            console.log("현지인 확인 완료!")
+            console.log("현지인 확인 완료!");
           }
         })
-        .catch((err)=> {
+        .catch((err) => {
           console.log(err);
-        })
-    }
-  }
-}
+        });
+    },
+  },
+};

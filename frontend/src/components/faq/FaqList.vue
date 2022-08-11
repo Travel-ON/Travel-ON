@@ -37,7 +37,7 @@ import { mapState } from "vuex";
 
 export default {
   computed: {
-    ...mapState(["faq", "totalPage"]),
+    ...mapState("Notices", ["faq", "totalPage"]),
   },
   watch: {
     page(num) {
@@ -48,17 +48,17 @@ export default {
     return { page: 1, isStatusOn: false, keyword: "" };
   },
   mounted() {
-    this.$store.dispatch("getFAQ");
+    this.$store.dispatch("Notices/getFAQ");
   },
   methods: {
     handlePage() {
-      this.$store.dispatch("getFAQ", this.page - 1);
+      this.$store.dispatch("Notices/getFAQ", this.page - 1);
     },
     toggleOn() {
       this.isStatusOn = !this.isStatusOn;
     },
     searchPage() {
-      this.$store.dispatch("getSearchFAQ", this.keyword);
+      this.$store.dispatch("Notices/getSearchFAQ", this.keyword);
     },
   },
 };

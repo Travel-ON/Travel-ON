@@ -2,14 +2,14 @@
 import axios from "axios";
 
 function createApi() {
-  const token =
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0MjEyMTIiLCJleHAiOjE2NjAxOTYxNDUsImlhdCI6MTY2MDE5MjU0NX0.jLesttJ3jywli24TLx4wdu77FChJgaaMhOLsqen1dU4Kv36I_Imaqu7D8h_IU0fCye4YbOiBVirMDWpNCLvtMA";
+  // const token =
+  //   "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0MjEyMTIiLCJleHAiOjE2NjAyMjMyMjksImlhdCI6MTY2MDIxOTYyOX0.XgqjQdUA2FZULZsVCcBhybOr_n_kFByMEH2t2dPupuVwCetjuz8faVLgRHpD7_oZoXmcc-89oyQGOcbvpLUJyg";
   return axios.create({
     baseURL: `http://localhost:3000/api`,
     headers: {
       "Content-Type": "application/json",
       // Authorization: `Bearer ${accessToken}`,
-      Authorization: `Bearer ${token}`,
+      // Authorization: `Bearer ${token}`,
     },
   });
 }

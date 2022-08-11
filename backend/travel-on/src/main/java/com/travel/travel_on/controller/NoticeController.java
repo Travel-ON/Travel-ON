@@ -63,6 +63,8 @@ public class NoticeController {
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
+            System.out.println(userDto.isAdminFlag());
+            System.out.println(userId);
             if(userDto.isAdminFlag()) {
                 Date time = new Date();
                 String nowTime = simpleDateFormat.format(time);
