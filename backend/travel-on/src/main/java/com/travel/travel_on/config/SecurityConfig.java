@@ -36,9 +36,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/user/nickcheck",
             "/api/user/email",
             "/api/notice/page",
-            "/api/notice/faq",
+            "/api/notice/faq/**",
             "/api/notice/detail/**",
             "/api/plan/auto",
+            "/api/plan/load",
     };
 
     @Autowired
