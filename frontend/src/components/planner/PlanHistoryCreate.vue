@@ -89,7 +89,7 @@
                   <v-rating
                     v-model="planData.ratePoint"
                     hover
-                    active-color="#ffec65"
+                    active-color="#f5c343"
                     color="#979797"
                     half-increments
                   ></v-rating>
@@ -133,7 +133,7 @@
 <script>
 import spring from "@/api/spring_boot";
 import axios from "axios";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   data: () => ({
@@ -170,30 +170,12 @@ export default {
   }),
   methods: {
     ...mapGetters(["token"]),
+    ...mapActions(["createPlan"]),
     validate() {
       this.$refs.form.validate();
     },
     reset() {
       this.$refs.form.reset();
-    },
-    createPlan(formData) {
-      console.log(formData);
-      axios({
-        url: spring.plan.regist(),
-        method: "post",
-        data: formData,
-        headers: {
-          Authorization: `Bearer ${this.token()}`,
-        },
-      })
-        .then((res) => {
-          console.log(res);
-          alert("플랜 작성에 성공하였습니다.");
-        })
-        .catch((err) => {
-          console.error(err);
-          alert("플랜 작성에 실패하였습니다.");
-        });
     },
   },
   watch: {

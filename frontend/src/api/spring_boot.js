@@ -28,7 +28,7 @@ export default {
     trophy: () => HOST + USER + "trophy", // 업적 지도용 카운트수
   },
   plan: {
-    gugun: (sido) => HOST + PLAN + "load/" + sido + "/",
+    gugun: (sido) => HOST + PLAN + "load/" + sido,
     regist: () => HOST + PLAN + "regist",
     getHistory: () => HOST + PLAN + "page",
   }
