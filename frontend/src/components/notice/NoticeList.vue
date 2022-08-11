@@ -22,7 +22,7 @@
           <v-row justify="center">
             <v-col cols="8">
               <v-container class="max-width">
-                <v-pagination v-model="page" class="my-4" :length="15"></v-pagination>
+                <v-pagination v-model="page" class="my-4" :length="totalPage"></v-pagination>
               </v-container>
             </v-col>
           </v-row>
@@ -37,7 +37,7 @@ import { mapState } from "vuex";
 
 export default {
   computed: {
-    ...mapState(["notices"]),
+    ...mapState(["notices", "totalPage"]),
   },
   watch: {
     page(num) {
