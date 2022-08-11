@@ -108,6 +108,7 @@ const routes = [
     ],
   },
   {
+<<<<<<< HEAD
     path: "/faq",
     component: Faq,
     children: [
@@ -119,6 +120,8 @@ const routes = [
     ],
   },
   {
+=======
+>>>>>>> 65e43a80df922a3b292a9a9f5c49f58e6cbef41b
     path: "/planner",
     name: "Planner",
     component: PlannerView,

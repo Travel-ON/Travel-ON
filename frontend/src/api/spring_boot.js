@@ -26,5 +26,9 @@ export default {
   },
   location: {
     trophy: () => HOST + USER + "trophy", // 업적 지도용 카운트수
+<<<<<<< HEAD
   },
+=======
+  }
+>>>>>>> 65e43a80df922a3b292a9a9f5c49f58e6cbef41b
 };
