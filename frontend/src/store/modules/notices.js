@@ -6,8 +6,10 @@ const api = createApi();
 
 export const Notices = {
   namespaced: true,
+
   state: { token: localStorage.getItem("token") || "", notices: [], notice: {}, totalPage: "", faq: [] },
   getters: { token: (state) => state.token },
+
   mutations: {
     GET_NOTICE(state, payload) {
       state.notice = payload;
