@@ -89,7 +89,7 @@ export default {
     items_community: [
       { title: "공지사항", name: "NoticeList" },
       { title: "FAQ", name: "faqList" },
-      { title: "Q&A", name: "qnaList" },
+      { title: "Q&A", name: "QnaList" },
     ],
     items_user: [
       { title: "마이페이지", name: "" },

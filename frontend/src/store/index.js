@@ -1,5 +1,4 @@
 import { createStore } from "vuex";
-import router from "@/router";
 import { Notices } from "@/store/modules/notices";
 import { createApi } from "@/api";
 import { Accounts } from "./modules/accounts";

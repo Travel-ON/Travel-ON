@@ -6,7 +6,7 @@ const api = createApi();
 
 export const Notices = {
   namespaced: true,
-  state: { notices: [], notice: {} },
+  state: { notices: [], notice: {}, totalPage: "", faq: [] },
   getters: {
     getQna: (state) => state.qna,
   },
@@ -26,6 +26,12 @@ export const Notices = {
     },
     MODIFY_NOTICE(state, payload) {
       state.notice = payload;
+    },
+    TOTAL_PAGE(state, payload) {
+      state.totalPage = payload;
+    },
+    GET_FAQ(state, payload) {
+      state.faq = payload;
     },
   },
   actions: {
@@ -104,6 +110,38 @@ export const Notices = {
       }).then(() => {
         router.push({ name: "NoticeList" });
       });
+    },
+    getFAQ({ commit }, faqPageNumber) {
+      let params = 0;
+      params = faqPageNumber;
+      api({
+        url: `/notice/faq`,
+        method: "GET",
+        params: { page: params },
+      })
+        .then((res) => {
+          console.log(res.data.pf.content);
+          commit("GET_FAQ", res.data.pf.content);
+          commit("TOTAL_PAGE", res.data.pf.totalPages);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getSearchFAQ({ commit }, payload) {
+      api({
+        url: `/notice/faq/search`,
+        method: "POST",
+        params: { key: payload },
+      })
+        .then((res) => {
+          console.log(res.data.pf.content);
+          commit("GET_FAQ", res.data.pf.content);
+          commit("TOTAL_PAGE", res.data.pf.totalPages);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };
