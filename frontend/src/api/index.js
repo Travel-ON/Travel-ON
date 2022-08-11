@@ -8,7 +8,6 @@ function createApi() {
     baseURL: `http://localhost:3000/api`,
     headers: {
       "Content-Type": "application/json",
-
       // Authorization: `Bearer ${accessToken}`,
       Authorization: `Bearer ${token}`,
     },

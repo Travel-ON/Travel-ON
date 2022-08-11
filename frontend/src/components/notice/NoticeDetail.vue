@@ -36,7 +36,7 @@ import { mapState } from "vuex";
 
 export default {
   computed: {
-    ...mapState(["notice"]),
+    ...mapState("Notices", ["notice"]),
   },
   data() {
     return {
@@ -47,7 +47,7 @@ export default {
     // actions로 noticeId값 보내기
     const pathName = new URL(document.location).pathname.split("/");
     const noticeId = pathName[pathName.length - 1];
-    this.$store.dispatch("getNotice", noticeId);
+    this.$store.dispatch("Notices/getNotice", noticeId);
   },
   methods: {
     moveToList() {
@@ -57,7 +57,7 @@ export default {
     },
     fixedToggle() {
       this.notice.fixationFlag = !this.notice.fixationFlag;
-      this.$store.dispatch("modifyNotice", this.notice);
+      this.$store.dispatch("Notices/modifyNotice", this.notice);
     },
     moveToUpdate() {
       this.$router.push({
@@ -65,7 +65,7 @@ export default {
       });
     },
     NoticeDelete() {
-      this.$store.dispatch("deleteNotice", this.notice.noticeId);
+      this.$store.dispatch("Notices/deleteNotice", this.notice.noticeId);
     },
   },
 };
