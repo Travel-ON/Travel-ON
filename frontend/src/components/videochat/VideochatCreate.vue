@@ -46,7 +46,17 @@
                     <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
                     <div
                       v-if="resident && residentMark"
-                      style="position: absolute; top: 10px; right: 50%; background-color: #6499ff; color: white"
+                      style="
+                        position: absolute;
+                        top: 10px;
+                        right: 50%;
+                        background-color: #6499ff;
+                        color: white;
+                        padding-left: 10px;
+                        padding-right: 10px;
+                        padding-top: 1px;
+                        padding-bottom: 1px;
+                      "
                     >
                       <v-icon>mdi-clover</v-icon> 현지인 <v-icon>mdi-clover</v-icon>
                     </div>

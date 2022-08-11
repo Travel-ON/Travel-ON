@@ -2,11 +2,46 @@
   <div class="ml-2 mr-2" v-if="streamManager" style="position: relative">
     <ov-video :stream-manager="streamManager" />
     <div style="position: absolute; bottom: 10px; right: 50%">
-      <div v-if="clientTitle" style="background-color: darkblue; color: whitesmoke">{{ clientTitle }}</div>
-      <div style="background-color: paleturquoise">{{ clientName }}</div>
+      <div
+        class="mb-1"
+        v-if="clientTitle"
+        style="
+          background-color: darkblue;
+          color: whitesmoke;
+          border-radius: 5px;
+          padding-left: 10px;
+          padding-right: 10px;
+          padding-top: 1px;
+          padding-bottom: 1px;
+        "
+      >
+        {{ clientTitle }}
+      </div>
+      <div
+        style="
+          background-color: paleturquoise;
+          border-radius: 5px;
+          padding-left: 10px;
+          padding-right: 10px;
+          padding-top: 1px;
+          padding-bottom: 1px;
+        "
+      >
+        {{ clientName }}
+      </div>
     </div>
-    <div style="position: absolute; top: 10px; right: 50%">
-      <div v-if="isResident === 'true'" style="background-color: darkblue; color: whitesmoke">
+    <div style="position: absolute; top: 10px; right: 50%; border-radius: 15px">
+      <div
+        v-if="isResident === 'true'"
+        style="
+          background-color: #6499ff;
+          color: whitesmoke;
+          padding-left: 10px;
+          padding-right: 10px;
+          padding-top: 1px;
+          padding-bottom: 1px;
+        "
+      >
         <v-icon>mdi-clover</v-icon> 현지인 <v-icon>mdi-clover</v-icon>
       </div>
     </div>
