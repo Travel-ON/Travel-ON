@@ -4,7 +4,7 @@ const HOST = "http://localhost:3000/";
 const USER = "api/user/";
 // const QNA = "qna/";
 // const NOTICE = "notice/";
-// const PLAN = "plan/";
+const PLAN = "api/plan/";
 // const ALARM = "alarm/";
 // const VIDEOCHAT = "videochat/";
 
@@ -27,4 +27,9 @@ export default {
   location: {
     trophy: () => HOST + USER + "trophy", // 업적 지도용 카운트수
   },
+  plan: {
+    gugun: (sido) => HOST + PLAN + "load/" + sido,
+    regist: () => HOST + PLAN + "regist",
+    getHistory: () => HOST + PLAN + "page",
+  }
 };
