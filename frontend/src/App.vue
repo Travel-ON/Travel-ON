@@ -6,6 +6,7 @@
     </v-app-bar>
     <v-main>
       <router-view />
+      <footer-view></footer-view>
     </v-main>
   </v-app>
 </template>
@@ -14,12 +15,13 @@
 import { reactive } from "vue";
 import { mapActions } from "vuex";
 import MainNav from "./components/common/MainNav.vue";
+import FooterView from "./components/common/FooterView.vue";
 
 export default {
   name: "App",
   setup() {
     const state = reactive({
-      exceptList: ["chatRoom"], // Nav바 제외리스트
+      exceptList: ["VideochatMatching", "VideochatMa", "VideochatCreate", "VideochatRoom", "VideochatShare"], // Nav바 제외리스트
     });
 
     return {
@@ -29,7 +31,7 @@ export default {
   methods: {
     ...mapActions(["fetchCurrentUser"]),
   },
-  components: { MainNav },
+  components: { MainNav, FooterView },
   mounted() {
     this.fetchCurrentUser();
   },

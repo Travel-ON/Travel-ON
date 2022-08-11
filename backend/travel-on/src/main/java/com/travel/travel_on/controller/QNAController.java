@@ -181,7 +181,7 @@ public class QNAController {
             UserDto userDto = userService.select(userId);
 
             if(!userDto.isAdminFlag()){
-                return  new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
 
             List<QNA> list;
@@ -235,6 +235,7 @@ public class QNAController {
             }
 
             QNADto qnaDto = qnaService.selectOne(Integer.parseInt(param.get("qnaId")));
+
             if(qnaDto.isAnswerFlag()){
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
