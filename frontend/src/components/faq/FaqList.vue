@@ -58,7 +58,7 @@ export default {
       this.isStatusOn = !this.isStatusOn;
     },
     searchPage() {
-      console.log(this.keyword);
+      this.$store.dispatch("getSearchFAQ", this.keyword);
     },
   },
 };

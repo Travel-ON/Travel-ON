@@ -118,6 +118,7 @@ const routes = [
       },
     ],
   },
+
   {
     path: "/planner",
     name: "Planner",

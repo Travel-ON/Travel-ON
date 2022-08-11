@@ -122,9 +122,9 @@ export default createStore({
     },
     getSearchFAQ({ commit }, payload) {
       api({
-        url: `/notice/faq`,
+        url: `/notice/faq/search`,
         method: "POST",
-        params: { page: 0, keyword: payload },
+        params: { key: payload },
       })
         .then((res) => {
           console.log(res.data.pf.content);
