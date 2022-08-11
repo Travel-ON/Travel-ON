@@ -1,7 +1,7 @@
 <template>
   <div id="plan-history-list">
     <div id="filter-btn">
-      <v-btn append-icon="mdi-filter-outline" style="background-color: #efefef">필터</v-btn>
+      <v-btn append-icon="mdi-filter-outline" style="background-color: #efefef" rounded="pill">필터</v-btn>
     </div>
     <div id="plan-add-btn">
       <v-btn
