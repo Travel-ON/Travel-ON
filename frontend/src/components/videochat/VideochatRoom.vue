@@ -153,7 +153,12 @@ export default {
       // 'token' parameter should be retrieved and returned by your own backend
       this.getToken(this.roomCode).then((token) => {
         this.session
-          .connect(token, { clientName: this.currentUser, clientTitle: this.title, isResident: this.residentMark })
+          .connect(token, {
+            clientName: this.currentUser,
+            clientTitle: this.title,
+            isResident: this.residentMark,
+            isHost: this.hostName === this.currentUser,
+          })
           .then(() => {
             // --- Get your own camera stream with the desired properties ---
 
