@@ -1,31 +1,31 @@
 <template>
   <div>
-    <select v-model="selected">
+    <select v-model="selectdistrict">
       <option disabled value="">전지역</option>
-      <option>강원</option>
-      <option>경기</option>
-      <option>경남</option>
-      <option>경북</option>
-      <option>광주</option>
-      <option>대구</option>
-      <option>대전</option>
-      <option>부산</option>
-      <option>서울</option>
-      <option>세종특별자치시</option>
-      <option>울산</option>
-      <option>인청</option>
-      <option>전남</option>
-      <option>전북</option>
-      <option>제주특별자치도</option>
-      <option>충남</option>
-      <option>충북</option>
+      <option value = "0"강원</option>
+      <option value = "1"> 경기</option>
+      <option value = "2">경남</option>
+      <option value = "3">경북</option>
+      <option value = "4">광주</option>
+      <option value = "5">대구</option>
+      <option value = "6">대전</option>
+      <option value = "7">부산</option>
+      <option value = "8">서울</option>
+      <option value = "9">세종특별자치시</option>
+      <option value = "10">울산</option>
+      <option value = "11">인청</option>
+      <option value = "12">전남</option>
+      <option value = "13">전북</option>
+      <option value = "14">제주특별자치도</option>
+      <option value = "15">충남</option>
+      <option value = "16">충북</option>
     </select>
     <span>선택함: {{ selected }}</span>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+// import { mapGetters } from "vuex";
 
 export default {
   data() {
@@ -60,4 +60,4 @@ export default {
     };
   },
 };
-
+</script>
