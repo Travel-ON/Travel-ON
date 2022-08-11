@@ -16,6 +16,9 @@ import NoticeDetail from "../components/notice/NoticeDetail.vue";
 import NoticeWrite from "../components/notice/NoticeWrite.vue";
 import NoticeUpdate from "../components/notice/NoticeUpdate.vue";
 
+import Faq from "../views/Faq.vue";
+import FaqList from "../components/faq/FaqList.vue";
+
 import Videochat from "../views/Videochat.vue";
 import VideochatMatching from "../components/VideochatMatching.vue";
 import VideochatCreate from "../components/VideochatCreate.vue";
@@ -101,6 +104,17 @@ const routes = [
         path: "write",
         name: "NoticeWrite",
         component: NoticeWrite,
+      },
+    ],
+  },
+  {
+    path: "/faq",
+    component: Faq,
+    children: [
+      {
+        path: "",
+        name: "faqList",
+        component: FaqList,
       },
     ],
   },

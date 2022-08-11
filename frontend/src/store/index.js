@@ -8,7 +8,7 @@ import { Weather } from "./modules/weather";
 const api = createApi();
 
 export default createStore({
-  state: { notices: [], notice: {} },
+  state: { notices: [], notice: {}, totalPage: "", faq: [] },
   getters: {},
   mutations: {
     GET_NOTICE(state, payload) {
@@ -27,6 +27,12 @@ export default createStore({
     MODIFY_NOTICE(state, payload) {
       state.notice = payload;
     },
+    TOTAL_PAGE(state, payload) {
+      state.totalPage = payload;
+    },
+    GET_FAQ(state, payload) {
+      state.faq = payload;
+    },
   },
   actions: {
     getNotice({ commit }, noticeId) {
@@ -41,12 +47,8 @@ export default createStore({
           console.log(err);
         });
     },
-    // 쿼리스트링으로 페이지가 안넘어감
     getNotices({ commit }, pageNumber) {
       let params = 0;
-      console.log("여기랑");
-      console.log(pageNumber);
-      console.log("여기사이");
       params = pageNumber;
       api({
         url: `/notice/page`,
@@ -54,8 +56,8 @@ export default createStore({
         params: { page: params },
       })
         .then((res) => {
-          console.log(res.data.p.content);
           commit("GET_NOTICES", res.data.p.content);
+          commit("TOTAL_PAGE", res.data.p.totalPages);
         })
         .catch((err) => {
           console.log(err);
@@ -100,6 +102,38 @@ export default createStore({
       }).then(() => {
         router.push({ name: "NoticeList" });
       });
+    },
+    getFAQ({ commit }, faqPageNumber) {
+      let params = 0;
+      params = faqPageNumber;
+      api({
+        url: `/notice/faq`,
+        method: "GET",
+        params: { page: params },
+      })
+        .then((res) => {
+          console.log(res.data.pf.content);
+          commit("GET_FAQ", res.data.pf.content);
+          commit("TOTAL_PAGE", res.data.pf.totalPages);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getSearchFAQ({ commit }, payload) {
+      api({
+        url: `/notice/faq`,
+        method: "POST",
+        params: { page: 0, keyword: payload },
+      })
+        .then((res) => {
+          console.log(res.data.pf.content);
+          commit("GET_FAQ", res.data.pf.content);
+          commit("TOTAL_PAGE", res.data.pf.totalPages);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
   modules: {

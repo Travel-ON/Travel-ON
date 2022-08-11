@@ -5,9 +5,7 @@ import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.dto.VisitExpectedDto;
 import com.travel.travel_on.dto.VisitPlaceDto;
 import com.travel.travel_on.entity.*;
-import com.travel.travel_on.model.repo.PlaceRepositorty;
-import com.travel.travel_on.model.repo.VisitExpectedRepository;
-import com.travel.travel_on.model.repo.VisitPlaceRepository;
+import com.travel.travel_on.model.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +25,13 @@ public class PlannerServiceImpl implements PlannerService{
 
     @Autowired
     VisitExpectedRepository eRepo;
+
+    @Autowired
+    SidoRepository sRepo;
+
+    @Autowired
+    GugunRepository gRepo;
+
 
     @Override
     public List<VisitPlace> selectVisitAll(User user) {
@@ -263,5 +268,17 @@ public class PlannerServiceImpl implements PlannerService{
         }
         return pList;
     }
+
+    @Override
+    public List<Gugun> loadGugun(String sidoName) {
+        Optional<Sido> value = sRepo.findFirstBySidoNameContaining(sidoName);
+        if(value.isPresent()){
+            Sido sido = value.get();
+            String splitCode = sido.getSidoCode().charAt(0) + "" + sido.getSidoCode().charAt(1);
+            System.out.println(splitCode);
+            return gRepo.findByGugunCodeStartsWith(splitCode);
+        }else return null;
+    }
+
 
 }
