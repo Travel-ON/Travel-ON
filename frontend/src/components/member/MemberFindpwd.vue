@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="login(credentials)">
+  <form @submit.prevent="userPassInit(credentials)">
     <div>
       <label for="id"
         >아이디
@@ -7,17 +7,14 @@
       </label>
     </div>
     <div>
-      <label for="password"
-        >비밀번호
-        <input id="password" type="password" v-model="credentials.password" />
+      <label for="email"
+        >이메일
+        <input id="email" type="text" v-model="credentials.email" />
       </label>
     </div>
-    <button type="submit">로그인</button>
+    <button type="submit">비밀번호 찾기</button>
     <p>{{ logMessage }}</p>
   </form>
-  <router-link :to="{ name: 'MemberFindpwd' }">
-    <v-btn>비밀번호찾기</v-btn>
-  </router-link>
 </template>
 
 <script>
@@ -28,7 +25,7 @@ export default {
     return {
       credentials: {
         id: "",
-        password: "",
+        email: "",
       },
       logMessage: "",
     };
@@ -37,7 +34,7 @@ export default {
     ...mapGetters(["isLoggedIn"]),
   },
   methods: {
-    ...mapActions(["login"]),
+    ...mapActions(["userPassInit"]),
   },
   created() {
     if (this.isLoggedIn) {
@@ -48,7 +45,7 @@ export default {
   },
   initForm() {
     this.id = "";
-    this.password = "";
+    this.email = "";
   },
 };
 </script>
