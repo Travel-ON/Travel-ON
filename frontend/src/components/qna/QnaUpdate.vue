@@ -1,26 +1,24 @@
 <template>
   <div>
     <v-form ref="form" v-model="valid" lazy-validation>
-      <v-container class=""
+      <v-container
         ><v-row>
           <v-col class="d-flex mb-6">
-            <v-btn depressed color="yellow" @click="moveToList"> 뒤로가기 </v-btn>
+            <v-btn depressed color="yellow" @click="moveToDetail"> 뒤로가기 </v-btn>
           </v-col>
         </v-row>
         <v-row>
           <v-col
-            ><v-text-field v-model="notice.title" :counter="10" :rules="titleRules" label="제목" required>
-            </v-text-field
+            ><v-text-field v-model="qna.title" :counter="10" :rules="titleRules" label="제목" required> </v-text-field
           ></v-col>
         </v-row>
         <v-row>
           <v-col
-            ><v-textarea v-model="notice.content" :counter="300" label="내용" :rules="contentRules" required>
-            </v-textarea
+            ><v-textarea v-model="qna.content" :counter="300" label="내용" :rules="contentRules" required> </v-textarea
           ></v-col>
         </v-row>
         <div class="d-flex justify-end mb-6">
-          <v-btn color="success" class="d-flex justify-end" @click="[validate(), updateNotice()]"> 수정 </v-btn>
+          <v-btn color="success" class="d-flex justify-end" @click="[validate(), updateQna()]"> 수정 </v-btn>
         </div>
       </v-container>
     </v-form>
@@ -31,8 +29,9 @@
 import { mapState } from "vuex";
 
 export default {
+  name: "QnaUpdate",
   computed: {
-    ...mapState("Notices", ["notice"]),
+    ...mapState("QnAs", ["qna"]),
   },
   data() {
     return {
@@ -47,24 +46,21 @@ export default {
   },
 
   methods: {
-    moveToList() {
+    moveToDetail() {
       this.$router.push({
-        name: "NoticeList",
+        name: "QnaDetail",
+        params: { qnaid: this.qna.qnaid },
       });
     },
     validate() {
       this.$refs.form.validate();
     },
-    updateNotice() {
-      // 날짜 포맷 ( yyyy-mm-ddThh:MM:ss )
-      const today = new Date();
-      today.setHours(today.getHours() + 9);
-      this.notice.noticeDate = today.toISOString().replace("T", " ").substring(0, 19);
-      console.log(this.notice);
-      this.$store.dispatch("Notices/modifyNotice", this.notice);
+    updateQna() {
+      console.log(this.qna);
+      this.$store.dispatch("QnAs/modifyQnas", this.qna);
     },
   },
 };
 </script>
 
-<style></style>
+<style scoped></style>
