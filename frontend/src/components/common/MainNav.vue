@@ -1,6 +1,6 @@
 <template>
   <div style="position: fixed; top: 0; left: 0; right: 0; z-index: 3000">
-    <v-toolbar height="116px">
+    <v-toolbar height="80">
       <router-link :to="{ name: 'home' }">
         <v-btn style="width: 150px">
           <v-img
