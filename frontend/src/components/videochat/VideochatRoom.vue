@@ -9,9 +9,7 @@
               <p class="text-center">
                 <v-col>
                   <v-row id="video-container">
-                    <!--자기 얼굴-->
                     <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
-                    <!-- 너매 얼굴 -->
                     <user-video
                       v-for="sub in subscribers"
                       :key="sub.stream.connection.connectionId"
@@ -62,14 +60,15 @@
 import { mapGetters } from "vuex";
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
+import swal from "sweetalert";
 import UserVideo from "./UserVideo.vue";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8443`;
-const OPENVIDU_SERVER_SECRET = "ssafy";
-// const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
-// const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+// const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8443`;
+// const OPENVIDU_SERVER_SECRET = "ssafy";
+const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
+const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
   name: "VideochatRoom",
@@ -131,8 +130,10 @@ export default {
           this.subscribers.splice(index, 1);
         }
         if (check) {
-          alert("호스트에 의해 화상채팅방이 종료되었습니다.");
           this.leaveSession();
+          swal("호스트에 의해 화상채팅방이 종료되었습니다.", {
+            icon: "warning",
+          });
           this.$router.push({
             name: "home",
           });
@@ -214,48 +215,72 @@ export default {
       }
     },
     clickCloseRoom() {
-      axios({
-        url: `http://i7b301.p.ssafy.io:3000/api/videochat/${this.roomCode}`,
-        // url: `http://localhost:3000/api/videochat/${this.roomCode}`,
-        method: "delete",
-        headers: { Authorization: `Bearer ${this.token}` },
-      })
-        .then((res) => {
-          console.log(res);
-          alert("방 종료!");
-          this.leaveSession();
-          this.$router.push({
-            name: "home",
-          });
-        })
-        .catch((err) => {
-          // alert("이미 있는 아이디 입니다!");
-          console.log(err);
-        });
+      swal({
+        title: "화상채팅방을 종료하실건가요?",
+        text: "종료하시려면 확인을 눌러주세요!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((willDelete) => {
+        if (willDelete) {
+          axios({
+            // url: `http://i7b301.p.ssafy.io:3000/api/videochat/${this.roomCode}`,
+            url: `http://localhost:3000/api/videochat/${this.roomCode}`,
+            method: "delete",
+            headers: { Authorization: `Bearer ${this.token}` },
+          })
+            .then((res) => {
+              console.log(res);
+              this.leaveSession();
+              swal("화상채팅방이 종료되었습니다!", {
+                icon: "success",
+              });
+              this.$router.push({
+                name: "home",
+              });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      });
     },
     clickLeaveRoom() {
-      axios({
-        url: `http://i7b301.p.ssafy.io:3000/api/videochat/leave/${this.roomCode}`,
-        // url: `http://localhost:3000/api/videochat/leave/${this.roomCode}`,
-        method: "get",
-        headers: { Authorization: `Bearer ${this.token}` },
-      })
-        .then((res) => {
-          console.log(res);
-          alert("방 나가기!");
-          this.leaveSession();
-          this.$router.push({
-            name: "home",
-          });
-        })
-        .catch((err) => {
-          // alert("이미 있는 아이디 입니다!");
-          console.log(err);
-        });
+      swal({
+        title: "화상채팅방을 나가실건가요?",
+        text: "나가시려면 확인을 눌러주세요!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((willDelete) => {
+        if (willDelete) {
+          axios({
+            // url: `http://i7b301.p.ssafy.io:3000/api/videochat/leave/${this.roomCode}`,
+            url: `http://localhost:3000/api/videochat/leave/${this.roomCode}`,
+            method: "get",
+            headers: { Authorization: `Bearer ${this.token}` },
+          })
+            .then((res) => {
+              console.log(res);
+              this.leaveSession();
+              swal("화상채팅방이 종료되었습니다!", {
+                icon: "success",
+              });
+              this.$router.push({
+                name: "home",
+              });
+            })
+            .catch((err) => {
+              // alert("이미 있는 아이디 입니다!");
+              console.log(err);
+            });
+        }
+      });
     },
     clickSharecode() {
-      alert(`${this.roomCode}`);
-      // 나중에 모달로 구현
+      swal("방 코드 🔑", `${this.roomCode}`, "info", {
+        button: "Aww yiss!",
+      });
     },
 
     // yuna end
