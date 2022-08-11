@@ -42,6 +42,9 @@
                       >
                     </div>
 
+                    <v-btn class="btn mr-2" style="background-color: darkblue; color: white" @click="clickSharecode">
+                      <v-icon color="white">mdi-share</v-icon> 방코드 확인</v-btn
+                    >
                     <v-btn v-if="hostName === currentUser" class="btn mr-2" @click="clickCloseRoom">종료</v-btn>
                     <v-btn v-else class="btn mr-2" @click="clickLeaveRoom">나가기</v-btn>
                   </v-row>
@@ -120,24 +123,15 @@ export default {
       // On every Stream destroyed...
       this.session.on("streamDestroyed", ({ stream }) => {
         const index = this.subscribers.indexOf(stream.streamManager, 0);
-        console.log("종료");
-        console.log(stream.connection.data);
-        console.log(stream.connection.data.clientName);
-        console.log(JSON.parse(stream.connection.data).clientName);
-        console.log(JSON.stringify(stream.connection.data));
-        console.log(this.hostName);
         let check = false;
-        const { clientName } = stream.connection.data;
-        console.log("종료1");
-        console.log(clientName);
         if (this.hostName === JSON.parse(stream.connection.data).clientName) {
-          console.log("방 종료됨!!!!!");
           check = true;
         }
         if (index >= 0) {
           this.subscribers.splice(index, 1);
         }
         if (check) {
+          alert("호스트에 의해 화상채팅방이 종료되었습니다.");
           this.leaveSession();
           this.$router.push({
             name: "home",
@@ -258,6 +252,10 @@ export default {
           // alert("이미 있는 아이디 입니다!");
           console.log(err);
         });
+    },
+    clickSharecode() {
+      alert(`${this.roomCode}`);
+      // 나중에 모달로 구현
     },
 
     // yuna end

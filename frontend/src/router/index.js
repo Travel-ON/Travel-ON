@@ -30,6 +30,7 @@ import VideochatMatching from "../components/VideochatMatching.vue";
 import VideochatCreate from "../components/videochat/VideochatCreate.vue";
 import VideochatRoom from "../components/videochat/VideochatRoom.vue";
 import VideochatMa from "../components/videochat/VideochatMa.vue";
+import VideochatShare from "../components/videochat/VideochatShare.vue";
 
 const routes = [
   {
@@ -57,9 +58,14 @@ const routes = [
         component: VideochatCreate,
       },
       {
-        path: "create",
+        path: "room",
         name: "VideochatRoom",
         component: VideochatRoom,
+      },
+      {
+        path: "share",
+        name: "VideochatShare",
+        component: VideochatShare,
       },
     ],
   },

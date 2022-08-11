@@ -1,9 +1,7 @@
 <template>
   <v-app>
-    <v-app-bar app>
-      <!-- main-nav는 기본적으로 모든 페이지에 포함, 제외시 하단 exceptList에 포함시킬것 -->
-      <main-nav v-if="!state.exceptList.includes($route.name)" />
-    </v-app-bar>
+    <!-- main-nav는 기본적으로 모든 페이지에 포함, 제외시 하단 exceptList에 포함시킬것 -->
+    <main-nav v-if="!state.exceptList.includes($route.name)" />
     <v-main>
       <router-view />
     </v-main>
@@ -19,7 +17,7 @@ export default {
   name: "App",
   setup() {
     const state = reactive({
-      exceptList: ["VideochatMatching", "VideochatMa", "VideochatCreate", "VideochatRoom"], // Nav바 제외리스트
+      exceptList: ["VideochatMatching", "VideochatMa", "VideochatCreate", "VideochatRoom", "VideochatShare"], // Nav바 제외리스트
     });
 
     return {

@@ -124,7 +124,7 @@ export default {
       mainStreamManager: undefined,
       publisher: undefined,
       subscribers: [],
-      areaScope: null,
+      areaScope: "sido",
       residentMark: true,
       select: 4,
       counts: [4, 6, 8],
@@ -272,7 +272,7 @@ export default {
           // this.joinSession();
         })
         .catch((err) => {
-          // alert("이미 있는 아이디 입니다!");
+          alert("방만들기 실패!");
           console.log(err);
         });
     },

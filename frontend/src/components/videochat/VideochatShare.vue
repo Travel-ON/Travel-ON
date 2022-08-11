@@ -3,19 +3,25 @@
     <v-row id="join">
       <v-col id="join-dialog" class="jumbotron vertical-center">
         <v-btn class="btn mr-2" @click="clickHome">홈으로</v-btn>
-        <h1>방 매칭 화면</h1>
+        <h1>방 코드 입장 화면</h1>
         <v-row style="margin-top: 20px">
           <v-col style="background-color: skyblue">
             <div>현위치: {{ sido }} {{ gugun }} {{ dong }} <v-icon x-small>mdi-map-marker-radius</v-icon></div>
             <h3 class="mt-3">설정</h3>
             <v-row class="setting" style="background-color: white; margin: 5px">
               <v-container fluid>
-                <div>지역범위 설정</div>
+                <!-- <div>지역범위 설정</div>
                 <v-radio-group v-model="areaScope" mandatory>
                   <v-radio :label="`시: ${sido}`" value="sido"></v-radio>
                   <v-radio :label="`구: ${gugun}`" value="gugun"></v-radio>
                   <v-radio :label="`동: ${dong}`" value="dong"></v-radio>
-                </v-radio-group>
+                </v-radio-group> -->
+                <div>
+                  <label for="roomCode"
+                    >방코드 입력
+                    <input id="roomCode" type="text" v-model="roomCode" />
+                  </label>
+                </div>
                 <div v-if="resident">
                   <v-container class="px-0" fluid>
                     <v-checkbox v-model="residentMark" label="현지인 마크 표시하기"></v-checkbox>
@@ -67,7 +73,7 @@
                     <v-icon color="white">mdi-microphone-off</v-icon> 음소거 해제</v-btn
                   >
                 </div>
-                <v-btn class="btn mr-2" @click="clickMatchingRoom">방 매칭하기</v-btn>
+                <v-btn class="btn mr-2" @click="clickMatchingRoom">방 입장하기</v-btn>
               </div>
             </div>
           </v-col>
@@ -91,7 +97,7 @@ const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
-  name: "VideochatMa",
+  name: "VideochatShare",
 
   components: {
     UserVideo,
@@ -116,11 +122,11 @@ export default {
       mainStreamManager: undefined,
       publisher: undefined,
       subscribers: [],
-      areaScope: "sido",
+      // areaScope: "sido",
       residentMark: true,
       video: true,
       audio: true,
-
+      roomCode: "",
       mySessionId: "impermanent_session",
       // myUserName: `닉네임들어갈곳`,
     };
@@ -231,20 +237,16 @@ export default {
     },
     clickMatchingRoom() {
       axios({
-        url: "http://localhost:3000/api/videochat/match",
+        url: `http://localhost:3000/api/videochat/${this.roomCode}`,
         // url: "http://i7b301.p.ssafy.io:3000/api/videochat/match",
-        method: "post",
+        method: "get",
         headers: { Authorization: `Bearer ${this.token}` },
-        data: {
-          dongCode: this.dongCode,
-          areaScope: this.areaScope,
-        },
       })
         .then((res) => {
           // console.log(res);
           // console.log("res.data:  ", res.data);
           // this.idChecked = id;
-          alert("방 매칭 완료!");
+          alert("방 입장 완료!");
           this.leaveSession();
           this.$router.push({
             name: "VideochatRoom",
@@ -259,7 +261,7 @@ export default {
           // this.joinSession();
         })
         .catch((err) => {
-          alert("방 매칭 실패!");
+          alert("방 입장 실패!");
           console.log(err);
         });
     },
