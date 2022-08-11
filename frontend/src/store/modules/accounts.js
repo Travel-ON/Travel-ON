@@ -98,7 +98,7 @@ export const Accounts = {
         data: credentials, // credentials.username, cresentials.password
       })
         .then(({ data }) => {
-          console.log(data)
+          console.log(data);
           const token = data.accessToken;
           const nickName = data.nickname;
           const userTitle = data.userTitle;
@@ -116,12 +116,12 @@ export const Accounts = {
         })
         .catch((err) => {
           console.error(err);
-          alert("아이디가 없거나 비밀번호가 일치하지 않습니다!")
-          router.push({ name: "MemberLogin" })
+          alert("아이디가 없거나 비밀번호가 일치하지 않습니다!");
+          router.push({ name: "MemberLogin" });
         });
     },
     logout({ commit, dispatch }) {
-      dispatch("removeToken")
+      dispatch("removeToken");
       commit("SET_CURRENT_USER", "");
       commit("SET_ADMIN", false);
       commit("SET_TITLE", "");
@@ -152,7 +152,7 @@ export const Accounts = {
       router.push({ name: "home" });
     },
     regist({ commit, dispatch }, formData) {
-        /* 
+      /*
         POST: 사용자 입력정보를 signup URL로 보내기
           성공하면
             응답 토큰 저장
@@ -161,15 +161,15 @@ export const Accounts = {
           실패하면
             에러 메시지 표시
         */
-      console.log("regist 메서드 실행")
-      console.log(formData)
-      console.log(spring.accounts.regist())
+      console.log("regist 메서드 실행");
+      console.log(formData);
+      console.log(spring.accounts.regist());
       axios({
         url: spring.accounts.regist(),
         method: "post",
         data: formData,
       })
-        .then(res => {
+        .then((res) => {
           const token = res.accessToken;
           const nickName = res.nickname;
           const userTitle = res.userTitle;
@@ -178,15 +178,15 @@ export const Accounts = {
           commit("SET_CURRENT_USER", nickName);
           commit("SET_ADMIN", adminFlag);
           commit("SET_TITLE", userTitle);
-          alert("회원가입 완료!")
+          alert("회원가입 완료!");
           router.push({ name: "home" });
         })
-        .catch(err => {
-          console.error(err)
-          alert("회원가입 실패")
+        .catch((err) => {
+          console.error(err);
+          alert("회원가입 실패");
         });
     },
-    detail( { getters } ) {
+    detail({ getters }) {
       const token = getters.token;
       console.log(token);
       axios({
