@@ -22,7 +22,6 @@ public class QNAServiceImpl implements QNAService{
     @Override
     public List<QNA> selectAll(User user, String keyword) {
         List<QNA> list = qnaRepository.findByUser(user);
-
         if(keyword.equals("null")){
             return list;
         }else{
