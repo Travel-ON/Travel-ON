@@ -27,6 +27,7 @@
           <div><h1>방문한 장소</h1></div>
         </div>
         <div class="plan-content">
+          <PlanHistoryList />
           <PlanHistoryCreate />
         </div>
       </div>
@@ -37,13 +38,14 @@
 
 <script>
 import PlanHistoryCreate from "@/components/planner/PlanHistoryCreate.vue";
+import PlanHistoryList from "@/components/planner/PlanHistoryList.vue";
 
 export default {
   name: "PlannerView",
   data: () => ({
     selectedPage: 0,
   }),
-  components: { PlanHistoryCreate },
+  components: { PlanHistoryCreate, PlanHistoryList },
 };
 </script>
 

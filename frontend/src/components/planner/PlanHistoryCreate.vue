@@ -26,7 +26,7 @@
               <input
                 type="date"
                 id="planDate"
-                v-model="planData.date"
+                v-model="planData.visitDate"
                 style="border-bottom: 2px solid #adadad; margin-bottom: 30px; margin-right: auto"
                 required
               />
@@ -37,18 +37,28 @@
               label="시(도)"
               :items="sido"
               item-title="name"
-              item-value="code"
-              v-model="planData.sidoCode"
+              item-value="codeSet"
+              v-model="selectedSido"
               style="margin-right: 30px"
               bg-color="#efefef"
               density="comfortable"
               required
             ></v-select>
-            <v-select label="구(군)" bg-color="#efefef" density="comfortable" required></v-select>
+            <v-select
+              label="구(군)"
+              :items="gugun"
+              item-title="gugunName"
+              item-value="gugunName"
+              v-model="planData.gugunName"
+              bg-color="#efefef"
+              density="comfortable"
+              required
+            ></v-select>
           </div>
           <v-text-field
             label="장소를 입력해주세요"
             prepend-inner-icon="mdi-map-marker"
+            v-model="planData.visitedPlace"
             bg-color="#efefef"
             style="margin: 0 30px"
             density="comfortable"
@@ -73,11 +83,11 @@
               <div style="display: flex; align-items: center; margin-left: 30px">
                 <div style="margin-bottom: 4px">
                   <span style="font-size: 16px; font-weight: bold">만족도는 어땠나요? </span>
-                  <span style="font-size: 16px">({{ planData.rating.toFixed(1) }}) </span>
+                  <span style="font-size: 16px">({{ planData.ratePoint.toFixed(1) }}) </span>
                 </div>
                 <div>
                   <v-rating
-                    v-model="planData.rating"
+                    v-model="planData.ratePoint"
                     hover
                     active-color="#ffec65"
                     color="#979797"
@@ -99,8 +109,9 @@
             color="#50a0f0"
             size="x-large"
             style="font-weight: bold; color: #efefef; margin-right: 30px"
-            @click="validate"
+            @click="createPlan(planData)"
             width="180px"
+            :disabled="!valid"
             >저장</v-btn
           >
           <v-btn
@@ -120,52 +131,89 @@
 </template>
 
 <script>
+import spring from "@/api/spring_boot";
+import axios from "axios";
+import { mapGetters } from "vuex";
+
 export default {
   data: () => ({
-    valid: true,
+    valid: true, // form 요휴성 검사
     planData: {
-      date: new Date().toISOString().substr(0, 10),
-      rating: 3,
-      sidoCode: null,
-      gugun: null,
-      locate: "",
+      visitedPlace: "",
+      ratePoint: 3,
       review: "",
+      sidoName: null,
+      gugunName: null,
+      visitDate: new Date().toISOString().substr(0, 10),
     },
+    selectedSido: null,
     sido: [
-      { code: "4200000000", name: "강원" },
-      { code: "4100000000", name: "경기" },
-      { code: "4800000000", name: "경남" },
-      { code: "4700000000", name: "경북" },
-      { code: "2900000000", name: "광주" },
-      { code: "2700000000", name: "대구" },
-      { code: "3000000000", name: "대전" },
-      { code: "2600000000", name: "부산" },
-      { code: "1100000000", name: "서울" },
-      { code: "3611000000", name: "세종" },
-      { code: "3100000000", name: "울산" },
-      { code: "2800000000", name: "인천" },
-      { code: "4600000000", name: "전남" },
-      { code: "4500000000", name: "전북" },
-      { code: "5000000000", name: "제주" },
-      { code: "4400000000", name: "충남" },
-      { code: "4300000000", name: "충북" },
+      { codeSet: { code: "4200000000", name: "강원" }, name: "강원" },
+      { codeSet: { code: "4100000000", name: "경기" }, name: "경기" },
+      { codeSet: { code: "4800000000", name: "경남" }, name: "경남" },
+      { codeSet: { code: "4700000000", name: "경북" }, name: "경북" },
+      { codeSet: { code: "2900000000", name: "광주" }, name: "광주" },
+      { codeSet: { code: "2700000000", name: "대구" }, name: "대구" },
+      { codeSet: { code: "3000000000", name: "대전" }, name: "대전" },
+      { codeSet: { code: "2600000000", name: "부산" }, name: "부산" },
+      { codeSet: { code: "1100000000", name: "서울" }, name: "서울" },
+      { codeSet: { code: "3611000000", name: "세종" }, name: "세종" },
+      { codeSet: { code: "3100000000", name: "울산" }, name: "울산" },
+      { codeSet: { code: "2800000000", name: "인천" }, name: "인천" },
+      { codeSet: { code: "4600000000", name: "전남" }, name: "전남" },
+      { codeSet: { code: "4500000000", name: "전북" }, name: "전북" },
+      { codeSet: { code: "5000000000", name: "제주" }, name: "제주" },
+      { codeSet: { code: "4400000000", name: "충남" }, name: "충남" },
+      { codeSet: { code: "4300000000", name: "충북" }, name: "충북" },
     ],
     gugun: [],
   }),
   methods: {
+    ...mapGetters(["token"]),
     validate() {
       this.$refs.form.validate();
     },
     reset() {
       this.$refs.form.reset();
     },
+    createPlan(formData) {
+      console.log(formData);
+      axios({
+        url: spring.plan.regist(),
+        method: "post",
+        data: formData,
+        headers: {
+          Authorization: `Bearer ${this.token()}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          alert("플랜 작성에 성공하였습니다.");
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("플랜 작성에 실패하였습니다.");
+        });
+    },
   },
   watch: {
-    // "planData.sido": function(val) {
-    //   axios({
-    //     url:
-    //   })
-    // },
+    selectedSido(val) {
+      this.planData.sidoName = val.name;
+    },
+    "planData.sidoName": function (val) {
+      axios({
+        url: spring.plan.gugun(val),
+        method: "get",
+      })
+        .then((res) => {
+          console.log(val);
+          console.log(res);
+          this.gugun = res.data;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
   },
 };
 </script>
