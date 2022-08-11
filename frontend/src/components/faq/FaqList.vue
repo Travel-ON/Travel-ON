@@ -1,12 +1,16 @@
 <template>
   <div>
     <v-container>
-      <v-row v-for="item in faq" :key="item.faqId">
-        <v-col>Q</v-col>
-        <v-col>{{ item.question }}</v-col>
-        <v-col v-show="isStatusOn">{{ item.answer }}</v-col>
-        <v-col @click="toggleOn">V</v-col>
-      </v-row>
+      <div v-for="item in faq" :key="item.faqId">
+        <v-row>
+          <v-col>Q</v-col>
+          <v-col>{{ item.question }}</v-col>
+          <v-col @click="toggleOn">V</v-col>
+        </v-row>
+        <v-row>
+          <v-col v-show="isStatusOn">{{ item.answer }}</v-col>
+        </v-row>
+      </div>
       <div class="text-center">
         <v-container>
           <v-row justify="center">
@@ -18,6 +22,12 @@
           </v-row>
         </v-container>
       </div>
+      <v-container class="">
+        <v-form>
+          <v-text-field v-model="keyword" placeholder="검색어를 입력하세요"></v-text-field>
+        </v-form>
+        <v-btn color="indigo" @click="searchPage()">검색</v-btn>
+      </v-container>
     </v-container>
   </div>
 </template>
@@ -35,18 +45,20 @@ export default {
     },
   },
   data() {
-    return { page: 1, isStatusOn: false };
+    return { page: 1, isStatusOn: false, keyword: "" };
   },
   mounted() {
     this.$store.dispatch("getFAQ");
   },
   methods: {
     handlePage() {
-      console.log(this.page - 1);
       this.$store.dispatch("getFAQ", this.page - 1);
     },
     toggleOn() {
       this.isStatusOn = !this.isStatusOn;
+    },
+    searchPage() {
+      console.log(this.keyword);
     },
   },
 };

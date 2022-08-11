@@ -120,6 +120,21 @@ export default createStore({
           console.log(err);
         });
     },
+    getSearchFAQ({ commit }, payload) {
+      api({
+        url: `/notice/faq`,
+        method: "POST",
+        params: { page: 0, keyword: payload },
+      })
+        .then((res) => {
+          console.log(res.data.pf.content);
+          commit("GET_FAQ", res.data.pf.content);
+          commit("TOTAL_PAGE", res.data.pf.totalPages);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   modules: {
     Accounts,
