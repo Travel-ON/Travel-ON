@@ -6,6 +6,7 @@ import MemberRegisterView from "../views/MemberRegisterView.vue";
 import MemberModify2 from "../components/member/MemberModify2.vue";
 import MemberSecession from "../components/member/MemberSecession.vue";
 import MemberLogout from "../components/member/MemberLogout.vue";
+import MemberFindpwd from "../components/member/MemberFindpwd.vue";
 import HomeView from "../views/HomeView.vue";
 
 import PlannerView from "../views/PlannerView.vue";
@@ -27,7 +28,10 @@ import QnaUpdate from "../components/qna/QnaUpdate.vue";
 
 import Videochat from "../views/Videochat.vue";
 import VideochatMatching from "../components/VideochatMatching.vue";
-import VideochatCreate from "../components/VideochatCreate.vue";
+import VideochatCreate from "../components/videochat/VideochatCreate.vue";
+import VideochatRoom from "../components/videochat/VideochatRoom.vue";
+import VideochatMa from "../components/videochat/VideochatMa.vue";
+import VideochatShare from "../components/videochat/VideochatShare.vue";
 
 const routes = [
   {
@@ -45,9 +49,24 @@ const routes = [
         component: VideochatMatching,
       },
       {
+        path: "matching",
+        name: "VideochatMa",
+        component: VideochatMa,
+      },
+      {
         path: "create",
         name: "VideochatCreate",
         component: VideochatCreate,
+      },
+      {
+        path: "room",
+        name: "VideochatRoom",
+        component: VideochatRoom,
+      },
+      {
+        path: "share",
+        name: "VideochatShare",
+        component: VideochatShare,
       },
     ],
   },
@@ -84,6 +103,11 @@ const routes = [
         path: "logout",
         name: "MemberLogout",
         component: MemberLogout,
+      },
+      {
+        path: "findpwd",
+        name: "MemberFindpwd",
+        component: MemberFindpwd,
       },
     ],
   },
