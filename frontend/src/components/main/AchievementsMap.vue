@@ -20,13 +20,9 @@
 </template>
 
 <script>
-import KoreaMap from "./KoreaMap.vue";
-
 export default {
   name: "AchievementsMap",
-  components: {
-    KoreaMap,
-  },
+  components: {},
 };
 </script>
 
