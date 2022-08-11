@@ -1,6 +1,6 @@
 <!-- eslint-disable vuejs-accessibility/media-has-caption -->
 <template>
-  <video autoplay />
+  <video style="height: 30vh" autoplay />
 </template>
 
 <script>

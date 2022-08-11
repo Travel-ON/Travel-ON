@@ -1,5 +1,5 @@
 <template>
-  <div v-if="streamManager" style="position: relative">
+  <div class="ml-2 mr-2" v-if="streamManager" style="position: relative">
     <ov-video :stream-manager="streamManager" />
     <div style="position: absolute; bottom: 10px; right: 50%">
       <div v-if="clientTitle" style="background-color: darkblue; color: whitesmoke">{{ clientTitle }}</div>
