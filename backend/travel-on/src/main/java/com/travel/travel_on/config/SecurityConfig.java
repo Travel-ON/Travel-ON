@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/notice/faq/**",
             "/api/notice/detail/**",
             "/api/plan/auto",
-            "/api/plan/load",
+            "/api/plan/load/**",
     };
 
     @Autowired

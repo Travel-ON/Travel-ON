@@ -6,6 +6,7 @@ import { Accounts } from "./modules/accounts";
 import { QnAs } from "./modules/qnas";
 import { Locations } from "./modules/locations";
 import { Weather } from "./modules/weather";
+import { Plans } from "./modules/plans";
 
 // const api = createApi();
 
@@ -20,5 +21,6 @@ export default createStore({
     Notices,
     Locations,
     Weather,
+    Plans,
   },
 });
