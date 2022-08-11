@@ -1,7 +1,7 @@
 <template>
   <div style="display: flex; justify-content: space-between">
     <div class="left-space"></div>
-    <div class="main-space">
+    <div class="plan-main-space">
       <div
         :style="`position: absolute; right: -20px; top: ${40 + 50 * item}px`"
         v-for="item in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]"
@@ -48,7 +48,7 @@ export default {
 </script>
 
 <style>
-.main-space {
+.plan-main-space {
   width: 1128px;
   height: 966px;
   padding: 30px 50px 30px 30px;
