@@ -1,8 +1,7 @@
 import { createStore } from "vuex";
-<<<<<<< HEAD
+
 // import router from "@/router";
-=======
->>>>>>> 0df7aaf59735fa498084cf9074709ad6e0efa714
+
 import { Notices } from "@/store/modules/notices";
 // import { createApi } from "@/api";
 import { Accounts } from "./modules/accounts";
