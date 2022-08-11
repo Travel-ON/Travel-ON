@@ -43,6 +43,10 @@
                     <v-btn class="btn mr-2" style="background-color: darkblue; color: white" @click="clickSharecode">
                       <v-icon color="white">mdi-share</v-icon> 방코드 확인</v-btn
                     >
+
+                    <v-btn class="btn mr-2" style="background-color: darkblue; color: white" @click="clickPlayGame">
+                      <v-icon color="white">mdi-controller</v-icon> 게임하기</v-btn
+                    >
                     <v-btn v-if="hostName === currentUser" class="btn mr-2" @click="clickCloseRoom">종료</v-btn>
                     <v-btn v-else class="btn mr-2" @click="clickLeaveRoom">나가기</v-btn>
                   </v-row>
@@ -60,7 +64,7 @@
 import { mapGetters } from "vuex";
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 import UserVideo from "./UserVideo.vue";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -131,9 +135,7 @@ export default {
         }
         if (check) {
           this.leaveSession();
-          swal("호스트에 의해 화상채팅방이 종료되었습니다.", {
-            icon: "warning",
-          });
+          Swal.fire("화상채팅방 종료", "호스트에 의해 화상채팅방이 종료되었습니다.", "warning");
           this.$router.push({
             name: "home",
           });
@@ -215,14 +217,15 @@ export default {
       }
     },
     clickCloseRoom() {
-      swal({
+      Swal.fire({
         title: "화상채팅방을 종료하실건가요?",
-        text: "종료하시려면 확인을 눌러주세요!",
+        text: "종료하려면 OK를 눌러주세요!",
         icon: "warning",
+        showCancelButton: true,
         buttons: true,
         dangerMode: true,
-      }).then((willDelete) => {
-        if (willDelete) {
+      }).then((result) => {
+        if (result.isConfirmed) {
           axios({
             // url: `http://i7b301.p.ssafy.io:3000/api/videochat/${this.roomCode}`,
             url: `http://localhost:3000/api/videochat/${this.roomCode}`,
@@ -232,8 +235,12 @@ export default {
             .then((res) => {
               console.log(res);
               this.leaveSession();
-              swal("화상채팅방이 종료되었습니다!", {
+
+              Swal.fire({
                 icon: "success",
+                title: "화상채팅방이 종료되었습니다!",
+                showConfirmButton: false,
+                timer: 1000,
               });
               this.$router.push({
                 name: "home",
@@ -246,14 +253,15 @@ export default {
       });
     },
     clickLeaveRoom() {
-      swal({
+      Swal.fire({
         title: "화상채팅방을 나가실건가요?",
-        text: "나가시려면 확인을 눌러주세요!",
+        text: "나가려면 OK를 눌러주세요!",
         icon: "warning",
+        showCancelButton: true,
         buttons: true,
         dangerMode: true,
-      }).then((willDelete) => {
-        if (willDelete) {
+      }).then((result) => {
+        if (result.isConfirmed) {
           axios({
             // url: `http://i7b301.p.ssafy.io:3000/api/videochat/leave/${this.roomCode}`,
             url: `http://localhost:3000/api/videochat/leave/${this.roomCode}`,
@@ -263,8 +271,11 @@ export default {
             .then((res) => {
               console.log(res);
               this.leaveSession();
-              swal("화상채팅방이 종료되었습니다!", {
+              Swal.fire({
                 icon: "success",
+                title: "화상채팅방이 종료되었습니다!",
+                showConfirmButton: false,
+                timer: 1000,
               });
               this.$router.push({
                 name: "home",
@@ -278,11 +289,25 @@ export default {
       });
     },
     clickSharecode() {
-      swal("방 코드 🔑", `${this.roomCode}`, "info", {
-        button: "Aww yiss!",
+      Swal.fire("방 코드 🔑", `${this.roomCode}`, "info", {
+        button: "확인",
       });
     },
-
+    clickPlayGame() {
+      Swal.fire({
+        title: "게임하고 싶으신가요?",
+        text: "사람들에게 동의를 구하고 게임을 시작해보세요!",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "게임신청",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire("게임신청!", "신청기능구현해라~", "success");
+        }
+      });
+    },
     // yuna end
 
     /**

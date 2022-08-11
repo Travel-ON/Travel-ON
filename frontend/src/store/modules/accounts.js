@@ -1,7 +1,7 @@
 import router from "@/router";
 import axios from "axios";
 import spring from "@/api/spring_boot";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 
 /* eslint-disable no-return-assign */
 export const Accounts = {
@@ -312,14 +312,14 @@ export const Accounts = {
         data: credentials, // credentials.id, cresentials.email
       })
         .then((res) => {
-          swal("Good job!", "이메일로 임시 비밀번호를 전송했습니다", "success", {
+          Swal.fire("Good job!", "이메일로 임시 비밀번호를 전송했습니다", "success", {
             button: "확인",
           });
           router.push({ name: "home" });
         })
         .catch((err) => {
           console.error(err);
-          swal("Error", "아이디가 없거나 이메일이 일치하지 않습니다!", "error", {
+          Swal.fire("Error", "아이디가 없거나 이메일이 일치하지 않습니다!", "error", {
             button: "확인",
           });
           router.push({ name: "MemberLogin" });

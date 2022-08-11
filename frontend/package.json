@@ -13,7 +13,6 @@
     "core-js": "^3.8.3",
     "openvidu-browser": "^2.22.0",
     "roboto-fontface": "*",
-    "sweetalert": "^2.1.2",
     "sweetalert2": "^11.4.26",
     "vue": "^3.2.13",
     "vue-router": "^4.1.2",

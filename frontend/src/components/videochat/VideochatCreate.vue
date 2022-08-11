@@ -99,7 +99,7 @@
 import { mapGetters } from "vuex";
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 import UserVideo from "./UserVideo.vue";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -267,7 +267,6 @@ export default {
           // console.log(res);
           // console.log("res.data:  ", res.data);
           // this.idChecked = id;
-          alert("방만들기 완료!");
           console.log(this.video);
           this.leaveSession();
           this.$router.push({
@@ -283,8 +282,11 @@ export default {
           // this.joinSession();
         })
         .catch((err) => {
-          swal("Error", "방만들기 실패!", "error", {
-            button: "확인",
+          Swal.fire({
+            icon: "error",
+            title: "방만들기 실패!",
+            showConfirmButton: false,
+            timer: 1000,
           });
           console.log(err);
         });

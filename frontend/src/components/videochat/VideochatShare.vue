@@ -87,6 +87,7 @@
 import { mapGetters } from "vuex";
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
+import Swal from "sweetalert2";
 import UserVideo from "./UserVideo.vue";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -246,7 +247,6 @@ export default {
           // console.log(res);
           // console.log("res.data:  ", res.data);
           // this.idChecked = id;
-          alert("방 입장 완료!");
           this.leaveSession();
           this.$router.push({
             name: "VideochatRoom",
@@ -261,7 +261,12 @@ export default {
           // this.joinSession();
         })
         .catch((err) => {
-          alert("방 입장 실패!");
+          Swal.fire({
+            icon: "error",
+            title: "방 입장 실패!",
+            showConfirmButton: false,
+            timer: 1000,
+          });
           console.log(err);
         });
     },
