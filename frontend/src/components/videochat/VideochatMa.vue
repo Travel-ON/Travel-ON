@@ -2,6 +2,7 @@
   <v-container v-if="publisher" id="main-container" class="container">
     <v-row id="join">
       <v-col id="join-dialog" class="jumbotron vertical-center">
+        <v-btn class="btn mr-2" @click="clickHome">홈으로</v-btn>
         <h1>방 매칭 화면</h1>
         <v-row style="margin-top: 20px">
           <v-col style="background-color: skyblue">
@@ -32,26 +33,42 @@
               <p class="text-center">
                 <!-- <v-btn class="btn btn-lg btn-success" @click="joinSession()">Join!</v-btn> -->
 
-                <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
                 <v-container class="px-0" fluid>
-                  <div v-if="title && title != ''">{{ title }}</div>
-                  <div v-if="resident && residentMark">현지인</div>
+                  <div style="position: relative">
+                    <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
+                    <div
+                      v-if="resident && residentMark"
+                      style="position: absolute; top: 10px; right: 50%; background-color: #6499ff; color: white"
+                    >
+                      <v-icon>mdi-clover</v-icon> 현지인 <v-icon>mdi-clover</v-icon>
+                    </div>
+                  </div>
                 </v-container>
-                <v-btn id="btn_video" class="btn mr-2" style="background-color: #6499ff" @click="clickMuteVideo">
-                  <div v-if="publisher.stream.videoActive">
-                    <v-icon color="white">mdi-video-outline</v-icon> 비디오 중지
-                  </div>
-                  <div v-else><v-icon color="white">mdi-video-off-outline</v-icon> 비디오 시작</div>
-                </v-btn>
-
-                <v-btn id="btn_audio" class="btn mr-2" style="background-color: #6499ff" @click="clickMuteAudio"
-                  ><div v-if="publisher.stream.audioActive">
-                    <v-icon color="white">mdi-microphone-outline</v-icon> 음소거 설정
-                  </div>
-                  <div v-else><v-icon color="white">mdi-microphone-off</v-icon> 음소거 해제</div></v-btn
-                >
-                <v-btn class="btn mr-2" @click="clickMatchingRoom">방 매칭하기</v-btn>
               </p>
+              <div style="display: flex">
+                <div v-if="publisher.stream.videoActive">
+                  <v-btn id="btn_video" class="btn mr-2" style="background-color: #6499ff" @click="clickMuteVideo">
+                    <v-icon color="white">mdi-video-outline</v-icon> 비디오 중지</v-btn
+                  >
+                </div>
+                <div v-else>
+                  <v-btn id="btn_video" class="btn mr-2" style="background-color: #979797" @click="clickMuteVideo">
+                    <v-icon color="white">mdi-video-outline</v-icon> 비디오 시작</v-btn
+                  >
+                </div>
+
+                <div v-if="publisher.stream.audioActive">
+                  <v-btn id="btn_audio" class="btn mr-2" style="background-color: #6499ff" @click="clickMuteAudio">
+                    <v-icon color="white">mdi-microphone-outline</v-icon> 음소거 설정</v-btn
+                  >
+                </div>
+                <div v-else>
+                  <v-btn id="btn_audio" class="btn mr-2" style="background-color: #979797" @click="clickMuteAudio">
+                    <v-icon color="white">mdi-microphone-off</v-icon> 음소거 해제</v-btn
+                  >
+                </div>
+                <v-btn class="btn mr-2" @click="clickMatchingRoom">방 매칭하기</v-btn>
+              </div>
             </div>
           </v-col>
         </v-row>
@@ -68,10 +85,10 @@ import UserVideo from "./UserVideo.vue";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8443`;
-const OPENVIDU_SERVER_SECRET = "ssafy";
-// const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
-// const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+// const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8443`;
+// const OPENVIDU_SERVER_SECRET = "ssafy";
+const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
+const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
   name: "VideochatMa",
@@ -146,7 +163,7 @@ export default {
       // 'token' parameter should be retrieved and returned by your own backend
       this.getToken(this.mySessionId).then((token) => {
         this.session
-          .connect(token, { clientData: this.currentUser })
+          .connect(token, { clientName: this.currentUser, clientTitle: this.title })
           .then(() => {
             // --- Get your own camera stream with the desired properties ---
 
@@ -195,36 +212,27 @@ export default {
     },
     // yuna start
     clickMuteVideo() {
-      const bodyTag = document.getElementById("btn_video");
       if (this.publisher.stream.videoActive) {
         this.publisher.publishVideo(false);
-        bodyTag.style.backgroundColor = "#979797";
         this.video = false;
       } else {
         this.publisher.publishVideo(true);
-        bodyTag.style.backgroundColor = "#6499FF";
         this.video = true;
       }
     },
     clickMuteAudio() {
-      const bodyTag = document.getElementById("btn_audio");
       if (this.publisher.stream.audioActive) {
         this.publisher.publishAudio(false);
-        bodyTag.style.backgroundColor = "#979797";
         this.audio = false;
       } else {
         this.publisher.publishAudio(true);
-        bodyTag.style.backgroundColor = "#6499FF";
         this.audio = true;
       }
     },
-    // 지역 범위
-    // 비디오 중지
-    // 음소거 설정
     clickMatchingRoom() {
       axios({
-        // url: "http://localhost:3000/api/videochat/match",
-        url: "http://i7b301.p.ssafy.io:3000/api/videochat/match",
+        url: "http://localhost:3000/api/videochat/match",
+        // url: "http://i7b301.p.ssafy.io:3000/api/videochat/match",
         method: "post",
         headers: { Authorization: `Bearer ${this.token}` },
         data: {
@@ -254,6 +262,12 @@ export default {
           // alert("이미 있는 아이디 입니다!");
           console.log(err);
         });
+    },
+    clickHome() {
+      this.leaveSession();
+      this.$router.push({
+        name: "home",
+      });
     },
 
     // yuna end

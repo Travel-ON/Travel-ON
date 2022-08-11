@@ -1,8 +1,14 @@
 <template>
   <div v-if="streamManager" style="position: relative">
     <ov-video :stream-manager="streamManager" />
-    <div style="position: absolute; bottom: 10px; right: 50%; background-color: white">
-      <p>{{ clientData }}</p>
+    <div style="position: absolute; bottom: 10px; right: 50%">
+      <div v-if="clientTitle" style="background-color: darkblue; color: whitesmoke">{{ clientTitle }}</div>
+      <div style="background-color: paleturquoise">{{ clientName }}</div>
+    </div>
+    <div style="position: absolute; top: 10px; right: 50%">
+      <div v-if="isResident === 'true'" style="background-color: darkblue; color: whitesmoke">
+        <v-icon>mdi-clover</v-icon> 현지인 <v-icon>mdi-clover</v-icon>
+      </div>
     </div>
   </div>
 </template>
@@ -22,9 +28,17 @@ export default {
   },
 
   computed: {
-    clientData() {
-      const { clientData } = this.getConnectionData();
-      return clientData;
+    clientName() {
+      const { clientName } = this.getConnectionData();
+      return clientName;
+    },
+    clientTitle() {
+      const { clientTitle } = this.getConnectionData();
+      return clientTitle;
+    },
+    isResident() {
+      const { isResident } = this.getConnectionData();
+      return isResident;
     },
   },
 

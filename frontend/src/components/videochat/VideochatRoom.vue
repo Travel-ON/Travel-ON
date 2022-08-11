@@ -20,19 +20,28 @@
                     />
                   </v-row>
                   <v-row class="mt-8">
-                    <v-btn id="btn_video" class="btn mr-2" style="background-color: #6499ff" @click="clickMuteVideo">
-                      <div v-if="publisher.stream.videoActive">
-                        <v-icon color="white">mdi-video-outline</v-icon> 비디오 중지
-                      </div>
-                      <div v-else><v-icon color="white">mdi-video-off-outline</v-icon> 비디오 시작</div>
-                    </v-btn>
+                    <div v-if="publisher.stream.videoActive">
+                      <v-btn id="btn_video" class="btn mr-2" style="background-color: #6499ff" @click="clickMuteVideo">
+                        <v-icon color="white">mdi-video-outline</v-icon> 비디오 중지</v-btn
+                      >
+                    </div>
+                    <div v-else>
+                      <v-btn id="btn_video" class="btn mr-2" style="background-color: #979797" @click="clickMuteVideo">
+                        <v-icon color="white">mdi-video-outline</v-icon> 비디오 시작</v-btn
+                      >
+                    </div>
 
-                    <v-btn id="btn_audio" class="btn mr-2" style="background-color: #6499ff" @click="clickMuteAudio"
-                      ><div v-if="publisher.stream.audioActive">
-                        <v-icon color="white">mdi-microphone-outline</v-icon> 음소거 설정
-                      </div>
-                      <div v-else><v-icon color="white">mdi-microphone-off</v-icon> 음소거 해제</div></v-btn
-                    >
+                    <div v-if="publisher.stream.audioActive">
+                      <v-btn id="btn_audio" class="btn mr-2" style="background-color: #6499ff" @click="clickMuteAudio">
+                        <v-icon color="white">mdi-microphone-outline</v-icon> 음소거 설정</v-btn
+                      >
+                    </div>
+                    <div v-else>
+                      <v-btn id="btn_audio" class="btn mr-2" style="background-color: #979797" @click="clickMuteAudio">
+                        <v-icon color="white">mdi-microphone-off</v-icon> 음소거 해제</v-btn
+                      >
+                    </div>
+
                     <v-btn v-if="hostName === currentUser" class="btn mr-2" @click="clickCloseRoom">종료</v-btn>
                     <v-btn v-else class="btn mr-2" @click="clickLeaveRoom">나가기</v-btn>
                   </v-row>
@@ -54,10 +63,10 @@ import UserVideo from "./UserVideo.vue";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8443`;
-const OPENVIDU_SERVER_SECRET = "ssafy";
-// const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
-// const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+// const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8443`;
+// const OPENVIDU_SERVER_SECRET = "ssafy";
+const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
+const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
   name: "VideochatRoom",
@@ -111,12 +120,28 @@ export default {
       // On every Stream destroyed...
       this.session.on("streamDestroyed", ({ stream }) => {
         const index = this.subscribers.indexOf(stream.streamManager, 0);
-        // console.log()
-        if (this.hostName === stream.connection.connectionId) {
+        console.log("종료");
+        console.log(stream.connection.data);
+        console.log(stream.connection.data.clientName);
+        console.log(JSON.parse(stream.connection.data).clientName);
+        console.log(JSON.stringify(stream.connection.data));
+        console.log(this.hostName);
+        let check = false;
+        const { clientName } = stream.connection.data;
+        console.log("종료1");
+        console.log(clientName);
+        if (this.hostName === JSON.parse(stream.connection.data).clientName) {
           console.log("방 종료됨!!!!!");
+          check = true;
         }
         if (index >= 0) {
           this.subscribers.splice(index, 1);
+        }
+        if (check) {
+          this.leaveSession();
+          this.$router.push({
+            name: "home",
+          });
         }
       });
 
@@ -131,15 +156,15 @@ export default {
       // 'token' parameter should be retrieved and returned by your own backend
       this.getToken(this.roomCode).then((token) => {
         this.session
-          .connect(token, { clientData: this.currentUser })
+          .connect(token, { clientName: this.currentUser, clientTitle: this.title, isResident: this.residentMark })
           .then(() => {
             // --- Get your own camera stream with the desired properties ---
 
             const publisher = this.OV.initPublisher(undefined, {
               audioSource: undefined, // The source of audio. If undefined default microphone
               videoSource: undefined, // The source of video. If undefined default webcam
-              publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-              publishVideo: true, // Whether you want to start publishing with your video enabled or not
+              publishAudio: this.audio === "true", // Whether you want to start publishing with your audio unmuted or not
+              publishVideo: this.video === "true", // Whether you want to start publishing with your video enabled or not
               resolution: "640x480", // The resolution of your video
               frameRate: 30, // The frame rate of your video
               insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
@@ -150,12 +175,6 @@ export default {
             this.publisher = publisher;
 
             // --- Publish your stream ---
-
-            console.log("hostName");
-            console.log(this.hostName);
-
-            console.log("currentUser");
-            console.log(this.currentUser);
 
             this.session.publish(this.publisher);
           })
@@ -187,33 +206,23 @@ export default {
 
     // yuna start
     clickMuteVideo() {
-      const bodyTag = document.getElementById("btn_video");
       if (this.publisher.stream.videoActive) {
         this.publisher.publishVideo(false);
-        bodyTag.style.backgroundColor = "#979797";
-        this.video = false;
       } else {
         this.publisher.publishVideo(true);
-        bodyTag.style.backgroundColor = "#6499FF";
-        this.video = true;
       }
     },
     clickMuteAudio() {
-      const bodyTag = document.getElementById("btn_audio");
       if (this.publisher.stream.audioActive) {
         this.publisher.publishAudio(false);
-        bodyTag.style.backgroundColor = "#979797";
-        this.audio = false;
       } else {
         this.publisher.publishAudio(true);
-        bodyTag.style.backgroundColor = "#6499FF";
-        this.audio = true;
       }
     },
     clickCloseRoom() {
       axios({
-        url: `http://i7b301.p.ssafy.io:3000/api/videochat/${this.roomCode}`,
-        // url: `http://localhost:3000/api/videochat/${this.roomCode}`,
+        // url: `http://i7b301.p.ssafy.io:3000/api/videochat/${this.roomCode}`,
+        url: `http://localhost:3000/api/videochat/${this.roomCode}`,
         method: "delete",
         headers: { Authorization: `Bearer ${this.token}` },
       })
@@ -221,6 +230,9 @@ export default {
           console.log(res);
           alert("방 종료!");
           this.leaveSession();
+          this.$router.push({
+            name: "home",
+          });
         })
         .catch((err) => {
           // alert("이미 있는 아이디 입니다!");
@@ -229,8 +241,8 @@ export default {
     },
     clickLeaveRoom() {
       axios({
-        url: `http://i7b301.p.ssafy.io:3000/api/videochat/leave/${this.roomCode}`,
-        // url: `http://localhost:3000/api/videochat/leave/${this.roomCode}`,
+        // url: `http://i7b301.p.ssafy.io:3000/api/videochat/leave/${this.roomCode}`,
+        url: `http://localhost:3000/api/videochat/leave/${this.roomCode}`,
         method: "get",
         headers: { Authorization: `Bearer ${this.token}` },
       })
@@ -238,6 +250,9 @@ export default {
           console.log(res);
           alert("방 나가기!");
           this.leaveSession();
+          this.$router.push({
+            name: "home",
+          });
         })
         .catch((err) => {
           // alert("이미 있는 아이디 입니다!");
