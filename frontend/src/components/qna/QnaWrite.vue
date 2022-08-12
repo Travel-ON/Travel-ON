@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
+
 export default {
   name: "QnaWrite",
   data() {
@@ -39,6 +41,13 @@ export default {
         content: this.content,
       };
       this.$store.dispatch("QnAs/writeQna", newQna);
+      Swal.fire({
+        icon: "success",
+        title: "문의 작성이 완료되었습니다!",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      this.$router.push({ name: "QnaList" });
     },
   },
 };

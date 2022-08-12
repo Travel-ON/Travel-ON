@@ -74,7 +74,6 @@ export const Notices = {
       })
         .then(() => {
           commit("WRITE_NOTICE", newNotice);
-          router.push("/notice");
         })
         .catch((err) => {
           console.log(err);
@@ -90,16 +89,6 @@ export const Notices = {
         },
       }).then(() => {
         commit("MODIFY_NOTICE", payload);
-        if (payload.fixationFlag) {
-          router.push("/notice");
-        } else {
-          router.push({
-            name: "NoticeDetail",
-            params: {
-              noticeId: payload.noticeId,
-            },
-          });
-        }
       });
     },
     deleteNotice({ commit, getters }, payload) {
