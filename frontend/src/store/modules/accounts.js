@@ -11,6 +11,7 @@ export const Accounts = {
   state: () => ({
     token: localStorage.getItem("token") || "", // 토큰
     currentUser: "", // 현재 유저 닉네임
+    currentUserId: "", // 현재 유저 아이디
     admin: false, // 관리자 여부
     title: "", // 유저 타이틀
     trophy: [], // 여행 횟수 리스트
@@ -40,6 +41,7 @@ export const Accounts = {
     isLoggedIn: (state) => !!state.token, // 로그인 여부
     token: (state) => state.token,
     currentUser: (state) => state.currentUser,
+    currentUserId: (state) => state.currentUserId,
     admin: (state) => state.admin,
     title: (state) => state.title,
     trophy: (state) => state.trophy,
@@ -48,6 +50,7 @@ export const Accounts = {
   },
   mutations: {
     SET_CURRENT_USER: (state, user) => (state.currentUser = user),
+    SET_CURRENT_USER_ID: (state, id) => (state.currentUserId = id),
     SET_TOKEN: (state, token) => (state.token = token),
     SET_ADMIN: (state, admin) => (state.admin = admin),
     SET_TITLE: (state, title) => (state.title = title),
@@ -96,7 +99,7 @@ export const Accounts = {
       axios({
         url: spring.accounts.login(),
         method: "post",
-        data: credentials, // credentials.username, cresentials.password
+        data: credentials, // credentials.id, cresentials.password
       })
         .then(({ data }) => {
           console.log(data);
@@ -107,6 +110,7 @@ export const Accounts = {
 
           dispatch("saveToken", token);
           commit("SET_CURRENT_USER", nickName);
+          commit("SET_CURRENT_USER_ID", credentials.id);
           commit("SET_ADMIN", adminFlag);
           commit("SET_TITLE", userTitle);
           dispatch("getLocation", true);
@@ -124,6 +128,7 @@ export const Accounts = {
     logout({ commit, dispatch }) {
       dispatch("removeToken");
       commit("SET_CURRENT_USER", "");
+      commit("SET_CURRENT_USER_ID", "");
       commit("SET_ADMIN", false);
       commit("SET_TITLE", "");
       dispatch("removeResident");
@@ -214,10 +219,12 @@ export const Accounts = {
           },
         })
           .then((res) => {
+            const id = res.data.id;
             const nickName = res.data.nickname;
             const userTitle = res.data.userTitle;
             const adminFlag = res.data.adminFlag;
             commit("SET_CURRENT_USER", nickName);
+            commit("SET_CURRENT_USER_ID", id);
             commit("SET_ADMIN", adminFlag);
             commit("SET_TITLE", userTitle);
             dispatch("getLocation", false);
