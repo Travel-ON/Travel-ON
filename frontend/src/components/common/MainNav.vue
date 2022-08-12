@@ -43,7 +43,7 @@
         <v-menu style="z-index: 3500">
           <template v-slot:activator="{ props }">
             <v-btn icon v-bind="props" @click="getAlarmList()">
-              <v-badge v-if="alarmFlag" value="0" color="red" dot>
+              <v-badge v-if="alarmFlag" color="red" dot>
                 <v-icon>mdi-bell</v-icon>
               </v-badge>
               <v-icon v-else>mdi-bell</v-icon>
@@ -56,7 +56,7 @@
             </v-btn>
             <v-divider class="mt-5"></v-divider>
             <v-list-item v-for="(item, index) in alarms" :key="index" :value="index">
-              <v-list-item-title>
+              <v-list-item-title @click="clickAlarm(item.content)">
                 {{ item.content }}
               </v-list-item-title>
             </v-list-item>
@@ -144,6 +144,17 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    clickAlarm(alarm) {
+      if (alarm.includes("칭호")) {
+        this.$router.push({
+          name: "MemberSetTitle",
+        });
+      } else if (alarm.includes("Q&A")) {
+        this.$router.push({
+          name: "QnaList",
+        });
+      }
     },
     clickRemoveAlarms() {
       if (this.alarms.length > 0) {
