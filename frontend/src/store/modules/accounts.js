@@ -338,5 +338,8 @@ export const Accounts = {
           router.push({ name: "MemberLogin" });
         });
     },
+    fetchAlarmFlag({ commit }, alarmFlag) {
+      commit("SET_ALARM_FLAG", alarmFlag);
+    },
   },
 };

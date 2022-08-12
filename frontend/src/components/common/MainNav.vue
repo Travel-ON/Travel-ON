@@ -104,7 +104,7 @@ export default {
     alarms: [],
   }),
   methods: {
-    ...mapActions(["logout"]),
+    ...mapActions(["logout", "fetchAlarmFlag"]),
     TransferPage(pageName) {
       if (this.isLoggedIn) {
         this.$router.push({
@@ -181,9 +181,7 @@ export default {
                   showConfirmButton: false,
                   timer: 1000,
                 });
-                setTimeout(function () {
-                  this.$router.go();
-                }, 3000);
+                this.fetchAlarmFlag(false);
               })
               .catch((err) => {
                 console.log(err);
