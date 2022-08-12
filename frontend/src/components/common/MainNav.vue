@@ -19,6 +19,9 @@
       <router-link :to="{ name: 'VideochatShare' }">
         <v-btn>방코드입장</v-btn>
       </router-link>
+      <!-- <router-link to="/videochat">
+        <v-btn>방매칭하기</v-btn>
+      </router-link> -->
       <router-link :to="{ name: 'Planner' }">
         <v-btn>여행플래너</v-btn>
       </router-link>
@@ -81,7 +84,6 @@
     </v-toolbar>
   </div>
 </template>
-
 <script>
 import { mapActions, mapGetters } from "vuex";
 
