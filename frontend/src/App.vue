@@ -6,8 +6,8 @@
     </v-app-bar>
     <v-main>
       <router-view />
-      <footer-view></footer-view>
     </v-main>
+    <footer-view></footer-view>
   </v-app>
 </template>
 
