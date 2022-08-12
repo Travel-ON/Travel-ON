@@ -29,6 +29,7 @@
 
 <script>
 import { mapState } from "vuex";
+import Swal from "sweetalert2";
 
 export default {
   computed: {
@@ -62,6 +63,16 @@ export default {
       this.notice.noticeDate = today.toISOString().replace("T", " ").substring(0, 19);
       console.log(this.notice);
       this.$store.dispatch("Notices/modifyNotice", this.notice);
+      Swal.fire({
+        icon: "success",
+        title: "공지사항 수정이 완료되었습니다!",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      this.$router.push({
+        name: "noticeDetail",
+        params: { noticeid: this.notice.noticeid },
+      });
     },
   },
 };
