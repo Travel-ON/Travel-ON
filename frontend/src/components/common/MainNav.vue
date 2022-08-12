@@ -40,12 +40,13 @@
         </router-link>
       </div>
       <div v-else>
-        <v-menu open-on-hover style="z-index: 3500">
+        <v-menu style="z-index: 3500">
           <template v-slot:activator="{ props }">
             <v-btn icon v-bind="props" @click="getAlarmList()">
-              <v-badge value="0" color="red" dot>
+              <v-badge v-if="alarmFlag" value="0" color="red" dot>
                 <v-icon>mdi-bell</v-icon>
               </v-badge>
+              <v-icon v-else>mdi-bell</v-icon>
             </v-btn>
           </template>
           <v-list dense>
@@ -54,15 +55,6 @@
               <v-icon>mdi-trash-can-outline</v-icon>
             </v-btn>
             <v-divider class="mt-5"></v-divider>
-            <!-- <v-virtual-scroll :items="this.alarms" item-height="50" height="300">
-              <template v-slot="{ item }">
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-list-item-title>Item {{ item }}</v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </template>
-            </v-virtual-scroll> -->
             <v-list-item v-for="(item, index) in alarms" :key="index" :value="index">
               <v-list-item-title>
                 {{ item.content }}
@@ -209,6 +201,7 @@ export default {
       currentUser: "currentUser",
       title: "title",
       token: "token",
+      alarmFlag: "alarmFlag",
     }),
   },
 };
