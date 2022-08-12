@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <v-app-bar height="80">
+    <v-app-bar height="80" v-if="!state.exceptList.includes($route.name)">
       <!-- main-nav는 기본적으로 모든 페이지에 포함, 제외시 하단 exceptList에 포함시킬것 -->
-      <main-nav v-if="!state.exceptList.includes($route.name)" />
+      <main-nav />
     </v-app-bar>
     <v-main>
       <router-view />
@@ -34,6 +34,13 @@ export default {
   components: { MainNav, FooterView },
   mounted() {
     this.fetchCurrentUser();
+  },
+  watch: {
+    $route(to, form) {
+      if (to.path !== form.path) {
+        this.fetchCurrentUser();
+      }
+    },
   },
 };
 </script>
