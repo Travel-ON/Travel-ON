@@ -4,6 +4,7 @@ import com.travel.travel_on.auth.JwtUserDetails;
 import com.travel.travel_on.dto.QNADto;
 import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.entity.QNA;
+import com.travel.travel_on.model.service.AlarmService;
 import com.travel.travel_on.model.service.QNAService;
 import com.travel.travel_on.model.service.UserService;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
@@ -39,6 +41,9 @@ public class QNAController {
 
     @Autowired
     private QNAService qnaService;
+
+    @Autowired
+    private AlarmService alarmService;
 
     @ApiOperation(value = "QNA 리스트 조회: QNA 글 조회(검색가능)", response = List.class)
     @GetMapping("/")
@@ -114,6 +119,29 @@ public class QNAController {
             }else{
                 return new ResponseEntity<QNADto>(result, HttpStatus.OK);
             }
+        }catch (Exception e){
+            return exceptionHandling(e);
+        }
+    }
+
+    @ApiOperation(value = "글 조회: 회원 답변완료글 조회", response = List.class)
+    @GetMapping("/answer/complete")
+    public ResponseEntity<?> completeSelect(@ApiIgnore Authentication authentication){
+        try{
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userId = userDetails.getUsername();
+            UserDto userDto = userService.select(userId);
+
+            if(userDto.isAdminFlag()){
+                return  new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+            
+            List<QNA> list = qnaService.AnswerAll(userDto.toEntity());
+
+            List<QNADto> result = list.stream()
+                    .map(r -> new QNADto(r))
+                    .collect(Collectors.toList());
+            return new ResponseEntity<List>(result, HttpStatus.OK);
         }catch (Exception e){
             return exceptionHandling(e);
         }
@@ -223,6 +251,7 @@ public class QNAController {
     }
 
     @ApiOperation(value = "글 수정: QNA 관리자 답변 등록")
+    @Transactional
     @PutMapping("/admin/regist")
     public ResponseEntity<?> adminRegist(@ApiIgnore Authentication authentication, @RequestBody Map<String, String> param){
         try{
@@ -246,6 +275,7 @@ public class QNAController {
             qnaDto.setAnswerDate(nowTime);
 
             boolean result = qnaService.update(qnaDto);
+            alarmService.insert(userDto.toEntity(),"Q&A : 답변이 등록되었습니다!");
             if(result){
                 return new ResponseEntity<>(HttpStatus.CREATED);
             }else{
