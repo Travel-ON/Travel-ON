@@ -85,7 +85,7 @@ export default {
   border-radius: 12px;
   margin-bottom: 30px;
 }
-#plan-visit-place-on {
+#plan-visit-place {
   margin: 0 20px;
   text-align: left;
   font-size: 32px;
