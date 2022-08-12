@@ -1,7 +1,6 @@
 <template>
   <div>
     <div id="title">Member</div>
-    <!-- 기본 경로를 routing함 /notice/ -->
     <router-view />
   </div>
 </template>
