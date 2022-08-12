@@ -1,15 +1,18 @@
+<!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <template>
   <div id="plan-history-list">
     <div id="filter-btn">
       <v-btn append-icon="mdi-filter-outline" style="background-color: #efefef" rounded="pill">필터</v-btn>
     </div>
     <div id="plan-add-btn">
+      <!-- 클릭시, 우측 컴포넌트 전환: 작성 뷰 -->
       <v-btn
         prepend-icon="mdi-plus"
         width="100%"
         size="x-large"
         height="64px"
         style="font-size: 20px; font-weight: bold; border: 2px dashed #adadad; background-color: #efefef"
+        @click="switchCreate()"
         >방문장소 추가</v-btn
       >
     </div>
@@ -21,7 +24,14 @@
               `${new Date(plan).getFullYear()}년 ${new Date(plan).getMonth() + 1}월 ${new Date(plan).getDate()}일`
             }}</span>
           </div>
-          <div v-else style="display: flex; border-bottom: 1px solid #ddd">
+          <!-- 각 요소 클릭시, 우측 컴포넌트 전환: 열람 뷰 -->
+          <div
+            v-else
+            :style="planStyle"
+            @click="switchDetail(plan)"
+            :mouseover="changebgcolor"
+            :mouseout="originalcolor"
+          >
             <div class="plan-address">
               <div>{{ `${plan.sidoName} ${plan.gugunName}` }}</div>
             </div>
@@ -64,11 +74,35 @@ export default {
   data() {
     return {
       page: 1, // 페이지네이션 변수
+      planStyle: {
+        display: "flex",
+        borderBottom: "1px solid #ddd",
+        cursor: "pointer",
+        backgroundColor: "#efefef",
+      },
     };
   },
   methods: {
     ...mapGetters(["token", "planHistoryList", "convertedHistoryList"]),
     ...mapActions(["getPlanList"]),
+    switchCreate() {
+      // 상위에 switchCreate 이벤트 전달
+      this.$emit("switchCreate");
+    },
+    switchDetail(plan) {
+      // 상위에 switchDetail 이벤트 전달
+      this.$emit("switchDetail", plan);
+    },
+    switchUpdate() {
+      // 상위에 switchUpdate 이벤트 전달
+      this.$emit("switchUpdate");
+    },
+    changebgcolor() {
+      this.planStyle.backgroundColor = "#aaa";
+    },
+    originalcolor() {
+      this.planStyle.backgroundColor = "#efefef";
+    },
   },
   mounted() {
     this.getPlanList();
