@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
+import CreateMeeting from "@/components/meetingpage/CreateMeeting.vue";
+
 import Member from "../views/Member.vue";
 import MemberLogin from "../components/member/MemberLogin.vue";
 import MemberRegisterView from "../views/MemberRegisterView.vue";
@@ -33,7 +35,19 @@ import VideochatRoom from "../components/videochat/VideochatRoom.vue";
 import VideochatMa from "../components/videochat/VideochatMa.vue";
 import VideochatShare from "../components/videochat/VideochatShare.vue";
 
+// test
+
 const routes = [
+  {
+    path: "/meeting",
+    children: [
+      {
+        path: "Create",
+        name: "CreateMeeting",
+        component: CreateMeeting,
+      },
+    ],
+  },
   {
     path: "/",
     name: "home",
@@ -41,10 +55,11 @@ const routes = [
   },
   {
     path: "/videochat",
+    name: "Videochat",
     component: Videochat,
     children: [
       {
-        path: "",
+        path: "matching",
         name: "VideochatMatching",
         component: VideochatMatching,
       },

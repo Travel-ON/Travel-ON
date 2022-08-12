@@ -1,7 +1,7 @@
 import { createStore } from "vuex";
-// import router from "@/router";
 import { Notices } from "@/store/modules/notices";
 // import { createApi } from "@/api";
+import { MeetingStore } from "@/store/modules/meetingStore";
 import { Accounts } from "./modules/accounts";
 import { QnAs } from "./modules/qnas";
 import { Locations } from "./modules/locations";
@@ -21,6 +21,7 @@ export default createStore({
     Notices,
     Locations,
     Weather,
+    MeetingStore,
     Plans,
   },
 });
