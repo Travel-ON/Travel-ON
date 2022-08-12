@@ -6,6 +6,11 @@
           ><input type="checkbox" id="checkbox" v-model="checked" @click="change" />답변 대기 글만 보기</label
         >
       </div>
+      <div v-else>
+        <label for="checkbox" style="float: left"
+          ><input type="checkbox" id="checkbox" v-model="ansChecked" @click="answerChange" />답변 완료 글만 보기</label
+        >
+      </div>
       <div class="d-flex justify-end mb-6">
         <v-btn color="primary" @click="moveToWrite">문의하기</v-btn>
       </div>
@@ -44,6 +49,7 @@ export default {
     return {
       keyword: "",
       checked: false,
+      ansChecked: false,
       theAdmin: false,
     };
   },
@@ -85,6 +91,14 @@ export default {
         this.checked = !this.checked;
       } else {
         this.$store.dispatch("QnAs/getAdminQnas", this.keyword);
+      }
+    },
+    answerChange() {
+      if (!this.ansChecked) {
+        this.$store.dispatch("QnAs/getCompletAnswer");
+        this.ansChecked = !this.ansChecked;
+      } else {
+        this.$store.dispatch("QnAs/getQnas", this.keyword);
       }
     },
   },

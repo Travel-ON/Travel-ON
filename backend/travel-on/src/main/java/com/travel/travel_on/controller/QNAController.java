@@ -124,6 +124,29 @@ public class QNAController {
         }
     }
 
+    @ApiOperation(value = "글 조회: 회원 답변완료글 조회", response = List.class)
+    @GetMapping("/answer/complete")
+    public ResponseEntity<?> completeSelect(@ApiIgnore Authentication authentication){
+        try{
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userId = userDetails.getUsername();
+            UserDto userDto = userService.select(userId);
+
+            if(userDto.isAdminFlag()){
+                return  new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+            
+            List<QNA> list = qnaService.AnswerAll(userDto.toEntity());
+
+            List<QNADto> result = list.stream()
+                    .map(r -> new QNADto(r))
+                    .collect(Collectors.toList());
+            return new ResponseEntity<List>(result, HttpStatus.OK);
+        }catch (Exception e){
+            return exceptionHandling(e);
+        }
+    }
+
     @ApiOperation(value = "글 수정: QNA 글 수정")
     @PutMapping("/modify")
     public ResponseEntity<?> modify(@ApiIgnore Authentication authentication, @RequestBody Map<String, String> param){

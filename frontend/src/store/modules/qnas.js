@@ -178,5 +178,17 @@ export const QnAs = {
         commit("GET_QNAS", res.data);
       });
     },
+    getCompletAnswer({ commit, getters }) {
+      api({
+        url: `/qna/answer/complete`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${getters.token}`,
+        },
+      }).then((res) => {
+        console.log(res);
+        commit("GET_QNAS", res.data);
+      });
+    },
   },
 };
