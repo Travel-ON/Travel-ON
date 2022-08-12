@@ -7,6 +7,7 @@ import MemberModify2 from "../components/member/MemberModify2.vue";
 import MemberSecession from "../components/member/MemberSecession.vue";
 import MemberLogout from "../components/member/MemberLogout.vue";
 import MemberFindpwd from "../components/member/MemberFindpwd.vue";
+import MemberSetTitle from "../components/member/MemberSetTitle.vue";
 import HomeView from "../views/HomeView.vue";
 
 import PlannerView from "../views/PlannerView.vue";
@@ -108,6 +109,16 @@ const routes = [
         path: "findpwd",
         name: "MemberFindpwd",
         component: MemberFindpwd,
+      },
+      {
+        path: "findpwd",
+        name: "MemberFindpwd",
+        component: MemberFindpwd,
+      },
+      {
+        path: "setTitle",
+        name: "MemberSetTitle",
+        component: MemberSetTitle,
       },
     ],
   },
