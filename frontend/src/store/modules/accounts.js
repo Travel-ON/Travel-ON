@@ -1,4 +1,4 @@
-import router from "@/router";
+// import router from "@/router";
 import axios from "axios";
 import spring from "@/api/spring_boot";
 import Swal from "sweetalert2";
@@ -12,7 +12,8 @@ export const Accounts = {
     token: localStorage.getItem("token") || "", // 토큰
     currentUser: "", // 현재 유저 닉네임
     currentUserId: "", // 현재 유저 아이디
-    admin: false, // 관리자 여부
+    alarmFlag: false,
+    admin: localStorage.getItem("admin") || false, // 관리자 여부
     title: "", // 유저 타이틀
     trophy: [], // 여행 횟수 리스트
     resident: localStorage.getItem("resident") || false, // 현지인 여부
@@ -42,6 +43,7 @@ export const Accounts = {
     token: (state) => state.token,
     currentUser: (state) => state.currentUser,
     currentUserId: (state) => state.currentUserId,
+    alarmFlag: (state) => state.alarmFlag,
     admin: (state) => state.admin,
     title: (state) => state.title,
     trophy: (state) => state.trophy,
@@ -51,6 +53,7 @@ export const Accounts = {
   mutations: {
     SET_CURRENT_USER: (state, user) => (state.currentUser = user),
     SET_CURRENT_USER_ID: (state, id) => (state.currentUserId = id),
+    SET_ALARM_FLAG: (state, alarmFlag) => (state.alarmFlag = alarmFlag),
     SET_TOKEN: (state, token) => (state.token = token),
     SET_ADMIN: (state, admin) => (state.admin = admin),
     SET_TITLE: (state, title) => (state.title = title),
@@ -83,6 +86,14 @@ export const Accounts = {
       commit("SET_RESIDENT", false);
       localStorage.setItem("resident", false);
     },
+    saveAdmin({ commit }, admin) {
+      commit("SET_ADMIN", admin);
+      localStorage.setItem("admin", admin, Date.now() + 1);
+    },
+    removeAdmin({ commit }) {
+      commit("SET_ADMIN", false);
+      localStorage.setItem("admin", false);
+    },
     login({ commit, dispatch }, credentials) {
       /*
       POST: 사용자 입력정보를 login URL로 보내기
@@ -111,7 +122,7 @@ export const Accounts = {
           dispatch("saveToken", token);
           commit("SET_CURRENT_USER", nickName);
           commit("SET_CURRENT_USER_ID", credentials.id);
-          commit("SET_ADMIN", adminFlag);
+          dispatch("saveAdmin", adminFlag);
           commit("SET_TITLE", userTitle);
           dispatch("getLocation", true);
           dispatch("getTrophy");
@@ -129,6 +140,7 @@ export const Accounts = {
       dispatch("removeToken");
       commit("SET_CURRENT_USER", "");
       commit("SET_CURRENT_USER_ID", "");
+      commit("SET_ALARM_FLAG", false);
       commit("SET_ADMIN", false);
       commit("SET_TITLE", "");
       dispatch("removeResident");
@@ -153,9 +165,36 @@ export const Accounts = {
         jeju: 0,
       });
       dispatch("removeLocation");
+      dispatch("removeAdmin");
 
       alert("성공적으로 로그아웃 했습니다!");
       router.push({ name: "home" });
+    },
+    modify({ commit, dispatch }, credentials) {
+      console.log("modify 메서드 실행");
+      console.log(spring.accounts.modify());
+      console.log(credentials);
+      axios({
+        url: spring.accounts.modify(),
+        method: "post",
+        data: credentials, // credentials.username, cresentials.password
+      }).then(({ data }) => {
+        console.log(data);
+        const token = data.accessToken;
+        const nickName = data.nickname;
+        const userTitle = data.userTitle;
+        const adminFlag = data.adminFlag;
+
+        dispatch("saveToken", token);
+        commit("SET_CURRENT_USER", nickName);
+        commit("SET_ADMIN", adminFlag);
+        commit("SET_TITLE", userTitle);
+        dispatch("getLocation", true);
+        dispatch("getTrophy");
+        console.log(data);
+        alert("회원정보 수정완료!");
+        router.push({ name: "home" });
+      });
     },
     regist({ commit, dispatch }, formData) {
       /*
@@ -182,7 +221,7 @@ export const Accounts = {
           const adminFlag = res.adminFlag;
           dispatch("saveToken", token);
           commit("SET_CURRENT_USER", nickName);
-          commit("SET_ADMIN", adminFlag);
+          dispatch("saveAdmin", adminFlag);
           commit("SET_TITLE", userTitle);
           alert("회원가입 완료!");
           router.push({ name: "home" });
@@ -223,8 +262,10 @@ export const Accounts = {
             const nickName = res.data.nickname;
             const userTitle = res.data.userTitle;
             const adminFlag = res.data.adminFlag;
+            const alarmFlag = res.data.alarmFlag;
             commit("SET_CURRENT_USER", nickName);
             commit("SET_CURRENT_USER_ID", id);
+            commit("SET_ALARM_FLAG", alarmFlag);
             commit("SET_ADMIN", adminFlag);
             commit("SET_TITLE", userTitle);
             dispatch("getLocation", false);
@@ -233,6 +274,8 @@ export const Accounts = {
           .catch((err) => {
             console.log(err);
             dispatch("removeToken");
+            dispatch("removeResident");
+            dispatch("removeAdmin");
           });
       }
     },
@@ -331,6 +374,9 @@ export const Accounts = {
           });
           router.push({ name: "MemberLogin" });
         });
+    },
+    fetchAlarmFlag({ commit }, alarmFlag) {
+      commit("SET_ALARM_FLAG", alarmFlag);
     },
   },
 };

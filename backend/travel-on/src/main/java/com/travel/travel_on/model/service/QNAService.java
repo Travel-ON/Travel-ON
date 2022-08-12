@@ -22,4 +22,6 @@ public interface QNAService {
     List<QNA> adminSelectAll(String keyword);
 
     List<QNA> noneAnswerAll();
+
+    List<QNA> AnswerAll(User user);
 }

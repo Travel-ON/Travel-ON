@@ -6,8 +6,8 @@
     </v-app-bar>
     <v-main>
       <router-view />
-      <footer-view></footer-view>
     </v-main>
+    <footer-view></footer-view>
   </v-app>
 </template>
 
@@ -34,6 +34,13 @@ export default {
   components: { MainNav, FooterView },
   mounted() {
     this.fetchCurrentUser();
+  },
+  watch: {
+    $route(to, form) {
+      if (to.path !== form.path) {
+        this.fetchCurrentUser();
+      }
+    },
   },
 };
 </script>
