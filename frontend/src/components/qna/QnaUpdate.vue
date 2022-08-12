@@ -27,6 +27,7 @@
 
 <script>
 import { mapState } from "vuex";
+import Swal from "sweetalert2";
 
 export default {
   name: "QnaUpdate",
@@ -58,6 +59,16 @@ export default {
     updateQna() {
       console.log(this.qna);
       this.$store.dispatch("QnAs/modifyQnas", this.qna);
+      Swal.fire({
+        icon: "success",
+        title: "문의 수정이 완료되었습니다!",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      this.$router.push({
+        name: "QnaDetail",
+        params: { qnaid: this.qna.qnaid },
+      });
     },
   },
 };
