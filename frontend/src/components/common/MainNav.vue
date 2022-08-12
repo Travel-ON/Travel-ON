@@ -42,16 +42,30 @@
       <div v-else>
         <v-menu open-on-hover style="z-index: 3500">
           <template v-slot:activator="{ props }">
-            <v-btn icon v-bind="props">
-              <v-badge color="red" dot model-value="true">
+            <v-btn icon v-bind="props" @click="getAlarmList()">
+              <v-badge value="0" color="red" dot>
                 <v-icon>mdi-bell</v-icon>
               </v-badge>
             </v-btn>
           </template>
-          <v-list>
-            <v-list-item v-for="(item, index) in items_new" :key="index" :value="index">
-              <v-list-item-title @click="$router.push({ name: item.name })">
-                {{ item.title }}
+          <v-list dense>
+            <v-subheader class="ml-5">알림</v-subheader>
+            <v-btn fab x-small dark class="float-right" @click="clickRemoveAlarms">
+              <v-icon>mdi-trash-can-outline</v-icon>
+            </v-btn>
+            <v-divider class="mt-5"></v-divider>
+            <!-- <v-virtual-scroll :items="this.alarms" item-height="50" height="300">
+              <template v-slot="{ item }">
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>Item {{ item }}</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </v-virtual-scroll> -->
+            <v-list-item v-for="(item, index) in alarms" :key="index" :value="index">
+              <v-list-item-title>
+                {{ item.content }}
               </v-list-item-title>
             </v-list-item>
           </v-list>
@@ -59,7 +73,7 @@
         <v-menu open-on-hover style="z-index: 3500">
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props">
-              <div style="font-size: x-small">{{ title }}</div>
+              <div style="font-size: x-small">{{ `${title}` }}</div>
               <div>{{ currentUser }}</div>
               <v-icon>mdi-chevron-down</v-icon>
             </v-btn>
@@ -78,6 +92,7 @@
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
+import axios from "axios";
 import Swal from "sweetalert2";
 
 export default {
@@ -91,9 +106,10 @@ export default {
     ],
     items_user: [
       { title: "마이페이지", name: "" },
+      { title: "칭호설정", name: "MemberSetTitle" },
       { title: "로그아웃", name: "MemberLogout" },
     ],
-    items_new: [{ title: "[Q&A] 에 답변이 달렸습니다." }, { title: "[대전 마스터] 업적을 달성하셨습니다." }],
+    alarms: [],
   }),
   methods: {
     ...mapActions(["logout"]),
@@ -123,12 +139,76 @@ export default {
         });
       }
     },
+    getAlarmList() {
+      axios({
+        url: "http://localhost:3000/api/alarm/",
+        // url: "http://i7b301.p.ssafy.io:3000/api/alarm/",
+        method: "get",
+        headers: { Authorization: `Bearer ${this.token}` },
+      })
+        .then(({ data }) => {
+          this.alarms = data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    clickRemoveAlarms() {
+      if (this.alarms.length > 0) {
+        Swal.fire({
+          title: "알림함 비우기",
+          text: "알림 내역을 삭제하실건가요?",
+          icon: "question",
+          showCancelButton: true,
+          buttons: true,
+          dangerMode: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            axios({
+              url: "http://localhost:3000/api/alarm/",
+              // url: "http://i7b301.p.ssafy.io:3000/api/alarm/",
+              method: "delete",
+              headers: { Authorization: `Bearer ${this.token}` },
+            })
+              .then((res) => {
+                console.log(res);
+                Swal.fire({
+                  icon: "success",
+                  title: "알림 내역을 삭제했습니다!",
+                  showConfirmButton: false,
+                  timer: 1000,
+                });
+                setTimeout(function () {
+                  this.$router.go();
+                }, 3000);
+              })
+              .catch((err) => {
+                console.log(err);
+                Swal.fire({
+                  icon: "error",
+                  title: "잠시후 다시 시도해주세요!",
+                  showConfirmButton: false,
+                  timer: 1000,
+                });
+              });
+          }
+        });
+      } else {
+        Swal.fire({
+          icon: "warning",
+          title: "삭제할 알림이 없습니다!",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      }
+    },
   },
   computed: {
     ...mapGetters({
       isLoggedIn: "isLoggedIn",
       currentUser: "currentUser",
       title: "title",
+      token: "token",
     }),
   },
 };

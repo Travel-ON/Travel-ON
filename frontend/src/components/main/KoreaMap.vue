@@ -144,6 +144,33 @@
         </g>
       </svg>
     </div>
+    <div style="position: absolute; left: 12px; bottom: 16px; z-index: 4000">
+      <v-btn icon="mdi-information-outline" @click="toggleInfoOn()" variant="text"></v-btn>
+    </div>
+    <transition name="fade">
+      <div
+        v-if="info"
+        style="
+          position: absolute;
+          bottom: 8px;
+          width: 450px;
+          height: 340px;
+          z-index: 4500;
+          transition-duration: 1s;
+          transition: opacity 0.5s;
+        "
+      >
+        <img
+          src="https://user-images.githubusercontent.com/97648026/184408768-5eb2a24a-47fd-4f6a-a308-1f5e8299cac5.png"
+          alt="trophyInfo"
+          width="450"
+          height="340"
+        />
+      </div>
+    </transition>
+    <div v-if="info" style="position: absolute; right: 12px; bottom: 300px; z-index: 5000">
+      <v-btn icon="mdi-close" @click="toggleInfoOff()" size="small" variant="text"></v-btn>
+    </div>
   </div>
 </template>
 
@@ -154,6 +181,17 @@ export default {
   name: "KoreaMap",
   computed: {
     ...mapGetters(["trophy", "trophyList"]),
+  },
+  data: () => ({
+    info: false,
+  }),
+  methods: {
+    toggleInfoOn() {
+      this.info = true;
+    },
+    toggleInfoOff() {
+      this.info = false;
+    },
   },
 };
 </script>
@@ -207,5 +245,18 @@ export default {
   font-weight: normal;
   text-anchor: middle;
   alignment-baseline: middle;
+}
+
+.fade-enter-active {
+  transition: opacity 0.5s;
+}
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter {
+  opacity: 0;
+}
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

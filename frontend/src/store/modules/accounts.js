@@ -12,7 +12,7 @@ export const Accounts = {
     token: localStorage.getItem("token") || "", // 토큰
     currentUser: "", // 현재 유저 닉네임
     currentUserId: "", // 현재 유저 아이디
-    admin: false, // 관리자 여부
+    admin: localStorage.getItem("admin") || false, // 관리자 여부
     title: "", // 유저 타이틀
     trophy: [], // 여행 횟수 리스트
     resident: localStorage.getItem("resident") || false, // 현지인 여부
@@ -83,6 +83,14 @@ export const Accounts = {
       commit("SET_RESIDENT", false);
       localStorage.setItem("resident", false);
     },
+    saveAdmin({ commit }, admin) {
+      commit("SET_ADMIN", admin);
+      localStorage.setItem("admin", admin, Date.now() + 1);
+    },
+    removeAdmin({ commit }) {
+      commit("SET_ADMIN", false);
+      localStorage.setItem("admin", false);
+    },
     login({ commit, dispatch }, credentials) {
       /*
       POST: 사용자 입력정보를 login URL로 보내기
@@ -111,7 +119,7 @@ export const Accounts = {
           dispatch("saveToken", token);
           commit("SET_CURRENT_USER", nickName);
           commit("SET_CURRENT_USER_ID", credentials.id);
-          commit("SET_ADMIN", adminFlag);
+          dispatch("saveAdmin", adminFlag);
           commit("SET_TITLE", userTitle);
           dispatch("getLocation", true);
           dispatch("getTrophy");
@@ -153,6 +161,7 @@ export const Accounts = {
         jeju: 0,
       });
       dispatch("removeLocation");
+      dispatch("removeAdmin");
 
       alert("성공적으로 로그아웃 했습니다!");
       router.push({ name: "home" });
@@ -182,7 +191,7 @@ export const Accounts = {
           const adminFlag = res.adminFlag;
           dispatch("saveToken", token);
           commit("SET_CURRENT_USER", nickName);
-          commit("SET_ADMIN", adminFlag);
+          dispatch("saveAdmin", adminFlag);
           commit("SET_TITLE", userTitle);
           alert("회원가입 완료!");
           router.push({ name: "home" });
@@ -233,6 +242,8 @@ export const Accounts = {
           .catch((err) => {
             console.log(err);
             dispatch("removeToken");
+            dispatch("removeResident");
+            dispatch("removeAdmin");
           });
       }
     },
