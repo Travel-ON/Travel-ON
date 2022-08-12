@@ -13,7 +13,7 @@ export const Accounts = {
     currentUser: "", // 현재 유저 닉네임
     currentUserId: "", // 현재 유저 아이디
     alarmFlag: false,
-    admin: false, // 관리자 여부
+    admin: localStorage.getItem("admin") || false, // 관리자 여부
     title: "", // 유저 타이틀
     trophy: [], // 여행 횟수 리스트
     resident: localStorage.getItem("resident") || false, // 현지인 여부
@@ -114,7 +114,7 @@ export const Accounts = {
           dispatch("saveToken", token);
           commit("SET_CURRENT_USER", nickName);
           commit("SET_CURRENT_USER_ID", credentials.id);
-          commit("SET_ADMIN", adminFlag);
+          dispatch("saveAdmin", adminFlag);
           commit("SET_TITLE", userTitle);
           dispatch("getLocation", true);
           dispatch("getTrophy");
