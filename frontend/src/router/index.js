@@ -6,8 +6,12 @@ import MemberRegisterView from "../views/MemberRegisterView.vue";
 import MemberModify2 from "../components/member/MemberModify2.vue";
 import MemberSecession from "../components/member/MemberSecession.vue";
 import MemberLogout from "../components/member/MemberLogout.vue";
+
+import MemberTitle from "../components/member/MemberTitle.vue";
+
 import MemberFindpwd from "../components/member/MemberFindpwd.vue";
 import MemberSetTitle from "../components/member/MemberSetTitle.vue";
+
 import HomeView from "../views/HomeView.vue";
 
 import PlannerView from "../views/PlannerView.vue";
@@ -104,6 +108,11 @@ const routes = [
         path: "logout",
         name: "MemberLogout",
         component: MemberLogout,
+      },
+      {
+        path: "title",
+        name: "MemberTitle",
+        component: MemberTitle,
       },
       {
         path: "findpwd",
