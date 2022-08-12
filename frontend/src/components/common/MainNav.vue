@@ -43,7 +43,7 @@
         <v-menu open-on-hover style="z-index: 3500">
           <template v-slot:activator="{ props }">
             <v-btn icon v-bind="props">
-              <v-badge color="red" dot>
+              <v-badge color="red" dot model-value="true">
                 <v-icon>mdi-bell</v-icon>
               </v-badge>
             </v-btn>

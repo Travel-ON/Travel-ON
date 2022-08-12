@@ -2,7 +2,18 @@
 <template>
   <div id="plan-history-list">
     <div id="filter-btn">
-      <v-btn append-icon="mdi-filter-outline" style="background-color: #efefef" rounded="pill">필터</v-btn>
+      <v-menu location="end">
+        <template v-slot:activator="{ props }">
+          <v-btn append-icon="mdi-filter-outline" style="background-color: #efefef" rounded="pill" v-bind="props"
+            >필터</v-btn
+          >
+        </template>
+        <v-list>
+          <v-list-item v-for="(item, index) in filters" :key="index" :value="index">
+            <v-list-item-title>{{ item.name }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </div>
     <div id="plan-add-btn">
       <!-- 클릭시, 우측 컴포넌트 전환: 작성 뷰 -->
@@ -71,17 +82,16 @@
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  data() {
-    return {
-      page: 1, // 페이지네이션 변수
-      planStyle: {
-        display: "flex",
-        borderBottom: "1px solid #ddd",
-        cursor: "pointer",
-        backgroundColor: "#efefef",
-      },
-    };
-  },
+  data: () => ({
+    page: 1, // 페이지네이션 변수
+    planStyle: {
+      display: "flex",
+      borderBottom: "1px solid #ddd",
+      cursor: "pointer",
+      backgroundColor: "#efefef",
+    },
+    filters: [{ name: "날짜 필터링" }, { name: "지역 필터링" }, { name: "장소 필터링" }],
+  }),
   methods: {
     ...mapGetters(["token", "planHistoryList", "convertedHistoryList"]),
     ...mapActions(["getPlanList"]),
