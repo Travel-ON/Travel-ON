@@ -27,8 +27,9 @@
           <div><h1>방문한 장소</h1></div>
         </div>
         <div class="plan-content">
-          <PlanHistoryList />
-          <PlanHistoryCreate />
+          <PlanHistoryList v-if="selectedPage === 0" @switch-create="switchCreate()" @switch-detail="switchDetail" />
+          <PlanHistoryCreate v-if="selectedView === 0" />
+          <PlanHistoryDetail v-else-if="selectedView === 1" :plan="planDetail" />
         </div>
       </div>
     </div>
@@ -39,13 +40,28 @@
 <script>
 import PlanHistoryCreate from "@/components/planner/PlanHistoryCreate.vue";
 import PlanHistoryList from "@/components/planner/PlanHistoryList.vue";
+import PlanHistoryDetail from "@/components/planner/PlanHistoryDetail.vue";
 
 export default {
   name: "PlannerView",
   data: () => ({
-    selectedPage: 0,
+    selectedPage: 0, // 0: 방문 장소, 1: 방문 예정 장소
+    selectedView: 0, // 0: 작성뷰, 1: 열람뷰, 2: 수정뷰
+    planDetail: {},
   }),
-  components: { PlanHistoryCreate, PlanHistoryList },
+  components: { PlanHistoryCreate, PlanHistoryList, PlanHistoryDetail },
+  methods: {
+    switchCreate() {
+      this.selectedView = 0;
+    },
+    switchDetail(plan) {
+      this.planDetail = plan;
+      this.selectedView = 1;
+    },
+    switchUpdate() {
+      this.selectedView = 2;
+    },
+  },
 };
 </script>
 

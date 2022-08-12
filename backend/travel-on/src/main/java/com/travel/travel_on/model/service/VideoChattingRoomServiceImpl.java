@@ -82,22 +82,21 @@ public class VideoChattingRoomServiceImpl implements VideoChattingRoomService{
     }
 
     @Override
-    public boolean enter(User user, String roomCode) {
+    public VideoChattingRoom enter(User user, String roomCode) {
         if(userVideoChattingRoomRepository.findByUser(user)!=null) {
-            return false;
+            return null;
         }
         VideoChattingRoom videoChattingRoom = videoChattingRoomRepository.findByRoomCode(roomCode);
-        if(videoChattingRoom==null) {
-            return false;
-        }
-        if(videoChattingRoom.getCount()==userVideoChattingRoomRepository.findByVideoChattingRoom(videoChattingRoom).size()){
-            return false;
+
+        if(videoChattingRoom==null ||
+                videoChattingRoom.getCount()==userVideoChattingRoomRepository.findByVideoChattingRoom(videoChattingRoom).size()){
+            return null;
         }
         UserVideoChattingRoom userVideoChattingRoom = new UserVideoChattingRoom();
         userVideoChattingRoom.setUser(user);
         userVideoChattingRoom.setVideoChattingRoom(videoChattingRoom);
         userVideoChattingRoomRepository.save(userVideoChattingRoom);
-        return true;
+        return videoChattingRoom;
     }
 
     @Override

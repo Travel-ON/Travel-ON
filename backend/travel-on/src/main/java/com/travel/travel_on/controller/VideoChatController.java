@@ -19,6 +19,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
@@ -80,7 +81,10 @@ public class VideoChatController {
                     .roomCode(roomCode)
                     .build();
             if(videoChattingRoomService.insert(newRoom)) {
-                return new ResponseEntity<String>(roomCode,HttpStatus.CREATED);
+                Map<String,String> result = new HashMap<>();
+                result.put("roomCode",roomCode);
+                result.put("hostName",userDto.getNickname());
+                return new ResponseEntity<Map>(result,HttpStatus.CREATED);
             }
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         } catch (Exception e) {
@@ -117,7 +121,10 @@ public class VideoChatController {
             if(videoChattingRoom==null)  {
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
-            return new ResponseEntity<String>(videoChattingRoom.getRoomCode(), HttpStatus.OK);
+            Map<String,String> result = new HashMap<>();
+            result.put("roomCode",videoChattingRoom.getRoomCode());
+            result.put("hostName",videoChattingRoom.getUser().getNickname());
+            return new ResponseEntity<Map>(result,HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
         }
@@ -134,10 +141,14 @@ public class VideoChatController {
             if(userDto==null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            if(videoChattingRoomService.enter(userDto.toEntity(),roomCode))  {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            VideoChattingRoom videoChattingRoom = videoChattingRoomService.enter(userDto.toEntity(),roomCode);
+            if(videoChattingRoom==null){
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+                Map<String,String> result = new HashMap<>();
+                result.put("roomCode",videoChattingRoom.getRoomCode());
+                result.put("hostName",videoChattingRoom.getUser().getNickname());
+                return new ResponseEntity<Map>(result,HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
         }

@@ -1,6 +1,11 @@
 <template>
   <div>
     <v-container>
+      <div v-if="admin">
+        <label for="checkbox" style="float: left"
+          ><input type="checkbox" id="checkbox" v-model="checked" @click="change" />답변 대기 글만 보기</label
+        >
+      </div>
       <div class="d-flex justify-end mb-6">
         <v-btn color="primary" @click="moveToWrite">문의하기</v-btn>
       </div>
@@ -20,10 +25,13 @@
         <v-col v-if="qna.answerFlag">답변완료</v-col>
         <v-col v-else>답변대기</v-col>
       </v-row>
-      <v-row>
-        <v-text-field v-model="keyword" label="제목검색"></v-text-field>
-        <v-btn color="primary" text @click="submit"> 검색 </v-btn>
-      </v-row>
+
+      <v-container class="">
+        <v-form>
+          <v-text-field v-model="keyword" label="제목검색"></v-text-field>
+        </v-form>
+        <v-btn color="indigo" text @click="submit">검색</v-btn>
+      </v-container>
     </v-container>
   </div>
 </template>
@@ -35,14 +43,23 @@ export default {
   data() {
     return {
       keyword: "",
+      checked: false,
+      admin: false,
     };
   },
   computed: {
     ...mapState("QnAs", ["qnas"]),
+    ...mapState("accounts"),
   },
   mounted() {
-    this.$store.dispatch("QnAs/getQnas");
+    this.admin = this.$store.getters.admin;
+    if (this.admin) {
+      this.$store.dispatch("QnAs/getAdminQnas");
+    } else {
+      this.$store.dispatch("QnAs/getQnas");
+    }
   },
+
   methods: {
     submit() {
       this.$store.dispatch("QnAs/getQnas", this.keyword);
@@ -56,6 +73,13 @@ export default {
       this.$router.push({
         path: "/qna/write",
       });
+    },
+    change() {
+      if (!this.checked) {
+        this.$store.dispatch("QnAs/getNoAnswer");
+      } else {
+        this.$store.dispatch("QnAs/getQnas", this.keyword);
+      }
     },
   },
 };
