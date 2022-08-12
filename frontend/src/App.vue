@@ -35,6 +35,13 @@ export default {
   mounted() {
     this.fetchCurrentUser();
   },
+  watch: {
+    $route(to, form) {
+      if (to.path !== form.path) {
+        this.fetchCurrentUser();
+      }
+    },
+  },
 };
 </script>
 

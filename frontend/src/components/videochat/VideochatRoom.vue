@@ -332,9 +332,37 @@ export default {
         }
       });
     },
+    copyToClipboard() {
+      const t = document.createElement("textarea");
+      document.body.appendChild(t);
+      t.value = `${this.roomCode}`;
+      t.select();
+      document.execCommand("copy");
+      document.body.removeChild(t);
+    },
     clickSharecode() {
+      // content.select();
+      // copyToClipboard("Hello World");
       Swal.fire("방 코드 🔑", `${this.roomCode}`, "info", {
         button: "확인",
+      });
+      Swal.fire({
+        title: "방 코드 🔑",
+        html: `방코드를 공유해 사람들을 초대해보세요!<br> ${this.roomCode}`,
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonText: "코드복사",
+        cancelButtonText: "확인",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.copyToClipboard();
+          Swal.fire({
+            icon: "success",
+            text: "화상채팅방 코드가 복사되었습니다!",
+            showConfirmButton: false,
+            timer: 1000,
+          });
+        }
       });
     },
     clickPlayGame() {
@@ -343,9 +371,8 @@ export default {
         text: "사람들에게 동의를 구하고 게임을 시작해보세요!",
         icon: "question",
         showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
         confirmButtonText: "게임신청",
+        cancelButtonText: "취소",
       }).then((result) => {
         if (result.isConfirmed) {
           Swal.fire("게임신청!", "신청기능구현해라~", "success");

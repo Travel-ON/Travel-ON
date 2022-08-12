@@ -40,12 +40,13 @@
         </router-link>
       </div>
       <div v-else>
-        <v-menu open-on-hover style="z-index: 3500">
+        <v-menu style="z-index: 3500">
           <template v-slot:activator="{ props }">
             <v-btn icon v-bind="props" @click="getAlarmList()">
-              <v-badge value="0" color="red" dot>
+              <v-badge v-if="alarmFlag" color="red" dot>
                 <v-icon>mdi-bell</v-icon>
               </v-badge>
+              <v-icon v-else>mdi-bell</v-icon>
             </v-btn>
           </template>
           <v-list dense>
@@ -54,17 +55,8 @@
               <v-icon>mdi-trash-can-outline</v-icon>
             </v-btn>
             <v-divider class="mt-5"></v-divider>
-            <!-- <v-virtual-scroll :items="this.alarms" item-height="50" height="300">
-              <template v-slot="{ item }">
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-list-item-title>Item {{ item }}</v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </template>
-            </v-virtual-scroll> -->
             <v-list-item v-for="(item, index) in alarms" :key="index" :value="index">
-              <v-list-item-title>
+              <v-list-item-title @click="clickAlarm(item.content)">
                 {{ item.content }}
               </v-list-item-title>
             </v-list-item>
@@ -112,12 +104,21 @@ export default {
     alarms: [],
   }),
   methods: {
-    ...mapActions(["logout"]),
+    ...mapActions(["logout", "fetchAlarmFlag"]),
     TransferPage(pageName) {
       if (this.isLoggedIn) {
-        this.$router.push({
-          name: pageName,
-        });
+        if (pageName !== "Planner" && !this.isLocation) {
+          Swal.fire({
+            title: "위치인증이 필요한 서비스입니다.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          });
+        } else {
+          this.$router.push({
+            name: pageName,
+          });
+        }
       } else {
         Swal.fire({
           title: "로그인이 필요한 서비스입니다.",
@@ -153,6 +154,17 @@ export default {
           console.log(err);
         });
     },
+    clickAlarm(alarm) {
+      if (alarm.includes("칭호")) {
+        this.$router.push({
+          name: "MemberSetTitle",
+        });
+      } else if (alarm.includes("Q&A")) {
+        this.$router.push({
+          name: "QnaList",
+        });
+      }
+    },
     clickRemoveAlarms() {
       if (this.alarms.length > 0) {
         Swal.fire({
@@ -178,9 +190,7 @@ export default {
                   showConfirmButton: false,
                   timer: 1000,
                 });
-                setTimeout(function () {
-                  this.$router.go();
-                }, 3000);
+                this.fetchAlarmFlag(false);
               })
               .catch((err) => {
                 console.log(err);
@@ -206,9 +216,11 @@ export default {
   computed: {
     ...mapGetters({
       isLoggedIn: "isLoggedIn",
+      isLocation: "isLocation",
       currentUser: "currentUser",
       title: "title",
       token: "token",
+      alarmFlag: "alarmFlag",
     }),
   },
 };
