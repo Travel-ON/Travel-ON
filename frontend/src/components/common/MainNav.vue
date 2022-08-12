@@ -40,18 +40,24 @@
         </router-link>
       </div>
       <div v-else>
-        <v-menu open-on-hover style="z-index: 3500">
+        <v-menu style="z-index: 3500">
           <template v-slot:activator="{ props }">
-            <v-btn icon v-bind="props">
-              <v-badge color="red" dot>
+            <v-btn icon v-bind="props" @click="getAlarmList()">
+              <v-badge v-if="alarmFlag" color="red" dot>
                 <v-icon>mdi-bell</v-icon>
               </v-badge>
+              <v-icon v-else>mdi-bell</v-icon>
             </v-btn>
           </template>
-          <v-list>
-            <v-list-item v-for="(item, index) in items_new" :key="index" :value="index">
-              <v-list-item-title @click="$router.push({ name: item.name })">
-                {{ item.title }}
+          <v-list dense>
+            <v-subheader class="ml-5">알림</v-subheader>
+            <v-btn fab x-small dark class="float-right" @click="clickRemoveAlarms">
+              <v-icon>mdi-trash-can-outline</v-icon>
+            </v-btn>
+            <v-divider class="mt-5"></v-divider>
+            <v-list-item v-for="(item, index) in alarms" :key="index" :value="index">
+              <v-list-item-title @click="clickAlarm(item.content)">
+                {{ item.content }}
               </v-list-item-title>
             </v-list-item>
           </v-list>
@@ -78,6 +84,7 @@
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
+import axios from "axios";
 import Swal from "sweetalert2";
 
 export default {
@@ -94,15 +101,24 @@ export default {
       { title: "칭호설정", name: "MemberSetTitle" },
       { title: "로그아웃", name: "MemberLogout" },
     ],
-    items_new: [{ title: "[Q&A] 에 답변이 달렸습니다." }, { title: "[대전 마스터] 업적을 달성하셨습니다." }],
+    alarms: [],
   }),
   methods: {
-    ...mapActions(["logout"]),
+    ...mapActions(["logout", "fetchAlarmFlag"]),
     TransferPage(pageName) {
       if (this.isLoggedIn) {
-        this.$router.push({
-          name: pageName,
-        });
+        if (pageName !== "Planner" && !this.isLocation) {
+          Swal.fire({
+            title: "위치인증이 필요한 서비스입니다.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          });
+        } else {
+          this.$router.push({
+            name: pageName,
+          });
+        }
       } else {
         Swal.fire({
           title: "로그인이 필요한 서비스입니다.",
@@ -124,12 +140,87 @@ export default {
         });
       }
     },
+    getAlarmList() {
+      axios({
+        url: "http://localhost:3000/api/alarm/",
+        // url: "http://i7b301.p.ssafy.io:3000/api/alarm/",
+        method: "get",
+        headers: { Authorization: `Bearer ${this.token}` },
+      })
+        .then(({ data }) => {
+          this.alarms = data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    clickAlarm(alarm) {
+      if (alarm.includes("칭호")) {
+        this.$router.push({
+          name: "MemberSetTitle",
+        });
+      } else if (alarm.includes("Q&A")) {
+        this.$router.push({
+          name: "QnaList",
+        });
+      }
+    },
+    clickRemoveAlarms() {
+      if (this.alarms.length > 0) {
+        Swal.fire({
+          title: "알림함 비우기",
+          text: "알림 내역을 삭제하실건가요?",
+          icon: "question",
+          showCancelButton: true,
+          buttons: true,
+          dangerMode: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            axios({
+              url: "http://localhost:3000/api/alarm/",
+              // url: "http://i7b301.p.ssafy.io:3000/api/alarm/",
+              method: "delete",
+              headers: { Authorization: `Bearer ${this.token}` },
+            })
+              .then((res) => {
+                console.log(res);
+                Swal.fire({
+                  icon: "success",
+                  title: "알림 내역을 삭제했습니다!",
+                  showConfirmButton: false,
+                  timer: 1000,
+                });
+                this.fetchAlarmFlag(false);
+              })
+              .catch((err) => {
+                console.log(err);
+                Swal.fire({
+                  icon: "error",
+                  title: "잠시후 다시 시도해주세요!",
+                  showConfirmButton: false,
+                  timer: 1000,
+                });
+              });
+          }
+        });
+      } else {
+        Swal.fire({
+          icon: "warning",
+          title: "삭제할 알림이 없습니다!",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      }
+    },
   },
   computed: {
     ...mapGetters({
       isLoggedIn: "isLoggedIn",
+      isLocation: "isLocation",
       currentUser: "currentUser",
       title: "title",
+      token: "token",
+      alarmFlag: "alarmFlag",
     }),
   },
 };
