@@ -1,8 +1,6 @@
 // import router from "@/router";
 import { createApi } from "@/api";
 
-import router from "@/router";
-
 const api = createApi();
 
 export const QnAs = {
@@ -49,6 +47,7 @@ export const QnAs = {
         },
       })
         .then((res) => {
+          console.log(res);
           commit("GET_QNAS", res.data);
         })
         .catch((err) => {
@@ -70,6 +69,7 @@ export const QnAs = {
         },
       })
         .then((res) => {
+          console.log(res);
           commit("GET_QNAS", res.data);
         })
         .catch((err) => {
@@ -98,7 +98,6 @@ export const QnAs = {
       })
         .then(() => {
           commit("WRITE_QNA", newQna);
-          router.push("/qna");
         })
         .catch((err) => {
           console.log(err);
@@ -118,12 +117,6 @@ export const QnAs = {
         },
       }).then(() => {
         commit("MODIFY_QNA", payload);
-        router.push({
-          name: "QnaDetail",
-          params: {
-            qnaid: payload.qnaid,
-          },
-        });
       });
     },
     deleteQna({ commit, getters }, payload) {
@@ -136,9 +129,7 @@ export const QnAs = {
         headers: {
           Authorization: `Bearer ${getters.token}`,
         },
-      }).then(() => {
-        router.push({ name: "QnaList" });
-      });
+      }).then(() => {});
     },
     registQnaAnswer({ commit, getters }, data) {
       api({
@@ -150,7 +141,6 @@ export const QnAs = {
         data,
       }).then(() => {
         commit("MODIFY_QNA_ANSWER", data);
-        router.push({ name: "QnaList" });
       });
     },
     modifyQnaAnswer({ commit, getters }, data) {
@@ -163,7 +153,6 @@ export const QnAs = {
         data,
       }).then(() => {
         commit("MODIFY_QNA_ANSWER", data);
-        router.push({ name: "QnaList" });
       });
     },
     deleteQnaAnswer({ commit, getters }, payload) {
@@ -175,7 +164,6 @@ export const QnAs = {
         },
       }).then((res) => {
         commit("MODIFY_QNA_ANSWER", res);
-        router.push({ name: "QnaList" });
       });
     },
     getNoAnswer({ commit, getters }) {
@@ -187,7 +175,7 @@ export const QnAs = {
         },
       }).then((res) => {
         console.log(res);
-        commit("MODIFY_QNA_ANSWER", res);
+        commit("GET_QNAS", res.data);
       });
     },
   },

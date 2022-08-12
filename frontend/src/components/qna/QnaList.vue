@@ -37,23 +37,24 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
   data() {
     return {
       keyword: "",
       checked: false,
-      admin: false,
+      theAdmin: false,
     };
   },
   computed: {
     ...mapState("QnAs", ["qnas"]),
-    ...mapState("accounts"),
+    ...mapGetters(["admin"]),
   },
   mounted() {
-    this.admin = this.$store.getters.admin;
-    if (this.admin) {
+    this.theAdmin = this.$store.getters.admin;
+    console.log(this.theAdmin);
+    if (this.theAdmin) {
       this.$store.dispatch("QnAs/getAdminQnas");
     } else {
       this.$store.dispatch("QnAs/getQnas");
@@ -62,7 +63,11 @@ export default {
 
   methods: {
     submit() {
-      this.$store.dispatch("QnAs/getQnas", this.keyword);
+      if (this.theAdmin) {
+        this.$store.dispatch("QnAs/getAdminQnas", this.keyword);
+      } else {
+        this.$store.dispatch("QnAs/getQnas", this.keyword);
+      }
     },
     moveToDetail(id) {
       this.$router.push({
@@ -77,8 +82,9 @@ export default {
     change() {
       if (!this.checked) {
         this.$store.dispatch("QnAs/getNoAnswer");
+        this.checked = !this.checked;
       } else {
-        this.$store.dispatch("QnAs/getQnas", this.keyword);
+        this.$store.dispatch("QnAs/getAdminQnas", this.keyword);
       }
     },
   },

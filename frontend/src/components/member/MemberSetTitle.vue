@@ -193,7 +193,6 @@ import { mapState, mapGetters } from "vuex";
 export default {
   computed: {
     ...mapState("Members", ["titles"]),
-    ...mapState("accounts"),
     ...mapGetters(["trophy", "trophyList"]),
     ...mapGetters(["title"]),
   },

@@ -22,7 +22,8 @@
       </v-row>
       <v-row>
         <v-col class="d-flex justify-end mb-6">
-          <v-btn depressed color="primary" @click="fixedToggle"> 상단고정 설정 </v-btn>
+          <v-btn v-if="!notice.fixationFlag" depressed color="primary" @click="fixedToggle"> 상단고정 설정 </v-btn>
+          <v-btn v-else depressed color="primary" @click="fixedToggle"> 상단고정 해제 </v-btn>
           <v-btn depressed color="red" @click="moveToUpdate"> 수정 </v-btn>
           <v-btn depressed color="blue" @click="NoticeDelete"> 삭제 </v-btn>
         </v-col>
@@ -33,6 +34,7 @@
 
 <script>
 import { mapState } from "vuex";
+import Swal from "sweetalert2";
 
 export default {
   computed: {
@@ -58,6 +60,13 @@ export default {
     fixedToggle() {
       this.notice.fixationFlag = !this.notice.fixationFlag;
       this.$store.dispatch("Notices/modifyNotice", this.notice);
+      Swal.fire({
+        icon: "success",
+        title: "공지사항 상단고정 내역이 변경되었습니다!",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      this.$router.push("/notice");
     },
     moveToUpdate() {
       this.$router.push({
@@ -66,6 +75,13 @@ export default {
     },
     NoticeDelete() {
       this.$store.dispatch("Notices/deleteNotice", this.notice.noticeId);
+      Swal.fire({
+        icon: "success",
+        title: "공지사항 삭제가 완료되었습니다!",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      this.$router.push("/notice");
     },
   },
 };
