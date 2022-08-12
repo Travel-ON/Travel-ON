@@ -1,23 +1,84 @@
 <template>
-  <v-container id="main-container" class="container">
+  <v-container v-if="publisher" id="main-container" class="container">
     <v-row id="join">
       <v-col id="join-dialog" class="jumbotron vertical-center">
-        <h1>방 만들기 화면</h1>
+        <v-btn class="btn mr-2" @click="clickHome">홈으로</v-btn>
+        <h1>방 매칭 화면</h1>
         <v-row style="margin-top: 20px">
           <v-col style="background-color: skyblue">
-            <h3>설정</h3>
-            <div class="setting" style="background-color: white">dsklfjkldsfjlksdjflkjsdfklsdfjkljdsklfjklsdjfl</div>
+            <div>현위치: {{ sido }} {{ gugun }} {{ dong }} <v-icon x-small>mdi-map-marker-radius</v-icon></div>
+            <h3 class="mt-3">설정</h3>
+            <v-row class="setting" style="background-color: white; margin: 5px">
+              <v-container fluid>
+                <div>지역범위 설정</div>
+                <v-radio-group v-model="areaScope" mandatory>
+                  <v-radio :label="`시: ${sido}`" value="sido"></v-radio>
+                  <v-radio :label="`구: ${gugun}`" value="gugun"></v-radio>
+                  <v-radio :label="`동: ${dong}`" value="dong"></v-radio>
+                </v-radio-group>
+                <div v-if="resident">
+                  <v-container class="px-0" fluid>
+                    <v-checkbox v-model="residentMark" label="현지인 마크 표시하기"></v-checkbox>
+                  </v-container>
+                </div>
+              </v-container>
+            </v-row>
+            <!-- </div> -->
           </v-col>
           <v-col>
             <div class="form-group">
               <!-- <v-text-field label="Participant" v-model="myUserName" class="form-control" type="text" required /> -->
               <!-- <v-text-field label="session" v-model="mySessionId" class="form-control" type="text" required /> -->
+              <p>[미리보기 화면]</p>
               <p class="text-center">
                 <!-- <v-btn class="btn btn-lg btn-success" @click="joinSession()">Join!</v-btn> -->
-                <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
-                <v-btn class="btn mr-2" @click="clickMuteVideo">비디오설정</v-btn>
-                <v-btn class="btn mr-2" @click="clickMuteAudio">음소거설정</v-btn>
+
+                <v-container class="px-0" fluid>
+                  <div style="position: relative">
+                    <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
+                    <div
+                      v-if="resident && residentMark"
+                      style="
+                        position: absolute;
+                        top: 10px;
+                        right: 50%;
+                        background-color: #6499ff;
+                        color: white;
+                        padding-left: 10px;
+                        padding-right: 10px;
+                        padding-top: 1px;
+                        padding-bottom: 1px;
+                      "
+                    >
+                      <v-icon>mdi-clover</v-icon> 현지인 <v-icon>mdi-clover</v-icon>
+                    </div>
+                  </div>
+                </v-container>
               </p>
+              <div style="display: flex">
+                <div v-if="publisher.stream.videoActive">
+                  <v-btn id="btn_video" class="btn mr-2" style="background-color: #6499ff" @click="clickMuteVideo">
+                    <v-icon color="white">mdi-video-outline</v-icon> 비디오 중지</v-btn
+                  >
+                </div>
+                <div v-else>
+                  <v-btn id="btn_video" class="btn mr-2" style="background-color: #979797" @click="clickMuteVideo">
+                    <v-icon color="white">mdi-video-outline</v-icon> 비디오 시작</v-btn
+                  >
+                </div>
+
+                <div v-if="publisher.stream.audioActive">
+                  <v-btn id="btn_audio" class="btn mr-2" style="background-color: #6499ff" @click="clickMuteAudio">
+                    <v-icon color="white">mdi-microphone-outline</v-icon> 음소거 설정</v-btn
+                  >
+                </div>
+                <div v-else>
+                  <v-btn id="btn_audio" class="btn mr-2" style="background-color: #979797" @click="clickMuteAudio">
+                    <v-icon color="white">mdi-microphone-off</v-icon> 음소거 해제</v-btn
+                  >
+                </div>
+                <v-btn class="btn mr-2" @click="clickMatchingRoom">방 매칭하기</v-btn>
+              </div>
             </div>
           </v-col>
         </v-row>
@@ -27,20 +88,37 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
-import UserVideo from "./openvidu/UserVideo.vue";
+import Swal from "sweetalert2";
+import UserVideo from "./UserVideo.vue";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
+// const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8443`;
+// const OPENVIDU_SERVER_SECRET = "ssafy";
 const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
-  name: "VideochatMatching",
+  name: "VideochatMa",
 
   components: {
     UserVideo,
+  },
+  computed: {
+    ...mapGetters({
+      sido: "sido",
+      gugun: "gugun",
+      dong: "dong",
+      dongCode: "dongCode",
+      resident: "resident",
+      currentUser: "currentUser",
+      token: "token",
+      title: "title",
+      isLoggedIn: "isLoggedIn",
+    }),
   },
 
   data() {
@@ -50,13 +128,19 @@ export default {
       mainStreamManager: undefined,
       publisher: undefined,
       subscribers: [],
+      areaScope: "sido",
+      residentMark: true,
+      video: true,
+      audio: true,
 
       mySessionId: "impermanent_session",
-      myUserName: `닉네임들어갈곳`,
+      // myUserName: `닉네임들어갈곳`,
     };
   },
   created() {
-    this.joinSession();
+    if (this.isLoggedIn) {
+      this.joinSession();
+    }
   },
   methods: {
     joinSession() {
@@ -93,7 +177,7 @@ export default {
       // 'token' parameter should be retrieved and returned by your own backend
       this.getToken(this.mySessionId).then((token) => {
         this.session
-          .connect(token, { clientData: this.myUserName })
+          .connect(token, { clientName: this.currentUser, clientTitle: this.title })
           .then(() => {
             // --- Get your own camera stream with the desired properties ---
 
@@ -144,16 +228,60 @@ export default {
     clickMuteVideo() {
       if (this.publisher.stream.videoActive) {
         this.publisher.publishVideo(false);
+        this.video = false;
       } else {
         this.publisher.publishVideo(true);
+        this.video = true;
       }
     },
     clickMuteAudio() {
       if (this.publisher.stream.audioActive) {
         this.publisher.publishAudio(false);
+        this.audio = false;
       } else {
         this.publisher.publishAudio(true);
+        this.audio = true;
       }
+    },
+    clickMatchingRoom() {
+      axios({
+        url: "http://localhost:3000/api/videochat/match",
+        // url: "http://i7b301.p.ssafy.io:3000/api/videochat/match",
+        method: "post",
+        headers: { Authorization: `Bearer ${this.token}` },
+        data: {
+          dongCode: this.dongCode,
+          areaScope: this.areaScope,
+        },
+      })
+        .then((res) => {
+          this.leaveSession();
+          this.$router.push({
+            name: "VideochatRoom",
+            params: {
+              residentMark: this.residentMark,
+              video: this.video,
+              audio: this.audio,
+              roomCode: res.data.roomCode,
+              hostName: res.data.hostName,
+            },
+          });
+        })
+        .catch((err) => {
+          Swal.fire({
+            icon: "error",
+            title: "방 매칭 실패!",
+            showConfirmButton: false,
+            timer: 1000,
+          });
+          console.log(err);
+        });
+    },
+    clickHome() {
+      this.leaveSession();
+      this.$router.push({
+        name: "home",
+      });
     },
 
     // yuna end

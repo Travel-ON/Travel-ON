@@ -28,12 +28,16 @@
       </v-row>
       <v-row>
         <v-col
-          ><v-card height="200px"> <v-textarea :disabled="!isNotAdmin()" v-model="answer" /></v-card
+          ><v-card height="200px"> <v-textarea :disabled="!admin" v-model="answer" /></v-card
         ></v-col>
       </v-row>
       <v-row
         ><v-col class="d-flex justify-end mb-6">
-          <v-btn depressed color="primary" @click="updateAnswer"> 답변작성 </v-btn>
+          <div v-if="!qna.answerFlag && admin">
+            <v-btn depressed color="primary" @click="registAnswer"> 답변작성 </v-btn>
+          </div>
+          <div v-if="qna.answerFlag"><v-btn depressed color="primary" @click="modifyAnswer"> 답변수정 </v-btn></div>
+          <div v-if="qna.answerFlag"><v-btn depressed color="primary" @click="deleteAnswer"> 답변삭제 </v-btn></div>
         </v-col></v-row
       >
     </v-container>
@@ -46,21 +50,23 @@ export default {
   name: "QnaDetail",
   computed: {
     ...mapState("QnAs", ["qna"]),
-    ...mapGetters(["admin", "QnAs/getQna"]),
+    ...mapGetters(["QnAs/getQna"]),
   },
   data() {
     return {
       idx: this.$route.params.id,
       answer: "",
+      admin: false,
     };
   },
   mounted() {
-    console.log(this.qna.answer);
     if (this.qna.answer) {
       this.answer = this.qna.answer;
     } else {
       this.answer = "아직 답변이 작성되지 않았습니다.";
     }
+    this.admin = this.$store.getters.admin;
+    console.log(this.admin);
   },
   created() {
     const pathName = new URL(document.location).pathname.split("/");
@@ -73,9 +79,7 @@ export default {
         name: "QnaList",
       });
     },
-    isNotAdmin() {
-      return !this.admin;
-    },
+
     moveToUpdate() {
       this.$router.push({
         path: `/qna/update/${this.qna.qnaid}`,
@@ -84,12 +88,22 @@ export default {
     QnaDelete() {
       this.$store.dispatch("QnAs/deleteQna", this.qna.qnaid);
     },
-    updateAnswer() {
+    registAnswer() {
+      const params = {
+        qnaId: this.qna.qnaid,
+        answer: this.answer,
+      };
+      this.$store.dispatch("QnAs/registQnaAnswer", params);
+    },
+    modifyAnswer() {
       const params = {
         qnaId: this.qna.qnaid,
         answer: this.answer,
       };
       this.$store.dispatch("QnAs/modifyQnaAnswer", params);
+    },
+    deleteAnswer() {
+      this.$store.dispatch("QnAs/deleteQnaAnswer", this.qna.qnaid);
     },
   },
 };

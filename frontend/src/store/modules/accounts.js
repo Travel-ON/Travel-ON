@@ -1,6 +1,7 @@
 import router from "@/router";
 import axios from "axios";
 import spring from "@/api/spring_boot";
+import Swal from "sweetalert2";
 
 /* eslint-disable no-return-assign */
 export const Accounts = {
@@ -10,6 +11,7 @@ export const Accounts = {
   state: () => ({
     token: localStorage.getItem("token") || "", // 토큰
     currentUser: "", // 현재 유저 닉네임
+    currentUserId: "", // 현재 유저 아이디
     admin: false, // 관리자 여부
     title: "", // 유저 타이틀
     trophy: [], // 여행 횟수 리스트
@@ -39,7 +41,8 @@ export const Accounts = {
     isLoggedIn: (state) => !!state.token, // 로그인 여부
     token: (state) => state.token,
     currentUser: (state) => state.currentUser,
-    admin: (state) => state.currentUser,
+    currentUserId: (state) => state.currentUserId,
+    admin: (state) => state.admin,
     title: (state) => state.title,
     trophy: (state) => state.trophy,
     resident: (state) => state.resident,
@@ -47,6 +50,7 @@ export const Accounts = {
   },
   mutations: {
     SET_CURRENT_USER: (state, user) => (state.currentUser = user),
+    SET_CURRENT_USER_ID: (state, id) => (state.currentUserId = id),
     SET_TOKEN: (state, token) => (state.token = token),
     SET_ADMIN: (state, admin) => (state.admin = admin),
     SET_TITLE: (state, title) => (state.title = title),
@@ -77,7 +81,7 @@ export const Accounts = {
     },
     removeResident({ commit }) {
       commit("SET_RESIDENT", false);
-      localStorage.setItem("resident", false)
+      localStorage.setItem("resident", false);
     },
     login({ commit, dispatch }, credentials) {
       /*
@@ -95,7 +99,7 @@ export const Accounts = {
       axios({
         url: spring.accounts.login(),
         method: "post",
-        data: credentials, // credentials.username, cresentials.password
+        data: credentials, // credentials.id, cresentials.password
       })
         .then(({ data }) => {
           console.log(data);
@@ -106,6 +110,7 @@ export const Accounts = {
 
           dispatch("saveToken", token);
           commit("SET_CURRENT_USER", nickName);
+          commit("SET_CURRENT_USER_ID", credentials.id);
           commit("SET_ADMIN", adminFlag);
           commit("SET_TITLE", userTitle);
           dispatch("getLocation", true);
@@ -123,6 +128,7 @@ export const Accounts = {
     logout({ commit, dispatch }) {
       dispatch("removeToken");
       commit("SET_CURRENT_USER", "");
+      commit("SET_CURRENT_USER_ID", "");
       commit("SET_ADMIN", false);
       commit("SET_TITLE", "");
       dispatch("removeResident");
@@ -147,7 +153,7 @@ export const Accounts = {
         jeju: 0,
       });
       dispatch("removeLocation");
-      
+
       alert("성공적으로 로그아웃 했습니다!");
       router.push({ name: "home" });
     },
@@ -193,7 +199,7 @@ export const Accounts = {
         url: spring.accounts.detail(),
         method: "get",
         headers: {
-          Authorization: `Bearer ${ token }`,
+          Authorization: `Bearer ${token}`,
         },
       })
         .then((res) => {
@@ -201,7 +207,7 @@ export const Accounts = {
         })
         .catch((err) => {
           console.log(err);
-        })
+        });
     },
     fetchCurrentUser({ commit, getters, dispatch }) {
       if (getters.isLoggedIn) {
@@ -209,14 +215,16 @@ export const Accounts = {
           url: spring.accounts.detail(),
           method: "get",
           headers: {
-            Authorization: `Bearer ${ getters.token }`,
+            Authorization: `Bearer ${getters.token}`,
           },
         })
           .then((res) => {
+            const id = res.data.id;
             const nickName = res.data.nickname;
             const userTitle = res.data.userTitle;
             const adminFlag = res.data.adminFlag;
             commit("SET_CURRENT_USER", nickName);
+            commit("SET_CURRENT_USER_ID", id);
             commit("SET_ADMIN", adminFlag);
             commit("SET_TITLE", userTitle);
             dispatch("getLocation", false);
@@ -225,18 +233,19 @@ export const Accounts = {
           .catch((err) => {
             console.log(err);
             dispatch("removeToken");
-          })
+          });
       }
     },
     getTrophy({ commit, getters }) {
       axios({
         url: spring.location.trophy(),
         method: "get",
-        headers: {Authorization: `Bearer ${ getters.token }`},
+        headers: { Authorization: `Bearer ${getters.token}` },
       })
         .then((res) => {
           const trophyList = res.data;
-          const trophyEngToKor = { // 지역명 한글 -> 영문 변환
+          const trophyEngToKor = {
+            // 지역명 한글 -> 영문 변환
             서울: "seoul",
             부산: "busan",
             대구: "daegu",
@@ -254,7 +263,7 @@ export const Accounts = {
             경북: "gyeongsangbuk",
             경남: "gyeongsangnam",
             제주특별자치도: "jeju",
-          }
+          };
           trophyList.forEach((element, index) => {
             trophyList[index].sidoName = trophyEngToKor[element.sidoName];
           });
@@ -279,25 +288,49 @@ export const Accounts = {
         })
         .catch((err) => {
           console.log(err);
-        })
+        });
     },
     fetchTrophy({ commit, getters, dispatch }) {
-      axios({ // 업적 업데이트
+      axios({
+        // 업적 업데이트
         url: spring.location.trophy(),
         method: "post",
-        headers: {Authorization: `Bearer ${getters.token}`},
-        data: {dongCode: getters.dongCode}
+        headers: { Authorization: `Bearer ${getters.token}` },
+        data: { dongCode: getters.dongCode },
       })
-        .then((res)=> {
+        .then((res) => {
           console.log("지역 카운트값 증가!");
-          if(res.status === 200) {
+          if (res.status === 200) {
             dispatch("saveResident", true);
-            console.log("현지인 확인 완료!")
+            console.log("현지인 확인 완료!");
           }
         })
-        .catch((err)=> {
+        .catch((err) => {
           console.log(err);
+        });
+    },
+    userPassInit({ commit, dispatch }, credentials) {
+      console.log("userPassInit 메서드 실행");
+      console.log(spring.accounts.userPassInit());
+      console.log(credentials);
+      axios({
+        url: spring.accounts.userPassInit(),
+        method: "post",
+        data: credentials, // credentials.id, cresentials.email
+      })
+        .then((res) => {
+          Swal.fire("Good job!", "이메일로 임시 비밀번호를 전송했습니다", "success", {
+            button: "확인",
+          });
+          router.push({ name: "home" });
         })
-    }
-  }
-}
+        .catch((err) => {
+          console.error(err);
+          Swal.fire("Error", "아이디가 없거나 이메일이 일치하지 않습니다!", "error", {
+            button: "확인",
+          });
+          router.push({ name: "MemberLogin" });
+        });
+    },
+  },
+};
