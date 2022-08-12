@@ -82,10 +82,11 @@ export default {
   },
   computed: {
     ...mapGetters({
-      // resident: "resident",
       currentUser: "currentUser",
+      currentUserId: "currentUserId",
       token: "token",
       title: "title",
+      isLoggedIn: "isLoggedIn",
     }),
   },
 
@@ -105,7 +106,9 @@ export default {
     };
   },
   created() {
-    this.joinSession();
+    if (this.isLoggedIn) {
+      this.joinSession();
+    }
   },
   methods: {
     joinSession() {
@@ -157,7 +160,9 @@ export default {
             clientName: this.currentUser,
             clientTitle: this.title,
             isResident: this.residentMark,
-            isHost: this.hostName === this.currentUser,
+            hostName: this.hostName,
+            isRoom: true,
+            clientUserId: this.currentUserId,
           })
           .then(() => {
             // --- Get your own camera stream with the desired properties ---
