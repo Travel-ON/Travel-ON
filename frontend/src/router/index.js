@@ -10,6 +10,7 @@ import MemberLogout from "../components/member/MemberLogout.vue";
 import MemberTitle from "../components/member/MemberTitle.vue";
 
 import MemberFindpwd from "../components/member/MemberFindpwd.vue";
+import MemberSetTitle from "../components/member/MemberSetTitle.vue";
 
 import HomeView from "../views/HomeView.vue";
 
@@ -117,6 +118,16 @@ const routes = [
         path: "findpwd",
         name: "MemberFindpwd",
         component: MemberFindpwd,
+      },
+      {
+        path: "findpwd",
+        name: "MemberFindpwd",
+        component: MemberFindpwd,
+      },
+      {
+        path: "setTitle",
+        name: "MemberSetTitle",
+        component: MemberSetTitle,
       },
     ],
   },
