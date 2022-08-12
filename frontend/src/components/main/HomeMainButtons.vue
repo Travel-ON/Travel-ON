@@ -1,13 +1,13 @@
 <template>
   <div class="container">
-    <v-btn height="120px" z-index="0">
+    <v-btn height="120px" z-index="0" @click="hostBtn">
       <div>
         <div style="font-weight: bold; font-size: large">방만들기</div>
         <div>직접 방을 생성해</div>
         <div>사람들을 만나보세요!</div>
       </div>
     </v-btn>
-    <v-btn height="120px" z-index="0">
+    <v-btn height="120px" z-index="0" @click="guestBtn">
       <div>
         <div style="font-weight: bold; font-size: large">방매칭하기</div>
         <div>이미 만들어진 방에 들어가</div>
@@ -25,8 +25,22 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   name: "HomeMainButtons",
+  data() {
+    return {};
+  },
+  methods: {
+    ...mapActions("MeetingStore", ["createSessionId"]),
+    // eslint-disable-next-line consistent-return
+    hostBtn() {
+      this.$router.push({ name: "CreateMeeting" });
+    },
+    // 방참여(EnterMeeting) 가는 버튼 보류
+    guestBtn() {},
+  },
 };
 </script>
 
