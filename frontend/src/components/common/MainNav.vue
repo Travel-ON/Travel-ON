@@ -107,9 +107,18 @@ export default {
     ...mapActions(["logout", "fetchAlarmFlag"]),
     TransferPage(pageName) {
       if (this.isLoggedIn) {
-        this.$router.push({
-          name: pageName,
-        });
+        if (pageName !== "Planner" && !this.isLocation) {
+          Swal.fire({
+            title: "위치인증이 필요한 서비스입니다.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          });
+        } else {
+          this.$router.push({
+            name: pageName,
+          });
+        }
       } else {
         Swal.fire({
           title: "로그인이 필요한 서비스입니다.",
@@ -207,6 +216,7 @@ export default {
   computed: {
     ...mapGetters({
       isLoggedIn: "isLoggedIn",
+      isLocation: "isLocation",
       currentUser: "currentUser",
       title: "title",
       token: "token",
