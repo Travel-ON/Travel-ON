@@ -68,7 +68,13 @@ public class AlarmController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             alarmService.deleteAll(userDto.toEntity());
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            userDto.setAlarmFlag(false);
+            boolean result = userService.update(userDto);
+            if(result) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }else{
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
         } catch (Exception e) {
             return exceptionHandling(e);
         }
