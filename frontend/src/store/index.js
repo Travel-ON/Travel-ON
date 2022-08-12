@@ -7,6 +7,7 @@ import { QnAs } from "./modules/qnas";
 import { Locations } from "./modules/locations";
 import { Weather } from "./modules/weather";
 import { Plans } from "./modules/plans";
+import { Members } from "./modules/members";
 
 // const api = createApi();
 
@@ -22,5 +23,6 @@ export default createStore({
     Locations,
     Weather,
     Plans,
+    Members,
   },
 });

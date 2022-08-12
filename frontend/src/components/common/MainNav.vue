@@ -91,6 +91,7 @@ export default {
     ],
     items_user: [
       { title: "마이페이지", name: "" },
+      { title: "칭호설정", name: "MemberSetTitle" },
       { title: "로그아웃", name: "MemberLogout" },
     ],
     items_new: [{ title: "[Q&A] 에 답변이 달렸습니다." }, { title: "[대전 마스터] 업적을 달성하셨습니다." }],
