@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
+
 export default {
   data() {
     return {
@@ -39,6 +41,13 @@ export default {
         content: this.content,
       };
       this.$store.dispatch("Notices/writeNotice", newNotice);
+      Swal.fire({
+        icon: "success",
+        title: "공지사항 작성이 완료되었습니다!",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      this.$router.push("/notice");
     },
   },
 };

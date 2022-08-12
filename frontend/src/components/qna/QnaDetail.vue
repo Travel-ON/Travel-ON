@@ -45,6 +45,7 @@
 </template>
 <script>
 import { mapState, mapGetters } from "vuex";
+import Swal from "sweetalert2";
 
 export default {
   name: "QnaDetail",
@@ -81,12 +82,29 @@ export default {
     },
 
     moveToUpdate() {
+      if (this.qna.answerFlag) {
+        Swal.fire({
+          icon: "error",
+          title: "답변이 완료된 글은 수정할 수 없습니다!",
+          text: "문의 글을 삭제하시거나 관리자에게 문의 하세요",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        return;
+      }
       this.$router.push({
         path: `/qna/update/${this.qna.qnaid}`,
       });
     },
     QnaDelete() {
       this.$store.dispatch("QnAs/deleteQna", this.qna.qnaid);
+      Swal.fire({
+        icon: "success",
+        title: "문의 삭제가 완료되었습니다!",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      this.$router.push({ name: "QnaList" });
     },
     registAnswer() {
       const params = {
@@ -94,6 +112,15 @@ export default {
         answer: this.answer,
       };
       this.$store.dispatch("QnAs/registQnaAnswer", params);
+      Swal.fire({
+        icon: "success",
+        title: "답변 작성이 완료되었습니다!",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+
+      this.$store.dispatch("QnAs/getQna", this.qna.qnaid);
+      this.$router.go();
     },
     modifyAnswer() {
       const params = {
@@ -101,9 +128,25 @@ export default {
         answer: this.answer,
       };
       this.$store.dispatch("QnAs/modifyQnaAnswer", params);
+      Swal.fire({
+        icon: "success",
+        title: "답변 수정이 완료되었습니다!",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      this.$store.dispatch("QnAs/getQna", this.qna.qnaid);
+      this.$router.go();
     },
     deleteAnswer() {
       this.$store.dispatch("QnAs/deleteQnaAnswer", this.qna.qnaid);
+      Swal.fire({
+        icon: "success",
+        title: "답변 삭제가 완료되었습니다!",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      this.$store.dispatch("QnAs/getQna", this.qna.qnaid);
+      this.$router.go();
     },
   },
 };

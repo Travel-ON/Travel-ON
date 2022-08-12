@@ -6,6 +6,11 @@
           ><input type="checkbox" id="checkbox" v-model="checked" @click="change" />답변 대기 글만 보기</label
         >
       </div>
+      <div v-else>
+        <label for="checkbox" style="float: left"
+          ><input type="checkbox" id="checkbox" v-model="ansChecked" @click="answerChange" />답변 완료 글만 보기</label
+        >
+      </div>
       <div class="d-flex justify-end mb-6">
         <v-btn color="primary" @click="moveToWrite">문의하기</v-btn>
       </div>
@@ -37,23 +42,25 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
   data() {
     return {
       keyword: "",
       checked: false,
-      admin: false,
+      ansChecked: false,
+      theAdmin: false,
     };
   },
   computed: {
     ...mapState("QnAs", ["qnas"]),
-    ...mapState("accounts"),
+    ...mapGetters(["admin"]),
   },
   mounted() {
-    this.admin = this.$store.getters.admin;
-    if (this.admin) {
+    this.theAdmin = this.$store.getters.admin;
+    console.log(this.theAdmin);
+    if (this.theAdmin) {
       this.$store.dispatch("QnAs/getAdminQnas");
     } else {
       this.$store.dispatch("QnAs/getQnas");
@@ -62,7 +69,11 @@ export default {
 
   methods: {
     submit() {
-      this.$store.dispatch("QnAs/getQnas", this.keyword);
+      if (this.theAdmin) {
+        this.$store.dispatch("QnAs/getAdminQnas", this.keyword);
+      } else {
+        this.$store.dispatch("QnAs/getQnas", this.keyword);
+      }
     },
     moveToDetail(id) {
       this.$router.push({
@@ -77,6 +88,15 @@ export default {
     change() {
       if (!this.checked) {
         this.$store.dispatch("QnAs/getNoAnswer");
+        this.checked = !this.checked;
+      } else {
+        this.$store.dispatch("QnAs/getAdminQnas", this.keyword);
+      }
+    },
+    answerChange() {
+      if (!this.ansChecked) {
+        this.$store.dispatch("QnAs/getCompletAnswer");
+        this.ansChecked = !this.ansChecked;
       } else {
         this.$store.dispatch("QnAs/getQnas", this.keyword);
       }
