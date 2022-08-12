@@ -23,5 +23,5 @@ public interface QNAService {
 
     List<QNA> noneAnswerAll();
 
-    List<QNA> AnswerAll();
+    List<QNA> AnswerAll(User user);
 }

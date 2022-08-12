@@ -134,8 +134,8 @@ public class QNAServiceImpl implements QNAService{
     }
 
     @Override
-    public List<QNA> AnswerAll() {
-        List<QNA> list = qnaRepository.findAll();
+    public List<QNA> AnswerAll(User user) {
+        List<QNA> list = qnaRepository.findByUser(user);
 
         List<QNA> alist = new LinkedList<>();
         for (QNA qna:list){

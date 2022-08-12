@@ -124,7 +124,7 @@ public class QNAController {
         }
     }
 
-    @ApiOperation(value = "글 조회: 회원 답변대기글 조회", response = List.class)
+    @ApiOperation(value = "글 조회: 회원 답변완료글 조회", response = List.class)
     @GetMapping("/answer/complete")
     public ResponseEntity<?> completeSelect(@ApiIgnore Authentication authentication){
         try{
@@ -136,7 +136,7 @@ public class QNAController {
                 return  new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
             
-            List<QNA> list = qnaService.AnswerAll();
+            List<QNA> list = qnaService.AnswerAll(userDto.toEntity());
 
             List<QNADto> result = list.stream()
                     .map(r -> new QNADto(r))
