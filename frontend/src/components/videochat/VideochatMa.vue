@@ -117,6 +117,7 @@ export default {
       currentUser: "currentUser",
       token: "token",
       title: "title",
+      isLoggedIn: "isLoggedIn",
     }),
   },
 
@@ -137,7 +138,9 @@ export default {
     };
   },
   created() {
-    this.joinSession();
+    if (this.isLoggedIn) {
+      this.joinSession();
+    }
   },
   methods: {
     joinSession() {
