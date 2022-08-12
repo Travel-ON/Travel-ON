@@ -125,8 +125,21 @@ public class QNAServiceImpl implements QNAService{
 
         List<QNA> alist = new LinkedList<>();
         for (QNA qna:list){
-            System.out.println("WHAT");
             if(qna.isAnswerFlag() == false){
+                alist.add(qna);
+            }
+        }
+
+        return alist;
+    }
+
+    @Override
+    public List<QNA> AnswerAll() {
+        List<QNA> list = qnaRepository.findAll();
+
+        List<QNA> alist = new LinkedList<>();
+        for (QNA qna:list){
+            if(qna.isAnswerFlag() == true){
                 alist.add(qna);
             }
         }
