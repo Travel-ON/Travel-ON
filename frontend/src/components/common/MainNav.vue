@@ -10,21 +10,13 @@
           />
         </v-btn>
       </router-link>
-      <router-link :to="{ name: 'VideochatCreate' }">
-        <v-btn>방만들기</v-btn>
-      </router-link>
-      <router-link :to="{ name: 'VideochatMa' }">
-        <v-btn>방매칭하기</v-btn>
-      </router-link>
-      <router-link :to="{ name: 'VideochatShare' }">
-        <v-btn>방코드입장</v-btn>
-      </router-link>
+      <v-btn @click="TransferPage('VideochatCreate')">방만들기</v-btn>
+      <v-btn @click="TransferPage('VideochatMa')">방매칭하기</v-btn>
+      <v-btn @click="TransferPage('VideochatShare')">방코드입장</v-btn>
       <!-- <router-link to="/videochat">
         <v-btn>방매칭하기</v-btn>
       </router-link> -->
-      <router-link :to="{ name: 'Planner' }">
-        <v-btn>여행플래너</v-btn>
-      </router-link>
+      <v-btn @click="TransferPage('Planner')">여행플래너</v-btn>
       <v-menu open-on-hover style="z-index: 3500">
         <template v-slot:activator="{ props }">
           <v-btn v-bind="props"> 커뮤니티 </v-btn>
@@ -84,9 +76,9 @@
     </v-toolbar>
   </div>
 </template>
-
 <script>
 import { mapActions, mapGetters } from "vuex";
+import Swal from "sweetalert2";
 
 export default {
   name: "MainNav",
@@ -106,6 +98,32 @@ export default {
   }),
   methods: {
     ...mapActions(["logout"]),
+    TransferPage(pageName) {
+      if (this.isLoggedIn) {
+        this.$router.push({
+          name: pageName,
+        });
+      } else {
+        Swal.fire({
+          title: "로그인이 필요한 서비스입니다.",
+          text: "로그인 화면으로 이동할까요?",
+          icon: "warning",
+          showCancelButton: true,
+          buttons: true,
+          dangerMode: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.$router.push({
+              name: "MemberLogin",
+            });
+          } else {
+            this.$router.push({
+              name: "home",
+            });
+          }
+        });
+      }
+    },
   },
   computed: {
     ...mapGetters({
