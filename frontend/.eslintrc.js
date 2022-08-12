@@ -14,5 +14,6 @@ module.exports = {
     // "vuetify/no-deprecated-classes": "error",
     // "vuetify/no-legacy-grid": "error",
     "import/prefer-default-export": "off",
+    "import/no-unresolved": "off",
   },
 };

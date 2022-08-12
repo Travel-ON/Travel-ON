@@ -37,8 +37,7 @@ import { mapState } from "vuex";
 
 export default {
   computed: {
-    ...mapState("Notices", ["notices"]),
-    ...mapState(["notices", "totalPage"]),
+    ...mapState("Notices", ["notices", "totalPage"]),
   },
   watch: {
     page(num) {
