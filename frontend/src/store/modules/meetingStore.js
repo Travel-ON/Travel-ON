@@ -227,7 +227,10 @@ export const MeetingStore = {
       window.addEventListener("beforeunload", this.leaveSession);
     },
     leaveSession() {
+    leaveSession({ state, commit }) {
       // --- Leave the session by calling 'disconnect' method over the Session object ---
+      state.publisher.stream.disposeWebRtcPeer();
+      state.publisher.stream.disposeMediaStream();
       if (this.session) this.session.disconnect();
 
       this.session = undefined;
@@ -235,6 +238,11 @@ export const MeetingStore = {
       this.publisher = undefined;
       this.subscribers = [];
       this.OV = undefined;
+      commit("SET_SESSION", undefined);
+      commit("SET_MAINSTREAMMANAGER", undefined);
+      commit("SET_PUBLISHER", undefined);
+      commit("SET_SUBSCRIBERS", []);
+      commit("SET_OV", undefined);
 
       window.removeEventListener("beforeunload", this.leaveSession);
     },

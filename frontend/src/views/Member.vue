@@ -1,7 +1,10 @@
 <template>
-  <div>
-    <div id="title">Member</div>
-    <router-view />
+  <div style="display: flex; justify-content: space-between">
+    <div class="left-space"></div>
+    <div class="main-space">
+      <router-view />
+    </div>
+    <div class="right-space"></div>
   </div>
 </template>
 
