@@ -4,7 +4,9 @@ import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import Swal from "sweetalert2";
 import moment from "moment";
-// import router from "@/router";
+// import { startsWith } from "core-js/core/string";
+import router from "@/router";
+
 const api = createApi();
 const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
@@ -18,23 +20,28 @@ export const MeetingStore = {
     publisher: undefined,
     subscribers: [],
     mainStreamManager: undefined,
+    hostName: "",
+    mySessionId: "impermanent_session",
+    residentMark: false,
+    videoFlag: "true",
+    audioFlag: "true",
     // chatting
     isChatPanel: false,
     messages: [],
     secretRoom: false,
-    mySessionId: "impermanent_session",
   },
   getters: {
     messages: (state) => state.messages,
+    subscribers: (state) => state.subscribers,
   },
   mutations: {
     // Openvidu
     SET_OV(state, OV) {
       state.OV = OV;
     },
-    SET_OVTOKEN(state, token) {
-      state.ovToken = token;
-    },
+    // SET_OVTOKEN(state, token) {
+    //   state.ovToken = token;
+    // },
     SET_SESSION(state, session) {
       state.session = session;
     },
@@ -47,16 +54,47 @@ export const MeetingStore = {
     SET_SUBSCRIBERS(state, subscribers) {
       state.subscribers = subscribers;
     },
+    SET_SESSION_ID(state, mySessionId) {
+      state.mySessionId = mySessionId;
+    },
+    SET_HOST_NAME(state, hostName) {
+      state.hostName = hostName;
+    },
+    SET_RESIDENT_MARK(state, residentMark) {
+      state.residentMark = residentMark;
+    },
+    SET_VIDEO_FLAG(state, videoFlag) {
+      state.videoFlag = videoFlag;
+    },
+    SET_AUDIO_FLAG(state, audioFlag) {
+      state.audioFlag = audioFlag;
+    },
 
     // chatting
     SET_IS_CHATPANEL(state, value) {
       state.isChatPanel = value;
     },
-    SET_MESSAGES(state, data) {
-      state.messages.push(data);
+    SET_MESSAGES(state, messages) {
+      // state.messages.push(data);
+      state.messages = messages;
     },
   },
   actions: {
+    setSessionID({ commit }, roomCode) {
+      commit("SET_SESSION_ID", roomCode);
+    },
+    setHostName({ commit }, hostName) {
+      commit("SET_HOST_NAME", hostName);
+    },
+    setResidentMark({ commit }, residentMark) {
+      commit("SET_RESIDENT_MARK", residentMark);
+    },
+    setVideoFlag({ commit }, videoFlag) {
+      commit("SET_VIDEO_FLAG", videoFlag);
+    },
+    setAudioFlag({ commit }, audioFlag) {
+      commit("SET_AUDIO_FLAG", audioFlag);
+    },
     getToken({ dispatch }, mySessionId) {
       return dispatch("createSession", mySessionId).then((sessionId) => dispatch("createToken", sessionId));
     },
@@ -153,60 +191,91 @@ export const MeetingStore = {
       });
     },
     enterSession() {},
+
     joinSession({ state, commit, dispatch, rootGetters }) {
       // 오픈비두 세션 초기화
       // --- Get an OpenVidu object ---
-      const OV = new OpenVidu();
+      // const OV = new OpenVidu();
+      commit("SET_OV", new OpenVidu());
       // --- Init a session ---
-      const session = OV.initSession();
+      // const session = state.OV.initSession();
       // --- Specify the actions when events take place in the session ---
+      commit("SET_SESSION", state.OV.initSession());
+      // console.log("SET_SESSION");
+      // console.log(session);
 
       // On every new Stream received...
-      const subscribers = [];
-      session.on("streamCreated", ({ stream }) => {
-        const subscriber = session.subscribe(stream);
-        subscribers.push(subscriber);
+      // const subscribers = [];
+      // commit("SET_SUBSCRIBERS", subscribers);
+      state.session.on("streamCreated", ({ stream }) => {
+        const subscriber = state.session.subscribe(stream);
+        state.subscribers.push(subscriber);
       });
 
       // On every Stream destroyed...
-      session.on("streamDestroyed", ({ stream }) => {
-        const index = subscribers.indexOf(stream.streamManager, 0);
+      state.session.on("streamDestroyed", ({ stream }) => {
+        const index = state.subscribers.indexOf(stream.streamManager, 0);
+
+        let check = false;
+        console.log("누가나갔다!!");
+        console.log(state.hostName);
+        console.log(JSON.parse(stream.connection.data).clientName);
+        console.log("====================================");
+        if (state.hostName === JSON.parse(stream.connection.data).clientName) {
+          check = true;
+        }
+
         if (index >= 0) {
-          subscribers.splice(index, 1);
+          state.subscribers.splice(index, 1);
+        }
+
+        if (check) {
+          dispatch("leaveSession");
+          Swal.fire("화상채팅방 종료", "호스트에 의해 화상채팅방이 종료되었습니다.", "warning");
+          router.push({
+            name: "home",
+          });
         }
       });
 
       // On every asynchronous exception...
-      session.on("exception", ({ exception }) => {
+      state.session.on("exception", ({ exception }) => {
         console.warn(exception);
       });
       // --- Connect to the session with a valid user token ---
 
       // 'getToken' method is simulating what your server-side should do.
       // 'token' parameter should be retrieved and returned by your own backend
-      dispatch("getToken", state.roomCode).then((token) => {
-        session
-          .connect(token, { clientName: rootGetters.currentUser, clientTitle: this.title })
+      dispatch("getToken", state.mySessionId).then((token) => {
+        state.session
+          .connect(token, {
+            clientName: rootGetters.currentUser,
+            clientTitle: rootGetters.title,
+            isResident: state.residentMark,
+            hostName: state.hostName,
+            isRoom: true,
+            clientUserId: rootGetters.currentUserId,
+          })
           .then(() => {
-            const publisher = OV.initPublisher(undefined, {
+            const publisher = state.OV.initPublisher(undefined, {
               audioSource: undefined, // The source of audio. If undefined default microphone
               videoSource: undefined, // The source of video. If undefined default webcam
-              publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-              publishVideo: true, // Whether you want to start publishing with your video enabled or not
+              publishAudio: state.audioFlag === "true", // Whether you want to start publishing with your audio unmuted or not
+              publishVideo: state.videoFlag === "true", // Whether you want to start publishing with your video enabled or not
               resolution: "640x480", // The resolution of your video
               frameRate: 30, // The frame rate of your video
               insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
               mirror: false, // Whether to mirror your local video or not
             });
-            commit("SET_OV", OV);
+            // commit("SET_OV", OV);
             commit("SET_MAINSTREAMMANAGER", publisher);
             commit("SET_PUBLISHER", publisher);
-            commit("SET_SESSION", session);
-            commit("SET_SUBSCRIBERS", subscribers);
-            commit("SET_OVTOKEN", token);
+            // commit("SET_SESSION", session);
+            // commit("SET_SUBSCRIBERS", subscribers);
+            // commit("SET_OVTOKEN", token);
 
-            this.mainStreamManager = publisher;
-            this.publisher = publisher;
+            // this.mainStreamManager = publisher;
+            // this.publisher = publisher;
             state.session.publish(state.publisher);
 
             state.session.on("signal:chat", (event) => {
@@ -214,41 +283,50 @@ export const MeetingStore = {
               const data = {};
               const time = new Date();
               data.message = eventData.content;
-              data.sender = event.from.data.slice(15, -2);
+              data.sender = JSON.parse(event.from.data).clientName;
               data.time = moment(time).format("HH:mm");
-              commit("SET_MESSAGES", data);
+              state.messages.push(data);
+              // commit("SET_MESSAGES", data);
             });
           })
           .catch((error) => {
             console.log("There was an error connecting to the session:", error.code, error.message);
           });
       });
-
       window.addEventListener("beforeunload", this.leaveSession);
     },
-    leaveSession() {
+    leaveSession({ state, commit }) {
+      console.log("나가라라라ㅏ랏");
       // --- Leave the session by calling 'disconnect' method over the Session object ---
-      if (this.session) this.session.disconnect();
+      if (state.session) state.session.disconnect();
 
-      this.session = undefined;
-      this.mainStreamManager = undefined;
-      this.publisher = undefined;
-      this.subscribers = [];
-      this.OV = undefined;
+      commit("SET_SESSION", undefined);
+      commit("SET_MAINSTREAMMANAGER", undefined);
+      commit("SET_PUBLISHER", undefined);
+      commit("SET_SUBSCRIBERS", []);
+      commit("SET_OV", undefined);
+      commit("SET_SESSION_ID", "impermanent_session");
+      commit("SET_HOST_NAME", "");
+      commit("SET_RESIDENT_MARK", false);
+      commit("SET_VIDEO_FLAG", "true");
+      commit("SET_AUDIO_FLAG", "true");
+      commit("SET_IS_CHATPANEL", false);
+      commit("SET_MESSAGES", []);
 
       window.removeEventListener("beforeunload", this.leaveSession);
     },
-    updateMainVideoStreamManager(stream) {
-      if (this.mainStreamManager === stream) return;
-      this.mainStreamManager = stream;
+    updateMainVideoStreamManager({ state, commit }, stream) {
+      if (state.mainStreamManager === stream) return;
+      commit("SET_MAINSTREAMMANAGER", stream);
+      // state.mainStreamManager = stream;
     },
     toggleVideo({ state }) {
       if (state.publisher.stream.videoActive) {
         state.publisher.publishVideo(false);
-        this.video = false;
+        // this.video = false;
       } else {
         state.publisher.publishVideo(true);
-        this.audio = true;
+        // this.audio = true;
       }
     },
     toggleAudio() {

@@ -28,10 +28,9 @@ import QnaDetail from "../components/qna/QnaDetail.vue";
 import QnaUpdate from "../components/qna/QnaUpdate.vue";
 
 import Videochat from "../views/Videochat.vue";
-import VideochatMatching from "../components/VideochatMatching.vue";
 import VideochatCreate from "../components/videochat/VideochatCreate.vue";
 import VideochatRoom from "../components/videochat/VideochatRoom.vue";
-import VideochatMa from "../components/videochat/VideochatMa.vue";
+import VideochatMatching from "../components/videochat/VideochatMatching.vue";
 import VideochatShare from "../components/videochat/VideochatShare.vue";
 
 import MypageView from "../views/MypageView.vue";
@@ -64,11 +63,6 @@ const routes = [
         path: "matching",
         name: "VideochatMatching",
         component: VideochatMatching,
-      },
-      {
-        path: "matching",
-        name: "VideochatMa",
-        component: VideochatMa,
       },
       {
         path: "create",

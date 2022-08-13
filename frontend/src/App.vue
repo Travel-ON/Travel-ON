@@ -21,7 +21,7 @@ export default {
   name: "App",
   setup() {
     const state = reactive({
-      exceptList: ["VideochatMatching", "VideochatMa", "VideochatCreate", "VideochatRoom", "VideochatShare"], // Nav바 제외리스트
+      exceptList: ["VideochatMatching", "VideochatCreate", "VideochatRoom", "VideochatShare"], // Nav바 제외리스트
     });
 
     return {
