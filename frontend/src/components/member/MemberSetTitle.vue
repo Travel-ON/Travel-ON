@@ -189,6 +189,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import Swal from "sweetalert2";
 
 export default {
   computed: {
@@ -241,6 +242,12 @@ export default {
     modifyTitle() {
       this.combiTitle = `${this.sido} ${this.changeTitle}`;
       this.$store.dispatch("Members/modifyTitle", this.combiTitle);
+      Swal.fire({
+        icon: "success",
+        title: "칭호 변경이 완료되었습니다!",
+        showConfirmButton: false,
+        timer: 1000,
+      });
     },
   },
 };

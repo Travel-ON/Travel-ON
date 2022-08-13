@@ -17,7 +17,7 @@ export const QnAs = {
     },
     GET_QNAS(state, payload) {
       payload.sort((a, b) => {
-        return a.answerFlag > b.answerFlag ? 1 : -1;
+        return a.qnaDate < b.qnaDate ? 1 : -1;
       });
       state.qnas = payload;
     },
@@ -84,6 +84,7 @@ export const QnAs = {
           Authorization: `Bearer ${getters.token}`,
         },
       }).then((res) => {
+        console.log(res.data);
         commit("GET_QNA", res.data);
       });
     },
