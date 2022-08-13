@@ -105,11 +105,6 @@ const routes = [
         name: "MemberLogout",
         component: MemberLogout,
       },
-      // {
-      //   path: "title",
-      //   name: "MemberTitle",
-      //   component: MemberTitle,
-      // },
       {
         path: "findpwd",
         name: "MemberFindpwd",

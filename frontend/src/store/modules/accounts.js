@@ -127,12 +127,22 @@ export const Accounts = {
           dispatch("getLocation", true);
           dispatch("getTrophy");
           console.log(data);
-          alert("로그인 완료!");
+          Swal.fire({
+            icon: "success",
+            title: "로그인 완료!",
+            showConfirmButton: false,
+            timer: 1000,
+          });
           router.push({ name: "home" });
         })
         .catch((err) => {
           console.error(err);
-          alert("아이디가 없거나 비밀번호가 일치하지 않습니다!");
+          Swal.fire({
+            icon: "error",
+            title: "아이디가 없거나 비밀번호가 일치하지 않습니다!",
+            showConfirmButton: false,
+            timer: 1000,
+          });
           router.push({ name: "MemberLogin" });
         });
     },
@@ -167,7 +177,12 @@ export const Accounts = {
       dispatch("removeLocation");
       dispatch("removeAdmin");
 
-      alert("성공적으로 로그아웃 했습니다!");
+      Swal.fire({
+        icon: "success",
+        title: "성공적으로 로그아웃 했습니다!",
+        showConfirmButton: false,
+        timer: 1000,
+      });
       router.push({ name: "home" });
     },
     modify({ commit, dispatch }, credentials) {
@@ -192,7 +207,12 @@ export const Accounts = {
         dispatch("getLocation", true);
         dispatch("getTrophy");
         console.log(data);
-        alert("회원정보 수정완료!");
+        Swal.fire({
+          icon: "success",
+          title: "회원정보 수정완료!",
+          showConfirmButton: false,
+          timer: 1000,
+        });
         router.push({ name: "home" });
       });
     },
@@ -223,12 +243,22 @@ export const Accounts = {
           commit("SET_CURRENT_USER", nickName);
           dispatch("saveAdmin", adminFlag);
           commit("SET_TITLE", userTitle);
-          alert("회원가입 완료!");
+          Swal.fire({
+            icon: "success",
+            title: "회원가입 완료!",
+            showConfirmButton: false,
+            timer: 1000,
+          });
           router.push({ name: "home" });
         })
         .catch((err) => {
           console.error(err);
-          alert("회원가입 실패");
+          Swal.fire({
+            icon: "error",
+            title: "회원가입 실패",
+            showConfirmButton: false,
+            timer: 1000,
+          });
         });
     },
     modify({ getters }, formData) {
