@@ -149,8 +149,8 @@ export default {
     },
     clickCreateRoom() {
       axios({
-        url: "http://localhost:3000/api/videochat/",
-        // url: "http://i7b301.p.ssafy.io:3000/api/videochat/",
+        // url: "http://localhost:3000/api/videochat/",
+        url: "http://i7b301.p.ssafy.io:3000/api/videochat/",
         method: "post",
         headers: { Authorization: `Bearer ${this.token}` },
         data: {

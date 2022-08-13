@@ -138,8 +138,8 @@ export default {
     },
     getAlarmList() {
       axios({
-        url: "http://localhost:3000/api/alarm/",
-        // url: "http://i7b301.p.ssafy.io:3000/api/alarm/",
+        // url: "http://localhost:3000/api/alarm/",
+        url: "http://i7b301.p.ssafy.io:3000/api/alarm/",
         method: "get",
         headers: { Authorization: `Bearer ${this.token}` },
       })
@@ -174,8 +174,8 @@ export default {
         }).then((result) => {
           if (result.isConfirmed) {
             axios({
-              url: "http://localhost:3000/api/alarm/",
-              // url: "http://i7b301.p.ssafy.io:3000/api/alarm/",
+              // url: "http://localhost:3000/api/alarm/",
+              url: "http://i7b301.p.ssafy.io:3000/api/alarm/",
               method: "delete",
               headers: { Authorization: `Bearer ${this.token}` },
             })

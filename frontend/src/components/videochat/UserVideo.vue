@@ -117,8 +117,8 @@ export default {
         if (text) {
           Swal.fire(text);
           axios({
-            // url: `http://i7b301.p.ssafy.io:3000/api/videochat/${this.roomCode}`,
-            url: `http://localhost:3000/api/videochat/report`,
+            url: `http://i7b301.p.ssafy.io:3000/api/videochat/report`,
+            // url: `http://localhost:3000/api/videochat/report`,
             method: "post",
             headers: { Authorization: `Bearer ${this.token}` },
             data: {

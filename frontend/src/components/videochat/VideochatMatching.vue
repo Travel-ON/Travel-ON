@@ -140,8 +140,8 @@ export default {
     },
     clickMatchingRoom() {
       axios({
-        url: "http://localhost:3000/api/videochat/match",
-        // url: "http://i7b301.p.ssafy.io:3000/api/videochat/match",
+        // url: "http://localhost:3000/api/videochat/match",
+        url: "http://i7b301.p.ssafy.io:3000/api/videochat/match",
         method: "post",
         headers: { Authorization: `Bearer ${this.token}` },
         data: {
