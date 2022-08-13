@@ -27,9 +27,15 @@
           <div><h1>방문한 장소</h1></div>
         </div>
         <div class="plan-content">
-          <PlanHistoryList v-if="selectedPage === 0" @switch-create="switchCreate()" @switch-detail="switchDetail" />
+          <PlanHistoryList
+            v-if="selectedPage === 0"
+            @switch-create="switchCreate()"
+            @switch-detail="switchDetail"
+            @switch-filter="switchFilter()"
+          />
           <PlanHistoryCreate v-if="selectedView === 0" />
           <PlanHistoryDetail v-else-if="selectedView === 1" :plan="planDetail" />
+          <PlanHistoryFilter v-else-if="selectedView === 3" />
         </div>
       </div>
     </div>
@@ -41,6 +47,7 @@
 import PlanHistoryCreate from "@/components/planner/PlanHistoryCreate.vue";
 import PlanHistoryList from "@/components/planner/PlanHistoryList.vue";
 import PlanHistoryDetail from "@/components/planner/PlanHistoryDetail.vue";
+import PlanHistoryFilter from "@/components/planner/PlanHistoryFilter.vue";
 
 export default {
   name: "PlannerView",
@@ -49,7 +56,7 @@ export default {
     selectedView: 0, // 0: 작성뷰, 1: 열람뷰, 2: 수정뷰
     planDetail: {},
   }),
-  components: { PlanHistoryCreate, PlanHistoryList, PlanHistoryDetail },
+  components: { PlanHistoryCreate, PlanHistoryList, PlanHistoryDetail, PlanHistoryFilter },
   methods: {
     switchCreate() {
       this.selectedView = 0;
@@ -60,6 +67,9 @@ export default {
     },
     switchUpdate() {
       this.selectedView = 2;
+    },
+    switchFilter() {
+      this.selectedView = 3;
     },
   },
 };

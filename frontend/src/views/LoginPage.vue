@@ -20,7 +20,7 @@ export default {
       this.login();
     } else { // 로그인 상태인데 로그인 시도시 홈으로 이동
       alert("잘못된 접근");
-      router.push({ name: "home" });
+      this.$router.push({ name: "home", });
     }
   },
 };
