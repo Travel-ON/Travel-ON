@@ -5,9 +5,8 @@ import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.entity.QNA;
 import com.travel.travel_on.entity.User;
 import com.travel.travel_on.model.repo.QNARepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -18,12 +17,11 @@ import java.util.Optional;
 public class QNAServiceImpl implements QNAService{
 
     @Autowired
-    QNARepository qRepo;
+    QNARepository qnaRepository;
 
     @Override
     public List<QNA> selectAll(User user, String keyword) {
-        List<QNA> list = qRepo.findByUser(user);
-
+        List<QNA> list = qnaRepository.findByUser(user);
         if(keyword.equals("null")){
             return list;
         }else{
@@ -39,7 +37,7 @@ public class QNAServiceImpl implements QNAService{
 
     @Override
     public QNADto selectOne(Integer id) {
-        Optional<QNA> result = qRepo.findById(id);
+        Optional<QNA> result = qnaRepository.findById(id);
         if(result.isPresent()){
             QNA qna = result.get();
             QNADto qnaDto = new QNADto(qna);
@@ -66,13 +64,13 @@ public class QNAServiceImpl implements QNAService{
                 .answerDate(qnaDto.getAnswerDate())
                 .build();
         qna.setUser(user);
-        qRepo.save(qna);
+        qnaRepository.save(qna);
         return true;
     }
 
     @Override
     public boolean update(QNADto qnaDto) {
-        Optional<QNA> result = qRepo.findById(qnaDto.getQNAId());
+        Optional<QNA> result = qnaRepository.findById(qnaDto.getQNAId());
 
         if (result.isPresent()){
             QNA qna = result.get();
@@ -84,7 +82,7 @@ public class QNAServiceImpl implements QNAService{
             qna.setRealId(qnaDto.getRealId());
             qna.setNickname(qnaDto.getNickname());
             qna.setAnswerFlag(qnaDto.isAnswerFlag());
-            qRepo.save(qna);
+            qnaRepository.save(qna);
             return true;
         }else{
             return false;
@@ -93,12 +91,12 @@ public class QNAServiceImpl implements QNAService{
 
     @Override
     public boolean delete(Integer id) {
-        Optional<QNA> result = qRepo.findById(id);
+        Optional<QNA> result = qnaRepository.findById(id);
         if(result == null){
             return false;
         }else{
             result.ifPresent(qna -> {
-                qRepo.delete(qna);
+                qnaRepository.delete(qna);
             });
             return true;
         }
@@ -106,7 +104,7 @@ public class QNAServiceImpl implements QNAService{
 
     @Override
     public List<QNA> adminSelectAll(String keyword) {
-        List<QNA> list = qRepo.findAll();
+        List<QNA> list = qnaRepository.findAll();
 
         if(keyword.equals("null")){
             return list;
@@ -123,12 +121,25 @@ public class QNAServiceImpl implements QNAService{
 
     @Override
     public List<QNA> noneAnswerAll() {
-        List<QNA> list = qRepo.findAll();
+        List<QNA> list = qnaRepository.findAll();
 
         List<QNA> alist = new LinkedList<>();
         for (QNA qna:list){
-            System.out.println("WHAT");
             if(qna.isAnswerFlag() == false){
+                alist.add(qna);
+            }
+        }
+
+        return alist;
+    }
+
+    @Override
+    public List<QNA> AnswerAll(User user) {
+        List<QNA> list = qnaRepository.findByUser(user);
+
+        List<QNA> alist = new LinkedList<>();
+        for (QNA qna:list){
+            if(qna.isAnswerFlag() == true){
                 alist.add(qna);
             }
         }

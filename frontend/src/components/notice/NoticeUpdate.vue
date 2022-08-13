@@ -20,9 +20,7 @@
           ></v-col>
         </v-row>
         <div class="d-flex justify-end mb-6">
-          <v-btn :disabled="!valid" color="success" class="d-flex justify-end" @click="[validate(), updateNotice()]">
-            수정
-          </v-btn>
+          <v-btn color="success" class="d-flex justify-end" @click="[validate(), updateNotice()]"> 수정 </v-btn>
         </div>
       </v-container>
     </v-form>
@@ -31,10 +29,11 @@
 
 <script>
 import { mapState } from "vuex";
+import Swal from "sweetalert2";
 
 export default {
   computed: {
-    ...mapState(["notice"]),
+    ...mapState("Notices", ["notice"]),
   },
   data() {
     return {
@@ -58,12 +57,22 @@ export default {
       this.$refs.form.validate();
     },
     updateNotice() {
-      const newNotice = {
-        notice_id: this.notice.notice_id,
-        title: this.notice.title,
-        content: this.notice.content,
-      };
-      this.$store.dispatch("modifyNotice", newNotice);
+      // 날짜 포맷 ( yyyy-mm-ddThh:MM:ss )
+      const today = new Date();
+      today.setHours(today.getHours() + 9);
+      this.notice.noticeDate = today.toISOString().replace("T", " ").substring(0, 19);
+      this.$store.dispatch("Notices/modifyNotice", this.notice);
+
+      Swal.fire({
+        icon: "success",
+        title: "공지사항 수정이 완료되었습니다!",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      this.$router.push({
+        name: "NoticeDetail",
+        params: { noticeId: this.notice.noticeId },
+      });
     },
   },
 };

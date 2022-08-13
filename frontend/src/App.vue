@@ -1,34 +1,47 @@
 <template>
   <v-app>
-    <v-main>
+    <v-app-bar height="80" v-if="!state.exceptList.includes($route.name)">
       <!-- main-nav는 기본적으로 모든 페이지에 포함, 제외시 하단 exceptList에 포함시킬것 -->
-      <main-nav v-if="!state.exceptList.includes($route.name)" />
-      <router-link to="/">Home</router-link> |
-      <router-link to="/notice">Notice</router-link>
-      | <router-link to="/member/login">로그인</router-link> |
-      <router-link to="/member/register">회원가입</router-link>
-      |<router-link to="/member/modify">회원정보수정</router-link>
+      <main-nav />
+    </v-app-bar>
+    <v-main>
       <router-view />
     </v-main>
+    <footer-view></footer-view>
   </v-app>
 </template>
 
 <script>
 import { reactive } from "vue";
+import { mapActions } from "vuex";
 import MainNav from "./components/common/MainNav.vue";
+import FooterView from "./components/common/FooterView.vue";
 
 export default {
   name: "App",
   setup() {
     const state = reactive({
-      exceptList: ["chatRoom"], // Nav바 제외리스트
+      exceptList: ["VideochatMatching", "VideochatCreate", "VideochatRoom", "VideochatShare"], // Nav바 제외리스트
     });
 
     return {
       state,
     };
   },
-  components: { MainNav },
+  methods: {
+    ...mapActions(["fetchCurrentUser"]),
+  },
+  components: { MainNav, FooterView },
+  mounted() {
+    this.fetchCurrentUser();
+  },
+  watch: {
+    $route(to, form) {
+      if (to.path !== form.path) {
+        this.fetchCurrentUser();
+      }
+    },
+  },
 };
 </script>
 
@@ -39,7 +52,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-
-  margin-top: 60px;
 }
 </style>
