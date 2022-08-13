@@ -149,6 +149,7 @@ export default {
       })
         .then(({ data }) => {
           this.alarms = data;
+          this.fetchAlarmFlag(false);
         })
         .catch((err) => {
           console.log(err);
