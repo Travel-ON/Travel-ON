@@ -55,6 +55,19 @@
         </div>
       </div>
     </div>
+    <div style="display: flex; justify-content: center">
+      <v-btn
+        color="#50a0f0"
+        size="x-large"
+        style="font-weight: bold; color: #efefef; margin-right: 30px"
+        @click="switchUpdate(plan)"
+        width="180px"
+        >수정하기</v-btn
+      >
+      <v-btn color="#f05a50" bg-color="#efefef" size="x-large" style="font-weight: bold" @click="reset" width="180px"
+        >삭제하기</v-btn
+      >
+    </div>
   </div>
 </template>
 
@@ -63,6 +76,12 @@ export default {
   data: () => ({}),
   props: {
     plan: Object,
+  },
+  methods: {
+    switchUpdate(plan) {
+      // 상위에 switchUpdate 이벤트 전달
+      this.$emit("switchUpdate", plan);
+    },
   },
 };
 </script>

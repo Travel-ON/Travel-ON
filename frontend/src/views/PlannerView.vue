@@ -34,7 +34,8 @@
             @switch-filter="switchFilter()"
           />
           <PlanHistoryCreate v-if="selectedView === 0" />
-          <PlanHistoryDetail v-else-if="selectedView === 1" :plan="planDetail" />
+          <PlanHistoryDetail v-else-if="selectedView === 1" :plan="planDetail" @switch-update="switchUpdate(plan)" />
+          <PlanHistoryUpdate v-else-if="selectedView === 2" :plan="planDetail" />
           <PlanHistoryFilter v-else-if="selectedView === 3" />
         </div>
       </div>
@@ -48,15 +49,16 @@ import PlanHistoryCreate from "@/components/planner/PlanHistoryCreate.vue";
 import PlanHistoryList from "@/components/planner/PlanHistoryList.vue";
 import PlanHistoryDetail from "@/components/planner/PlanHistoryDetail.vue";
 import PlanHistoryFilter from "@/components/planner/PlanHistoryFilter.vue";
+import PlanHistoryUpdate from "@/components/planner/PlanHistoryUpdate.vue";
 
 export default {
   name: "PlannerView",
   data: () => ({
     selectedPage: 0, // 0: 방문 장소, 1: 방문 예정 장소
-    selectedView: 0, // 0: 작성뷰, 1: 열람뷰, 2: 수정뷰
-    planDetail: {},
+    selectedView: 0, // 0: 작성뷰, 1: 열람뷰, 2: 수정뷰, 3: 필터뷰
+    planDetail: {}, // 우측 뷰에서 참조하는 플랜 저장
   }),
-  components: { PlanHistoryCreate, PlanHistoryList, PlanHistoryDetail, PlanHistoryFilter },
+  components: { PlanHistoryCreate, PlanHistoryList, PlanHistoryDetail, PlanHistoryFilter, PlanHistoryUpdate },
   methods: {
     switchCreate() {
       this.selectedView = 0;
@@ -65,7 +67,8 @@ export default {
       this.planDetail = plan;
       this.selectedView = 1;
     },
-    switchUpdate() {
+    switchUpdate(plan) {
+      this.planDetail = plan;
       this.selectedView = 2;
     },
     switchFilter() {
