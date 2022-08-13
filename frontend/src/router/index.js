@@ -1,10 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
+// import CreateMeeting from "@/components/meetingpage/CreateMeeting.vue";
+
 import Member from "../views/Member.vue";
 import MemberLogin from "../components/member/MemberLogin.vue";
 import MemberRegisterView from "../views/MemberRegisterView.vue";
 import MemberSecession from "../components/member/MemberSecession.vue";
 import MemberLogout from "../components/member/MemberLogout.vue";
 import MemberFindpwd from "../components/member/MemberFindpwd.vue";
+
 import HomeView from "../views/HomeView.vue";
 
 import PlannerView from "../views/PlannerView.vue";
@@ -37,6 +40,16 @@ import MemberModify from "../components/mypage/MemberModify.vue";
 import MemberModifyPwd from "../components/mypage/MemberModifyPwd.vue";
 
 const routes = [
+  // {
+  //   path: "/meeting",
+  //   children: [
+  //     {
+  //       path: "Create",
+  //       name: "CreateMeeting",
+  //       component: CreateMeeting,
+  //     },
+  //   ],
+  // },
   {
     path: "/",
     name: "home",
@@ -44,10 +57,11 @@ const routes = [
   },
   {
     path: "/videochat",
+    name: "Videochat",
     component: Videochat,
     children: [
       {
-        path: "",
+        path: "matching",
         name: "VideochatMatching",
         component: VideochatMatching,
       },
@@ -97,6 +111,11 @@ const routes = [
         name: "MemberLogout",
         component: MemberLogout,
       },
+      // {
+      //   path: "title",
+      //   name: "MemberTitle",
+      //   component: MemberTitle,
+      // },
       {
         path: "findpwd",
         name: "MemberFindpwd",

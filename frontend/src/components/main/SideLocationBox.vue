@@ -57,7 +57,6 @@
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  data() {},
   computed: {
     ...mapGetters(["isLocation", "dong", "gugun", "sido", "isLoggedIn"]),
   },

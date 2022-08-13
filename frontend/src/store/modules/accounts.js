@@ -170,6 +170,32 @@ export const Accounts = {
       alert("성공적으로 로그아웃 했습니다!");
       router.push({ name: "home" });
     },
+    modify({ commit, dispatch }, credentials) {
+      console.log("modify 메서드 실행");
+      console.log(spring.accounts.modify());
+      console.log(credentials);
+      axios({
+        url: spring.accounts.modify(),
+        method: "post",
+        data: credentials, // credentials.username, cresentials.password
+      }).then(({ data }) => {
+        console.log(data);
+        const token = data.accessToken;
+        const nickName = data.nickname;
+        const userTitle = data.userTitle;
+        const adminFlag = data.adminFlag;
+
+        dispatch("saveToken", token);
+        commit("SET_CURRENT_USER", nickName);
+        commit("SET_ADMIN", adminFlag);
+        commit("SET_TITLE", userTitle);
+        dispatch("getLocation", true);
+        dispatch("getTrophy");
+        console.log(data);
+        alert("회원정보 수정완료!");
+        router.push({ name: "home" });
+      });
+    },
     regist({ commit, dispatch }, formData) {
       /*
         POST: 사용자 입력정보를 signup URL로 보내기
