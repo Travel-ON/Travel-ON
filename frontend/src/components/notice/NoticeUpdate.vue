@@ -61,8 +61,8 @@ export default {
       const today = new Date();
       today.setHours(today.getHours() + 9);
       this.notice.noticeDate = today.toISOString().replace("T", " ").substring(0, 19);
-      console.log(this.notice);
       this.$store.dispatch("Notices/modifyNotice", this.notice);
+
       Swal.fire({
         icon: "success",
         title: "공지사항 수정이 완료되었습니다!",
@@ -70,8 +70,8 @@ export default {
         timer: 1000,
       });
       this.$router.push({
-        name: "noticeDetail",
-        params: { noticeid: this.notice.noticeid },
+        name: "NoticeDetail",
+        params: { noticeId: this.notice.noticeId },
       });
     },
   },

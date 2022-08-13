@@ -11,11 +11,8 @@
         </v-btn>
       </router-link>
       <v-btn @click="TransferPage('VideochatCreate')">방만들기</v-btn>
-      <v-btn @click="TransferPage('VideochatMa')">방매칭하기</v-btn>
+      <v-btn @click="TransferPage('VideochatMatching')">방매칭하기</v-btn>
       <v-btn @click="TransferPage('VideochatShare')">방코드입장</v-btn>
-      <!-- <router-link to="/videochat">
-        <v-btn>방매칭하기</v-btn>
-      </router-link> -->
       <v-btn @click="TransferPage('Planner')">여행플래너</v-btn>
       <v-menu open-on-hover style="z-index: 3500">
         <template v-slot:activator="{ props }">
@@ -50,7 +47,7 @@
             </v-btn>
           </template>
           <v-list dense>
-            <v-subheader class="ml-5">알림</v-subheader>
+            알림
             <v-btn fab x-small dark class="float-right" @click="clickRemoveAlarms">
               <v-icon>mdi-trash-can-outline</v-icon>
             </v-btn>
@@ -97,8 +94,7 @@ export default {
       { title: "Q&A", name: "QnaList" },
     ],
     items_user: [
-      { title: "마이페이지", name: "" },
-      { title: "칭호설정", name: "MemberSetTitle" },
+      { title: "마이페이지", name: "MypageView" },
       { title: "로그아웃", name: "MemberLogout" },
     ],
     alarms: [],

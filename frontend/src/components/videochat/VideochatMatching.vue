@@ -3,19 +3,19 @@
     <v-row id="join">
       <v-col id="join-dialog" class="jumbotron vertical-center">
         <v-btn class="btn mr-2" @click="clickHome">홈으로</v-btn>
-        <h1>방 코드 입장 화면</h1>
+        <h1>방 매칭 화면</h1>
         <v-row style="margin-top: 20px">
           <v-col style="background-color: skyblue">
             <div>현위치: {{ sido }} {{ gugun }} {{ dong }} <v-icon x-small>mdi-map-marker-radius</v-icon></div>
             <h3 class="mt-3">설정</h3>
             <v-row class="setting" style="background-color: white; margin: 5px">
               <v-container fluid>
-                <div>
-                  <label for="roomCode"
-                    >방코드 입력
-                    <input id="roomCode" type="text" v-model="roomCode" />
-                  </label>
-                </div>
+                <div>지역범위 설정</div>
+                <v-radio-group v-model="areaScope" mandatory>
+                  <v-radio :label="`시: ${sido}`" value="sido"></v-radio>
+                  <v-radio :label="`구: ${gugun}`" value="gugun"></v-radio>
+                  <v-radio :label="`동: ${dong}`" value="dong"></v-radio>
+                </v-radio-group>
                 <div v-if="resident">
                   <v-container class="px-0" fluid>
                     <v-checkbox v-model="residentMark" label="현지인 마크 표시하기"></v-checkbox>
@@ -33,7 +33,15 @@
                     <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
                     <div
                       v-if="resident && residentMark"
-                      style="position: absolute; top: 10px; right: 50%; background-color: #6499ff; color: white"
+                      style="
+                        width: 130px;
+                        position: absolute;
+                        top: 10px;
+                        right: 50%;
+                        background-color: #6499ff;
+                        color: white;
+                        padding: 1px 10px;
+                      "
                     >
                       <v-icon>mdi-clover</v-icon> 현지인 <v-icon>mdi-clover</v-icon>
                     </div>
@@ -62,7 +70,7 @@
                     <v-icon color="white">mdi-microphone-off</v-icon> 음소거 해제</v-btn
                   >
                 </div>
-                <v-btn class="btn mr-2" @click="clickMatchingRoom">방 입장하기</v-btn>
+                <v-btn class="btn mr-2" @click="clickMatchingRoom">방 매칭하기</v-btn>
               </div>
             </div>
           </v-col>
@@ -81,7 +89,7 @@ import UserVideo from "./UserVideo.vue";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 export default {
-  name: "VideochatShare",
+  name: "VideochatMatching",
 
   components: {
     UserVideo,
@@ -93,6 +101,7 @@ export default {
 
   data() {
     return {
+      areaScope: "sido",
       residentMark: true,
       video: true,
       audio: true,
@@ -131,10 +140,14 @@ export default {
     },
     clickMatchingRoom() {
       axios({
-        url: `http://localhost:3000/api/videochat/${this.roomCode}`,
-        // url: `http://i7b301.p.ssafy.io:3000/api/videochat/${this.roomCode}`,
-        method: "get",
+        url: "http://localhost:3000/api/videochat/match",
+        // url: "http://i7b301.p.ssafy.io:3000/api/videochat/match",
+        method: "post",
         headers: { Authorization: `Bearer ${this.token}` },
+        data: {
+          dongCode: this.dongCode,
+          areaScope: this.areaScope,
+        },
       })
         .then((res) => {
           this.leaveSession();
@@ -152,7 +165,7 @@ export default {
         .catch((err) => {
           Swal.fire({
             icon: "error",
-            title: "방 입장 실패!",
+            title: "방 매칭 실패!",
             showConfirmButton: false,
             timer: 1000,
           });

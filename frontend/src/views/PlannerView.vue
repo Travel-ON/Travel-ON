@@ -34,7 +34,7 @@
             @switch-filter="switchFilter()"
           />
           <PlanHistoryCreate v-if="selectedView === 0" />
-          <PlanHistoryDetail v-else-if="selectedView === 1" :plan="planDetail" @switch-update="switchUpdate(plan)" />
+          <PlanHistoryDetail v-else-if="selectedView === 1" :plan="planDetail" @switch-update="switchUpdate" />
           <PlanHistoryUpdate v-else-if="selectedView === 2" :plan="planDetail" />
           <PlanHistoryFilter v-else-if="selectedView === 3" />
         </div>

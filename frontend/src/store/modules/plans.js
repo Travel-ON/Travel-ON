@@ -90,6 +90,26 @@ export const Plans = {
           alert("플랜 작성에 실패하였습니다.");
         });
     },
+    updatePlan({ getters, dispatch }, formData) {
+      console.log(formData);
+      axios({
+        url: spring.plan.modify(),
+        method: "put",
+        data: formData,
+        headers: {
+          Authorization: `Bearer ${getters.token}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          alert("플랜 수정에 성공하였습니다.");
+          dispatch("getPlanList")
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("플랜 수정에 실패하였습니다.");
+        });
+    },
     filterPlan({ getters, commit, dispatch }, formData) {
       console.log(formData);
       axios({
