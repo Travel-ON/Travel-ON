@@ -184,6 +184,7 @@
           <div v-else-if="changeTitle != null">나의 칭호 > {{ sido }} {{ changeTitle }}</div>
         </div>
         <div><v-btn @click="modifyTitle()">설정</v-btn></div>
+        <div><v-btn @click="deleteTitle()">칭호해제하기</v-btn></div>
       </v-card-text>
     </v-card>
   </div>
@@ -247,6 +248,16 @@ export default {
       Swal.fire({
         icon: "success",
         title: "칭호 변경이 완료되었습니다!",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+    },
+    deleteTitle() {
+      this.combiTitle = null;
+      this.$store.dispatch("Members/modifyTitle", this.combiTitle);
+      Swal.fire({
+        icon: "success",
+        title: "칭호 해제가 완료되었습니다!",
         showConfirmButton: false,
         timer: 1000,
       });
