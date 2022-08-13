@@ -64,7 +64,13 @@
         width="180px"
         >수정하기</v-btn
       >
-      <v-btn color="#f05a50" bg-color="#efefef" size="x-large" style="font-weight: bold" @click="reset" width="180px"
+      <v-btn
+        color="#f05a50"
+        bg-color="#efefef"
+        size="x-large"
+        style="font-weight: bold"
+        @click="deletePlan()"
+        width="180px"
         >삭제하기</v-btn
       >
     </div>
@@ -72,15 +78,41 @@
 </template>
 
 <script>
+import axios from "axios";
+import spring from "@/api/spring_boot";
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   data: () => ({}),
   props: {
     plan: Object,
   },
   methods: {
+    ...mapActions(["getPlanList"]),
+    ...mapGetters(["token"]),
     switchUpdate(plan) {
       // 상위에 switchUpdate 이벤트 전달
       this.$emit("switchUpdate", plan);
+    },
+    deletePlan() {
+      if (window.confirm("정말 이 게시글을 삭제하시겠습니까?")) {
+        axios({
+          url: spring.plan.delete(this.plan.visitPlaceId),
+          method: "delete",
+          headers: {
+            Authorization: `Bearer ${this.token()}`,
+          },
+        })
+          .then((res) => {
+            alert("플랜 삭제 성공하였습니다.");
+            console.log(res);
+            this.getPlanList();
+          })
+          .catch((err) => {
+            alert("플랜 삭제 실패하였습니다.");
+            console.log(err);
+          });
+      }
     },
   },
 };

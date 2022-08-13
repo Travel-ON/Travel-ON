@@ -142,6 +142,7 @@ export default {
   data: () => ({
     valid: true, // form 요휴성 검사
     planData: {
+      visitPlaceId: "",
       visitedPlace: "",
       ratePoint: 3,
       review: "",
@@ -185,6 +186,7 @@ export default {
       .catch((err) => {
         console.error(err);
       });
+    this.planData.visitPlaceId = this.plan.visitPlaceId;
     this.planData.visitedPlace = this.plan.visitedPlace;
     this.planData.ratePoint = this.plan.ratePoint;
     this.planData.review = this.plan.review;
@@ -211,14 +213,14 @@ export default {
   },
   watch: {
     selectedSido(val) {
-      if (!val.name) {
-        this.planData.sidoName = val.name;
+      if (!val) {
+        this.planData.sidoName = val;
       } else {
         console.log("빈 문자열");
       }
     },
     "planData.sidoName": function (val) {
-      if (!val.name) {
+      if (!val) {
         axios({
           url: spring.plan.gugun(val),
           method: "get",

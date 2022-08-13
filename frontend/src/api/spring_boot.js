@@ -34,5 +34,6 @@ export default {
     getHistory: () => HOST + PLAN + "page",
     filter: () => HOST + PLAN + "page/filter",
     modify: () => HOST + PLAN + "modify",
+    delete: (visitPlaceId) => HOST + PLAN + "delete/" + String(visitPlaceId),
   },
 };
