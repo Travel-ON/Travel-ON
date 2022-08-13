@@ -21,6 +21,7 @@ public class AlarmServiceImpl implements AlarmService {
     @Override
     public List<Alarm> selectAll(User user) {
         List<Alarm> list = alarmRepository.findByUser(user);
+        userService.updateAlarm(user, false);
         return list;
     }
 
@@ -32,7 +33,7 @@ public class AlarmServiceImpl implements AlarmService {
                 .build();
         alarm.setUser(user);
         alarmRepository.save(alarm);
-        userService.updateAlarm(user);
+        userService.updateAlarm(user, true);
     }
 
 
