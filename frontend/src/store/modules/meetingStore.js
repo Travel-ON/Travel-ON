@@ -296,7 +296,6 @@ export const MeetingStore = {
       window.addEventListener("beforeunload", this.leaveSession);
     },
     leaveSession({ state, commit }) {
-      console.log("나가라라라ㅏ랏");
       // --- Leave the session by calling 'disconnect' method over the Session object ---
       if (state.session) state.session.disconnect();
 
