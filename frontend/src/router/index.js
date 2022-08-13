@@ -4,15 +4,9 @@ import { createRouter, createWebHistory } from "vue-router";
 import Member from "../views/Member.vue";
 import MemberLogin from "../components/member/MemberLogin.vue";
 import MemberRegisterView from "../views/MemberRegisterView.vue";
-// import MemberModify1 from "../components/member/MemberModify1.vue";
-import MemberModify2 from "../components/member/MemberModify2.vue";
 import MemberSecession from "../components/member/MemberSecession.vue";
 import MemberLogout from "../components/member/MemberLogout.vue";
-
-// import MemberTitle from "../components/member/MemberTitle.vue";
-
 import MemberFindpwd from "../components/member/MemberFindpwd.vue";
-import MemberSetTitle from "../components/member/MemberSetTitle.vue";
 
 import HomeView from "../views/HomeView.vue";
 
@@ -34,13 +28,15 @@ import QnaDetail from "../components/qna/QnaDetail.vue";
 import QnaUpdate from "../components/qna/QnaUpdate.vue";
 
 import Videochat from "../views/Videochat.vue";
-import VideochatMatching from "../components/VideochatMatching.vue";
 import VideochatCreate from "../components/videochat/VideochatCreate.vue";
 import VideochatRoom from "../components/videochat/VideochatRoom.vue";
-import VideochatMa from "../components/videochat/VideochatMa.vue";
+import VideochatMatching from "../components/videochat/VideochatMatching.vue";
 import VideochatShare from "../components/videochat/VideochatShare.vue";
 
-// test
+import MypageView from "../views/MypageView.vue";
+import MemberSetTitle from "../components/mypage/MemberSetTitle.vue";
+import MemberModify from "../components/mypage/MemberModify.vue";
+import MemberModifyPwd from "../components/mypage/MemberModifyPwd.vue";
 
 const routes = [
   // {
@@ -67,11 +63,6 @@ const routes = [
         path: "matching",
         name: "VideochatMatching",
         component: VideochatMatching,
-      },
-      {
-        path: "matching",
-        name: "VideochatMa",
-        component: VideochatMa,
       },
       {
         path: "create",
@@ -104,16 +95,6 @@ const routes = [
         name: "MemberRegister",
         component: MemberRegisterView,
       },
-      // {
-      //   path: "modify",
-      //   name: "MemberModify1",
-      //   component: MemberModify1,
-      // },
-      {
-        path: "modify",
-        name: "MemberModify2",
-        component: MemberModify2,
-      },
       {
         path: "secession",
         name: "MemberSecession",
@@ -124,25 +105,32 @@ const routes = [
         name: "MemberLogout",
         component: MemberLogout,
       },
-      // {
-      //   path: "title",
-      //   name: "MemberTitle",
-      //   component: MemberTitle,
-      // },
       {
         path: "findpwd",
         name: "MemberFindpwd",
         component: MemberFindpwd,
       },
+    ],
+  },
+  {
+    path: "/mypage",
+    name: "MypageView",
+    component: MypageView,
+    children: [
       {
-        path: "findpwd",
-        name: "MemberFindpwd",
-        component: MemberFindpwd,
-      },
-      {
-        path: "setTitle",
+        path: "",
         name: "MemberSetTitle",
         component: MemberSetTitle,
+      },
+      {
+        path: "modify",
+        name: "MemberModify",
+        component: MemberModify,
+      },
+      {
+        path: "modifypwd",
+        name: "MemberModifyPwd",
+        component: MemberModifyPwd,
       },
     ],
   },

@@ -22,8 +22,6 @@
                   <v-radio :label="`구: ${gugun}`" value="gugun"></v-radio>
                   <v-radio :label="`동: ${dong}`" value="dong"></v-radio>
                 </v-radio-group>
-                <!-- <p>{{ areaScope }}</p> -->
-
                 <div v-if="resident">
                   <v-container class="px-0" fluid>
                     <v-checkbox v-model="residentMark" label="현지인 마크 표시하기"></v-checkbox>
@@ -31,16 +29,11 @@
                 </div>
               </v-container>
             </v-row>
-            <!-- </div> -->
           </v-col>
           <v-col>
             <div class="form-group">
-              <!-- <v-text-field label="Participant" v-model="myUserName" class="form-control" type="text" required /> -->
-              <!-- <v-text-field label="session" v-model="mySessionId" class="form-control" type="text" required /> -->
               <p>[미리보기 화면]</p>
               <p class="text-center">
-                <!-- <v-btn class="btn btn-lg btn-success" @click="joinSession()">Join!</v-btn> -->
-
                 <v-container class="px-0" fluid>
                   <v-row style="position: relative" justify="center">
                     <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
@@ -121,7 +114,6 @@ export default {
       secretRoom: false,
       video: true,
       audio: true,
-      // myUserName: `닉네임들어갈곳`,
     };
   },
   created() {
@@ -137,7 +129,6 @@ export default {
       "toggleVideo",
       "toggleVideo",
     ]),
-    // yuna start
     toggleVideo() {
       if (this.publisher.stream.videoActive) {
         this.publisher.publishVideo(false);
@@ -170,10 +161,6 @@ export default {
         },
       })
         .then((res) => {
-          // console.log(res);
-          // console.log("res.data:  ", res.data);
-          // this.idChecked = id;
-          console.log(this.video);
           this.leaveSession();
           this.$router.push({
             name: "VideochatRoom",
@@ -185,7 +172,6 @@ export default {
               hostName: res.data.hostName,
             },
           });
-          // this.joinSession();
         })
         .catch((err) => {
           Swal.fire({

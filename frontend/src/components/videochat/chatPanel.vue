@@ -8,8 +8,8 @@
       <v-col id="chat-area" :height="chatHeight">
         <v-row class="mt-2 text-left message" v-for="(message, i) of messages" :key="i">
           <div class="message-title">
-            <span class="mr-2 message-header">{{ message.sender }}</span>
-            <span class="message-header">{{ message.time }}</span>
+            보낸사람: <span class="mr-2 message-header">{{ message.sender }}</span> <br />
+            시간: <span class="message-header">{{ message.time }}</span>
           </div>
           <div>
             {{ message.message }}
@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       message: "",
-      chatHeight: "33vh",
+      chatHeight: "30vh",
     };
   },
   watch: {
@@ -114,9 +114,6 @@ export default {
 }
 .send-btn {
   color: white;
-}
-#chat-area {
-  overflow-y: auto;
 }
 #chat-area::-webkit-scrollbar {
   width: 15px;
