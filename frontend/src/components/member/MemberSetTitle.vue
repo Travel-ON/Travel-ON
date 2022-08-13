@@ -154,8 +154,10 @@
           <div style="display: table-cell">
             칭호리스트 구역
             <table v-for="title in titles" :key="title.userAchievmentId">
-              <v-row @click="setTitle(title.sidoName, title.title)">{{ title.sidoName }} {{ title.title }}</v-row>
-              <v-row>--------------------------------------</v-row>
+              <v-row @click="setTitle(title.sidoName, title.title)"
+                ><v-btn>{{ title.sidoName }} {{ title.title }}</v-btn></v-row
+              >
+              <v-row>.</v-row>
               <v-row>.</v-row>
               <v-row>.</v-row>
               <v-row>.</v-row>
@@ -189,6 +191,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import Swal from "sweetalert2";
 
 export default {
   computed: {
@@ -241,6 +244,12 @@ export default {
     modifyTitle() {
       this.combiTitle = `${this.sido} ${this.changeTitle}`;
       this.$store.dispatch("Members/modifyTitle", this.combiTitle);
+      Swal.fire({
+        icon: "success",
+        title: "칭호 변경이 완료되었습니다!",
+        showConfirmButton: false,
+        timer: 1000,
+      });
     },
   },
 };

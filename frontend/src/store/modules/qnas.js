@@ -5,11 +5,8 @@ const api = createApi();
 
 export const QnAs = {
   namespaced: true,
-  state: { token: localStorage.getItem("token") || "", qnas: [], qna: {} },
-  getters: {
-    getQna: (state) => state.qna,
-    token: (state) => state.token,
-  },
+  state: { qnas: [], qna: {} },
+  getters: {},
   mutations: {
     MODIFY_QNA_ANSWER(state, payload) {
       state.qna.qnaid = payload.qnaId;
@@ -17,7 +14,7 @@ export const QnAs = {
     },
     GET_QNAS(state, payload) {
       payload.sort((a, b) => {
-        return a.answerFlag > b.answerFlag ? 1 : -1;
+        return a.qnaDate < b.qnaDate ? 1 : -1;
       });
       state.qnas = payload;
     },
@@ -32,7 +29,7 @@ export const QnAs = {
     },
   },
   actions: {
-    getQnas({ commit, getters }, payload) {
+    getQnas({ commit, rootGetters }, payload) {
       let keyword;
       if (typeof payload === "string") {
         keyword = payload;
@@ -43,7 +40,7 @@ export const QnAs = {
         method: "GET",
         params: { keyword },
         headers: {
-          Authorization: `Bearer ${getters.token}`,
+          Authorization: `Bearer ${rootGetters.token}`,
         },
       })
         .then((res) => {
@@ -54,7 +51,7 @@ export const QnAs = {
           console.log(err);
         });
     },
-    getAdminQnas({ commit, getters }, payload) {
+    getAdminQnas({ commit, rootGetters }, payload) {
       let keyword;
       if (typeof payload === "string") {
         keyword = payload;
@@ -65,7 +62,7 @@ export const QnAs = {
         method: "GET",
         params: { keyword },
         headers: {
-          Authorization: `Bearer ${getters.token}`,
+          Authorization: `Bearer ${rootGetters.token}`,
         },
       })
         .then((res) => {
@@ -76,23 +73,24 @@ export const QnAs = {
           console.log(err);
         });
     },
-    getQna({ commit, getters }, qnaid) {
+    getQna({ commit, rootGetters }, qnaid) {
       api({
         url: `/qna/detail/${qnaid}`,
         method: "GET",
         headers: {
-          Authorization: `Bearer ${getters.token}`,
+          Authorization: `Bearer ${rootGetters.token}`,
         },
       }).then((res) => {
+        console.log(res.data);
         commit("GET_QNA", res.data);
       });
     },
-    writeQna({ commit, getters }, newQna) {
+    writeQna({ commit, rootGetters }, newQna) {
       api({
         url: `/qna/regist`,
         method: "POST",
         headers: {
-          Authorization: `Bearer ${getters.token}`,
+          Authorization: `Bearer ${rootGetters.token}`,
         },
         data: newQna,
       })
@@ -103,12 +101,12 @@ export const QnAs = {
           console.log(err);
         });
     },
-    modifyQnas({ commit, getters }, payload) {
+    modifyQnas({ commit, rootGetters }, payload) {
       api({
         url: `/qna/modify`,
         method: "PUT",
         headers: {
-          Authorization: `Bearer ${getters.token}`,
+          Authorization: `Bearer ${rootGetters.token}`,
         },
         data: {
           qnaId: payload.qnaid,
@@ -119,7 +117,7 @@ export const QnAs = {
         commit("MODIFY_QNA", payload);
       });
     },
-    deleteQna({ commit, getters }, payload) {
+    deleteQna({ commit, rootGetters }, payload) {
       // eslint-disable-next-line no-unused-expressions
       commit;
       console.log(payload);
@@ -127,63 +125,63 @@ export const QnAs = {
         url: `/qna/delete/${payload}`,
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${getters.token}`,
+          Authorization: `Bearer ${rootGetters.token}`,
         },
       }).then(() => {});
     },
-    registQnaAnswer({ commit, getters }, data) {
+    registQnaAnswer({ commit, rootGetters }, data) {
       api({
         url: `/qna/admin/regist`,
         method: "PUT",
         headers: {
-          Authorization: `Bearer ${getters.token}`,
+          Authorization: `Bearer ${rootGetters.token}`,
         },
         data,
       }).then(() => {
         commit("MODIFY_QNA_ANSWER", data);
       });
     },
-    modifyQnaAnswer({ commit, getters }, data) {
+    modifyQnaAnswer({ commit, rootGetters }, data) {
       api({
         url: `/qna/admin/modify`,
         method: "PUT",
         headers: {
-          Authorization: `Bearer ${getters.token}`,
+          Authorization: `Bearer ${rootGetters.token}`,
         },
         data,
       }).then(() => {
         commit("MODIFY_QNA_ANSWER", data);
       });
     },
-    deleteQnaAnswer({ commit, getters }, payload) {
+    deleteQnaAnswer({ commit, rootGetters }, payload) {
       api({
         url: `/qna/admin/delete/${payload}`,
         method: "PUT",
         headers: {
-          Authorization: `Bearer ${getters.token}`,
+          Authorization: `Bearer ${rootGetters.token}`,
         },
       }).then((res) => {
         commit("MODIFY_QNA_ANSWER", res);
       });
     },
-    getNoAnswer({ commit, getters }) {
+    getNoAnswer({ commit, rootGetters }) {
       api({
         url: `/qna/admin/answer`,
         method: "GET",
         headers: {
-          Authorization: `Bearer ${getters.token}`,
+          Authorization: `Bearer ${rootGetters.token}`,
         },
       }).then((res) => {
         console.log(res);
         commit("GET_QNAS", res.data);
       });
     },
-    getCompletAnswer({ commit, getters }) {
+    getCompletAnswer({ commit, rootGetters }) {
       api({
         url: `/qna/answer/complete`,
         method: "GET",
         headers: {
-          Authorization: `Bearer ${getters.token}`,
+          Authorization: `Bearer ${rootGetters.token}`,
         },
       }).then((res) => {
         console.log(res);

@@ -6,8 +6,8 @@ const api = createApi();
 export const Members = {
   namespaced: true,
 
-  state: { token: localStorage.getItem("token") || "", titles: [], setTitle: "" },
-  getters: { token: (state) => state.token },
+  state: { titles: [], setTitle: "" },
+  getters: {},
 
   mutations: {
     GET_TITLES(state, payload) {
@@ -19,7 +19,7 @@ export const Members = {
     },
   },
   actions: {
-    getTitles({ commit, getters }, payload) {
+    getTitles({ commit, rootGetters }, payload) {
       const value = { sidoName: payload };
 
       api({
@@ -27,7 +27,7 @@ export const Members = {
         method: "post",
         data: value,
         headers: {
-          Authorization: `Bearer ${getters.token}`,
+          Authorization: `Bearer ${rootGetters.token}`,
         },
       })
         .then((res) => {
@@ -39,14 +39,14 @@ export const Members = {
         });
     },
 
-    modifyTitle({ commit, getters }, payload) {
+    modifyTitle({ commit, rootGetters }, payload) {
       const value = { title: payload };
       api({
         url: `/user/title`,
         method: "PUT",
         data: value,
         headers: {
-          Authorization: `Bearer ${getters.token}`,
+          Authorization: `Bearer ${rootGetters.token}`,
         },
       }).then((res) => {
         console.log(res);
