@@ -30,7 +30,7 @@
               <p class="text-center">
                 <v-container class="px-0" fluid>
                   <div style="position: relative">
-                    <user-video :stream-manager="publisher"/>
+                    <user-video :stream-manager="publisher" />
                     <div
                       v-if="resident && residentMark"
                       style="
@@ -113,12 +113,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("MeetingStore", [
-      "joinSession",
-      "leaveSession",
-      "toggleVideo",
-      "toggleVideo",
-    ]),
+    ...mapActions("MeetingStore", ["joinSession", "leaveSession", "toggleVideo", "toggleVideo"]),
     toggleVideo() {
       if (this.publisher.stream.videoActive) {
         this.publisher.publishVideo(false);

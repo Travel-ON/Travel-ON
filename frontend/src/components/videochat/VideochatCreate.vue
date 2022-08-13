@@ -122,12 +122,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("MeetingStore", [
-      "joinSession",
-      "leaveSession",
-      "toggleVideo",
-      "toggleVideo",
-    ]),
+    ...mapActions("MeetingStore", ["joinSession", "leaveSession", "toggleVideo", "toggleVideo"]),
     toggleVideo() {
       if (this.publisher.stream.videoActive) {
         this.publisher.publishVideo(false);

@@ -25,15 +25,12 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-
 export default {
   name: "HomeMainButtons",
   data() {
     return {};
   },
   methods: {
-    ...mapActions("MeetingStore", ["createSessionId"]),
     // eslint-disable-next-line consistent-return
     hostBtn() {
       this.$router.push({ name: "CreateMeeting" });

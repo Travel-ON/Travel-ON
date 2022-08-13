@@ -1,5 +1,3 @@
-import { createApi } from "@/api";
-
 import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -7,7 +5,6 @@ import moment from "moment";
 // import { startsWith } from "core-js/core/string";
 import router from "@/router";
 
-const api = createApi();
 const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -164,31 +161,6 @@ export const MeetingStore = {
           });
       });
     },
-    // pre meeting
-    createSessionId({ dispatch }) {
-      api({
-        url: `/videochat/`,
-        method: "POST",
-        headers: { Authorization: `Bearer ${this.token}` },
-        data: {
-          dongCode: this.dongCode,
-          areaScope: this.areaScope,
-          privateFlag: this.secretRoom,
-          count: this.select,
-        },
-      }).then((res) => {
-        // 긁어온거 copy
-        dispatch("joinSession", {
-          residentMark: this.residentMark,
-          video: this.video,
-          audio: this.audio,
-          code: res.data.roomCode,
-          hostName: res.data.hostName,
-        });
-      });
-    },
-    enterSession() {},
-
     joinSession({ state, commit, dispatch, rootGetters }) {
       // 오픈비두 세션 초기화
       // --- Get an OpenVidu object ---
