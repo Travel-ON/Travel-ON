@@ -10,12 +10,11 @@
               <p class="text-center">
                 <v-col>
                   <v-row id="video-container">
-                    <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
+                    <user-video :stream-manager="publisher" />
                     <user-video
                       v-for="sub in subscribers"
                       :key="sub.stream.connection.connectionId"
                       :stream-manager="sub"
-                      @click="$emit(updateMainVideoStreamManager(sub))"
                     />
                   </v-row>
                   <v-row class="mt-8">
@@ -155,7 +154,6 @@ export default {
     ...mapActions("MeetingStore", [
       "joinSession",
       "leaveSession",
-      "updateMainVideoStreamManager",
       "toggleVideo",
       "toggleAudio",
       "setSessionID",

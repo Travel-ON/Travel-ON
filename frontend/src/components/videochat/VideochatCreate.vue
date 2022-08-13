@@ -36,7 +36,7 @@
               <p class="text-center">
                 <v-container class="px-0" fluid>
                   <v-row style="position: relative" justify="center">
-                    <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
+                    <user-video :stream-manager="publisher" />
                     <v-col
                       v-if="resident && residentMark"
                       style="
@@ -125,7 +125,6 @@ export default {
     ...mapActions("MeetingStore", [
       "joinSession",
       "leaveSession",
-      "updateMainVideoStreamManager",
       "toggleVideo",
       "toggleVideo",
     ]),

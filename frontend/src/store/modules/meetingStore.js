@@ -39,9 +39,6 @@ export const MeetingStore = {
     SET_OV(state, OV) {
       state.OV = OV;
     },
-    // SET_OVTOKEN(state, token) {
-    //   state.ovToken = token;
-    // },
     SET_SESSION(state, session) {
       state.session = session;
     },
@@ -313,11 +310,6 @@ export const MeetingStore = {
       commit("SET_MESSAGES", []);
 
       window.removeEventListener("beforeunload", this.leaveSession);
-    },
-    updateMainVideoStreamManager({ state, commit }, stream) {
-      if (state.mainStreamManager === stream) return;
-      commit("SET_MAINSTREAMMANAGER", stream);
-      // state.mainStreamManager = stream;
     },
     toggleVideo({ state }) {
       if (state.publisher.stream.videoActive) {
