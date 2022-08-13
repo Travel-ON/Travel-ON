@@ -107,8 +107,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateAlarm(User user) {
-        user.setAlarmFlag(true);
+    public void updateAlarm(User user, boolean flag) {
+        user.setAlarmFlag(flag);
         userRepository.save(user);
     }
 

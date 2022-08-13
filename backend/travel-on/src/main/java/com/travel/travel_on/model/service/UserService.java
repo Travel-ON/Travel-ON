@@ -18,7 +18,7 @@ public interface UserService {
 
     UserDto selectByNickname(String nickname);
 
-    void updateAlarm(User user);
+    void updateAlarm(User user, boolean flag);
 
     List<UserAchievement> selectUserAchievement(User user, String sidoName);
 

@@ -241,7 +241,11 @@ public class QNAController {
             }
 
             QNADto qnaDto = qnaService.selectOne(Integer.parseInt(param.get("qnaId")));
+            UserDto clientDto = userService.select(qnaDto.getRealId());
 
+            if(clientDto==null){
+                return  new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
             if(qnaDto.isAnswerFlag()){
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
@@ -252,7 +256,7 @@ public class QNAController {
             qnaDto.setAnswerDate(nowTime);
 
             boolean result = qnaService.update(qnaDto);
-            alarmService.insert(userDto.toEntity(),"Q&A : 답변이 등록되었습니다!");
+            alarmService.insert(clientDto.toEntity(),"Q&A : 답변이 등록되었습니다!");
             if(result){
                 return new ResponseEntity<>(HttpStatus.CREATED);
             }else{
