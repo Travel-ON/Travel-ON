@@ -205,6 +205,26 @@ export const Accounts = {
           alert("회원가입 실패");
         });
     },
+    modify({ getters }, formData) {
+      const token = getters.token;
+      axios({
+        url: spring.accounts.userModify(),
+        method: "put",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: formData,
+      })
+        .then((res) => {
+          console.log(res);
+          alert("정보수정 완료!");
+          router.push({ name: "MemberLogout" });
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("정보수정 실패");
+        });
+    },
     detail({ getters }) {
       const token = getters.token;
       console.log(token);
@@ -220,6 +240,25 @@ export const Accounts = {
         })
         .catch((err) => {
           console.log(err);
+        });
+    },
+    delete({ getters }) {
+      const token = getters.token;
+      axios({
+        url: spring.accounts.userDelete(),
+        method: "delete",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          alert("탈퇴 완료!");
+          router.push({ name: "MemberLogout" });
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("탈퇴 실패!");
         });
     },
     fetchCurrentUser({ commit, getters, dispatch }) {

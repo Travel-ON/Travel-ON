@@ -43,7 +43,9 @@ export default {
     if (this.isLoggedIn) {
       // eslint-disable-next-line no-alert
       alert("로그아웃 후 진행해주세요!");
-      this.$router.back();
+      this.$router.push({
+        name: "home",
+      });
     }
   },
   initForm() {

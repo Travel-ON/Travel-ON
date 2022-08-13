@@ -50,7 +50,7 @@
             </v-btn>
           </template>
           <v-list dense>
-            <v-subheader class="ml-5">알림</v-subheader>
+            알림
             <v-btn fab x-small dark class="float-right" @click="clickRemoveAlarms">
               <v-icon>mdi-trash-can-outline</v-icon>
             </v-btn>
@@ -97,8 +97,7 @@ export default {
       { title: "Q&A", name: "QnaList" },
     ],
     items_user: [
-      { title: "마이페이지", name: "" },
-      { title: "칭호설정", name: "MemberSetTitle" },
+      { title: "마이페이지", name: "MypageView" },
       { title: "로그아웃", name: "MemberLogout" },
     ],
     alarms: [],
