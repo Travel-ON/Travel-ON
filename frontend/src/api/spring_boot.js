@@ -31,5 +31,6 @@ export default {
     gugun: (sido) => HOST + PLAN + "load/" + sido,
     regist: () => HOST + PLAN + "regist",
     getHistory: () => HOST + PLAN + "page",
+    filter: () => HOST + PLAN + "page/filter",
   }
 };
