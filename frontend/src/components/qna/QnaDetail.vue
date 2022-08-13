@@ -27,8 +27,13 @@
         >
       </v-row>
       <v-row>
-        <v-col
-          ><v-card height="200px"> <v-textarea :disabled="!admin" v-model="answer" /></v-card
+        <v-col v-if="qna.answerFlag"
+          ><v-card height="200px">
+            <v-textarea :disabled="!admin" v-model="answer" :placeholder="`${qna.answer}`" /></v-card
+        ></v-col>
+        <v-col v-else
+          ><v-card height="200px">
+            <v-textarea :disabled="!admin" v-model="answer" placeholder="아직 답변이 작성되지 않았습니다." /></v-card
         ></v-col>
       </v-row>
       <v-row
@@ -36,7 +41,9 @@
           <div v-if="!qna.answerFlag && admin">
             <v-btn depressed color="primary" @click="registAnswer"> 답변작성 </v-btn>
           </div>
-          <div v-if="qna.answerFlag"><v-btn depressed color="primary" @click="modifyAnswer"> 답변수정 </v-btn></div>
+          <div v-if="qna.answerFlag">
+            <v-btn depressed color="primary" @click="modifyAnswer"> 답변수정 </v-btn>
+          </div>
           <div v-if="qna.answerFlag"><v-btn depressed color="primary" @click="deleteAnswer"> 답변삭제 </v-btn></div>
         </v-col></v-row
       >
@@ -61,18 +68,19 @@ export default {
     };
   },
   mounted() {
-    if (this.qna.answer) {
-      this.answer = this.qna.answer;
-    } else {
-      this.answer = "아직 답변이 작성되지 않았습니다.";
-    }
+    console.log(this.$store.state.qna);
+
     this.admin = this.$store.getters.admin;
-    console.log(this.admin);
   },
   created() {
     const pathName = new URL(document.location).pathname.split("/");
     const qnaid = pathName[pathName.length - 1];
     this.$store.dispatch("QnAs/getQna", qnaid);
+    // if (this.qna.answer) {
+    //   this.answer = this.qna.answer;
+    // } else {
+    //   this.answer = ;
+    // }
   },
   methods: {
     moveToList() {
