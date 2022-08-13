@@ -9,7 +9,7 @@ import router from "@/router";
 
 const api = createApi();
 const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
-const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+const OPENVIDU_SERVER_SECRET = "ssafy";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 export const MeetingStore = {
