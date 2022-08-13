@@ -1,6 +1,5 @@
 package com.travel.travel_on.model.service;
 
-import com.travel.travel_on.dto.UserDto;
 import com.travel.travel_on.entity.Alarm;
 import com.travel.travel_on.entity.User;
 import com.travel.travel_on.model.repo.AlarmRepository;
@@ -14,14 +13,15 @@ import java.util.List;
 public class AlarmServiceImpl implements AlarmService {
 
     @Autowired
-    AlarmRepository repo;
+    AlarmRepository alarmRepository;
 
     @Autowired
-    UserService usvc;
+    UserService userService;
 
     @Override
     public List<Alarm> selectAll(User user) {
-        List<Alarm> list = repo.findByUser(user);
+        List<Alarm> list = alarmRepository.findByUser(user);
+        userService.updateAlarm(user, false);
         return list;
     }
 
@@ -32,16 +32,16 @@ public class AlarmServiceImpl implements AlarmService {
                 .content(content)
                 .build();
         alarm.setUser(user);
-        repo.save(alarm);
-        usvc.updateAlarm(user);
+        alarmRepository.save(alarm);
+        userService.updateAlarm(user, true);
     }
 
 
     @Override
     public void deleteAll(User user) {
-        List<Alarm> list = repo.findByUser(user);
+        List<Alarm> list = alarmRepository.findByUser(user);
             for(Alarm alarm : list) {
-                repo.delete(alarm);
+                alarmRepository.delete(alarm);
             }
     }
 }

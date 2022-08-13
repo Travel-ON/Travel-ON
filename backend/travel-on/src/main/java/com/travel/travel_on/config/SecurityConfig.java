@@ -1,51 +1,87 @@
 package com.travel.travel_on.config;
 
+import com.travel.travel_on.auth.JwtAuthenticationFilter;
+import com.travel.travel_on.auth.JwtUserDetailService;
+import com.travel.travel_on.model.service.UserService;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Configuration;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.firewall.DefaultHttpFirewall;
+import org.springframework.security.web.firewall.HttpFirewall;
 
 @RequiredArgsConstructor
-@Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String[] PERMIT_URL_ARRAY = {
-            // swagger
+    private static final String[] PERMIT_ALL_URL_ARRAY = {
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-resources/**",
 
-            // 컨트롤러
-            "/notice/**",
-            "/qna/**",
-            "/user/**",
-            "/alarm/**",
+            "/api/user/login",
+            "/api/user/regist",
+            "/api/user/idcheck",
+            "/api/user/nickcheck",
+            "/api/user/email",
+            "/api/notice/page",
+            "/api/notice/faq/**",
+            "/api/notice/detail/**",
+            "/api/plan/auto",
+            "/api/plan/load/**",
     };
 
+    @Autowired
+    private JwtUserDetailService jwtUserDetailService;
+
+    @Autowired
+    private UserService userService;
+
+    @Bean
+    DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(PasswordEncoderConfig.passwordEncoder());
+        daoAuthenticationProvider.setUserDetailsService(this.jwtUserDetailService);
+        return daoAuthenticationProvider;
+    }
+
     @Override
-    public void configure(WebSecurity web) {
-        web.ignoring()
-                .antMatchers(
-                        "/favicon.ico"
-                        ,"/error"
-                        ,"/swagger-ui/**"
-                        ,"/swagger-resources/**"
-                        ,"/v3/api-docs/**"
-                );
+    protected void configure(AuthenticationManagerBuilder auth) {
+        auth.authenticationProvider(authenticationProvider());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable() // swagger API 호출시 403 에러 발생 방지
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), userService))
                 .authorizeRequests()
-                .antMatchers(PERMIT_URL_ARRAY).permitAll()
+                .antMatchers(PERMIT_ALL_URL_ARRAY).permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
                 .anyRequest().authenticated();
+    }
+
+    @Override
+    public void configure(WebSecurity web) {
+        web.httpFirewall(defaultHttpFirwall());
+    }
+
+    @Bean
+    public HttpFirewall defaultHttpFirwall(){
+        return new DefaultHttpFirewall();
     }
 
 }
