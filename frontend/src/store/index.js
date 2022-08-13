@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { createStore } from "vuex";
 import { Notices } from "@/store/modules/notices";
 // import { createApi } from "@/api";

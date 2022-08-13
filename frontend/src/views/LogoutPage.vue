@@ -21,7 +21,7 @@ export default {
     } else {
       // 로그인 상태가 아닌데 로그아웃 시도시 홈으로 이동
       alert("잘못된 접근");
-      router.push({ name: "home" });
+      this.$router.push({ name: "home", });
     }
   },
 };
