@@ -154,8 +154,10 @@
           <div style="display: table-cell">
             칭호리스트 구역
             <table v-for="title in titles" :key="title.userAchievmentId">
-              <v-row @click="setTitle(title.sidoName, title.title)">{{ title.sidoName }} {{ title.title }}</v-row>
-              <v-row>--------------------------------------</v-row>
+              <v-row @click="setTitle(title.sidoName, title.title)"
+                ><v-btn>{{ title.sidoName }} {{ title.title }}</v-btn></v-row
+              >
+              <v-row>.</v-row>
               <v-row>.</v-row>
               <v-row>.</v-row>
               <v-row>.</v-row>
