@@ -334,9 +334,27 @@ export default {
         }).then((result) => {
           if (result.isConfirmed) {
             // 게임 시작하면 게임하기 버튼 비활성화
-            this.startLiar();
+            this.selectGame();
           }
         });
+      }
+    },
+    async selectGame() {
+      const { value: game } = await Swal.fire({
+        title: "Select color",
+        input: "radio",
+        inputOptions: { liar: "라이어게임", roulette: "룰렛게임" },
+        showCancelButton: true,
+        inputValidator: (value) => {
+          if (!value) {
+            return "게임을 선택하세요!";
+          }
+          return "";
+        },
+      });
+      Swal.fire({ html: `You selected: ${game}` });
+      if (game === "liar") {
+        this.startLiar();
       }
     },
   },
