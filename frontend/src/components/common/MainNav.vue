@@ -37,7 +37,8 @@
         </router-link>
       </div>
       <div v-else>
-        <v-menu style="z-index: 3500">
+        <!-- <v-menu style="z-index: 3500"> -->
+        <v-dialog v-model="dialog" scrollable>
           <template v-slot:activator="{ props }">
             <v-btn icon v-bind="props" @click="getAlarmList()">
               <v-badge v-if="alarmFlag" color="red" dot>
@@ -46,19 +47,26 @@
               <v-icon v-else>mdi-bell</v-icon>
             </v-btn>
           </template>
-          <v-list dense>
-            알림
-            <v-btn fab x-small dark class="float-right" @click="clickRemoveAlarms">
-              <v-icon>mdi-trash-can-outline</v-icon>
-            </v-btn>
-            <v-divider class="mt-5"></v-divider>
-            <v-list-item v-for="(item, index) in alarms" :key="index" :value="index">
-              <v-list-item-title @click="clickAlarm(item.content)">
-                {{ item.content }}
-              </v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
+          <v-card>
+            <v-card-title>알림</v-card-title>
+            <v-divider></v-divider>
+            <v-card-text style="height: 300px">
+              <v-list-item v-for="(item, index) in alarms" :key="index" :value="index">
+                <v-list-item-title @click="clickAlarm(item.content)">
+                  {{ item.content }}
+                </v-list-item-title>
+              </v-list-item>
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+              <v-btn fab x-small dark @click="clickRemoveAlarms">
+                <v-icon>mdi-trash-can-outline</v-icon>
+              </v-btn>
+              <v-btn color="blue-darken-1" text @click="dialog = false"> Close </v-btn>
+              <!-- <v-btn color="blue-darken-1" text @click="dialog = false"> Save </v-btn> -->
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <v-menu open-on-hover style="z-index: 3500">
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props">
@@ -88,6 +96,8 @@ export default {
   name: "MainNav",
   data: () => ({
     // items_메뉴
+    dialogm1: "",
+    dialog: false,
     items_community: [
       { title: "공지사항", name: "NoticeList" },
       { title: "FAQ", name: "faqList" },
@@ -152,6 +162,7 @@ export default {
         });
     },
     clickAlarm(alarm) {
+      this.dialog = false;
       if (alarm.includes("칭호")) {
         this.$router.push({
           name: "MemberSetTitle",
@@ -163,6 +174,7 @@ export default {
       }
     },
     clickRemoveAlarms() {
+      this.dialog = false;
       if (this.alarms.length > 0) {
         Swal.fire({
           title: "알림함 비우기",
