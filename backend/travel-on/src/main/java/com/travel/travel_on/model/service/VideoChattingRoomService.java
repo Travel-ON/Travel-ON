@@ -8,6 +8,7 @@ public interface VideoChattingRoomService {
 
     boolean checkRoomNumber(String roomCode);
     boolean insert(VideoChattingRoom videoChattingRoom);
+    boolean update(String roomCode, boolean status);
     VideoChattingRoom match(User user, String areaCode);
     VideoChattingRoom enter(User user, String roomCode);
     boolean leave(User user, String roomCode);

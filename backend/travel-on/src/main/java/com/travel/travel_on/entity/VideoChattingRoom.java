@@ -34,6 +34,9 @@ public class VideoChattingRoom implements Serializable {
     @Column
     private int count;
 
+    @Column(name="play_game")
+    private boolean playGame;
+
     @Column(name="room_code",length = 10, nullable = false)
     private String roomCode;
 

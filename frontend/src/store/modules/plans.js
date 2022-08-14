@@ -90,5 +90,26 @@ export const Plans = {
           alert("플랜 작성에 실패하였습니다.");
         });
     },
+    filterPlan({ getters, commit, dispatch }, formData) {
+      console.log(formData);
+      axios({
+        url: spring.plan.filter(),
+        method: "post",
+        data: formData,
+        headers: {
+          Authorization: `Bearer ${getters.token}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          alert("필터링 성공하였습니다!");
+          commit("SET_PLAN_HISTORY_LIST", res.data);
+          dispatch("convertPlanList");
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("필터링 실패하였습니다");
+        })
+    }
   },
 };

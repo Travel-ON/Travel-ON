@@ -2,18 +2,10 @@
 <template>
   <div id="plan-history-list">
     <div id="filter-btn">
-      <v-menu location="end">
-        <template v-slot:activator="{ props }">
-          <v-btn append-icon="mdi-filter-outline" style="background-color: #efefef" rounded="pill" v-bind="props"
-            >필터</v-btn
-          >
-        </template>
-        <v-list>
-          <v-list-item v-for="(item, index) in filters" :key="index" :value="index">
-            <v-list-item-title>{{ item.name }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+      <!-- 클릭시, 우측 컴포넌트 전환: 필터 뷰 -->
+      <v-btn append-icon="mdi-filter-outline" style="background-color: #efefef" rounded="pill" @click="switchFilter()"
+        >필터</v-btn
+      >
     </div>
     <div id="plan-add-btn">
       <!-- 클릭시, 우측 컴포넌트 전환: 작성 뷰 -->
@@ -90,7 +82,6 @@ export default {
       cursor: "pointer",
       backgroundColor: "#efefef",
     },
-    filters: [{ name: "날짜 필터링" }, { name: "지역 필터링" }, { name: "장소 필터링" }],
   }),
   methods: {
     ...mapGetters(["token", "planHistoryList", "convertedHistoryList"]),
@@ -106,6 +97,10 @@ export default {
     switchUpdate() {
       // 상위에 switchUpdate 이벤트 전달
       this.$emit("switchUpdate");
+    },
+    switchFilter() {
+      // 상위에 switchFilter 이벤트 전달
+      this.$emit("switchFilter");
     },
     changebgcolor() {
       this.planStyle.backgroundColor = "#aaa";
