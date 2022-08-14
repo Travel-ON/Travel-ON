@@ -46,6 +46,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import Swal from "sweetalert2";
 
 export default {
   data() {
@@ -66,8 +67,12 @@ export default {
   },
   created() {
     if (this.isLoggedIn) {
-      // eslint-disable-next-line no-alert
-      alert("로그아웃 후 진행해주세요!");
+      Swal.fire({
+        icon: "error",
+        title: "로그아웃 후 진행해주세요!",
+        showConfirmButton: false,
+        timer: 1000,
+      });
       this.$router.back();
     }
   },

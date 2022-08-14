@@ -127,12 +127,22 @@ export const Accounts = {
           dispatch("getLocation", true);
           dispatch("getTrophy");
           console.log(data);
-          alert("로그인 완료!");
+          Swal.fire({
+            icon: "success",
+            title: "로그인 완료!",
+            showConfirmButton: false,
+            timer: 1000,
+          });
           router.push({ name: "home" });
         })
         .catch((err) => {
           console.error(err);
-          alert("아이디가 없거나 비밀번호가 일치하지 않습니다!");
+          Swal.fire({
+            icon: "error",
+            title: "아이디가 없거나 비밀번호가 일치하지 않습니다!",
+            showConfirmButton: false,
+            timer: 1000,
+          });
           router.push({ name: "MemberLogin" });
         });
     },
@@ -167,35 +177,46 @@ export const Accounts = {
       dispatch("removeLocation");
       dispatch("removeAdmin");
 
-      alert("성공적으로 로그아웃 했습니다!");
+      Swal.fire({
+        icon: "success",
+        title: "성공적으로 로그아웃 했습니다!",
+        showConfirmButton: false,
+        timer: 1000,
+      });
       router.push({ name: "home" });
     },
-    modify({ commit, dispatch }, credentials) {
-      console.log("modify 메서드 실행");
-      console.log(spring.accounts.modify());
-      console.log(credentials);
-      axios({
-        url: spring.accounts.modify(),
-        method: "post",
-        data: credentials, // credentials.username, cresentials.password
-      }).then(({ data }) => {
-        console.log(data);
-        const token = data.accessToken;
-        const nickName = data.nickname;
-        const userTitle = data.userTitle;
-        const adminFlag = data.adminFlag;
-
-        dispatch("saveToken", token);
-        commit("SET_CURRENT_USER", nickName);
-        commit("SET_ADMIN", adminFlag);
-        commit("SET_TITLE", userTitle);
-        dispatch("getLocation", true);
-        dispatch("getTrophy");
-        console.log(data);
-        alert("회원정보 수정완료!");
-        router.push({ name: "home" });
-      });
-    },
+    // 중복되서 하나는 주석처리
+    // modify({ commit, dispatch }, credentials) {
+    //   console.log("modify 메서드 실행");
+    //   console.log(spring.accounts.modify());
+    //   console.log(credentials);
+    //   axios({
+    //     url: spring.accounts.modify(),
+    //     method: "post",
+    //     data: credentials, // credentials.username, cresentials.password
+    //   }).then(({ data }) => {
+    //     console.log(data);
+    //     const token = data.accessToken;
+    //     const nickName = data.nickname;
+    //     const userTitle = data.userTitle;
+    //     const adminFlag = data.adminFlag;
+    //
+    //     dispatch("saveToken", token);
+    //     commit("SET_CURRENT_USER", nickName);
+    //     commit("SET_ADMIN", adminFlag);
+    //     commit("SET_TITLE", userTitle);
+    //     dispatch("getLocation", true);
+    //     dispatch("getTrophy");
+    //     console.log(data);
+    //     Swal.fire({
+    //       icon: "success",
+    //       title: "회원정보 수정완료!",
+    //       showConfirmButton: false,
+    //       timer: 1000,
+    //     });
+    //     router.push({ name: "home" });
+    //   });
+    // },
     regist({ commit, dispatch }, formData) {
       /*
         POST: 사용자 입력정보를 signup URL로 보내기
@@ -223,12 +244,42 @@ export const Accounts = {
           commit("SET_CURRENT_USER", nickName);
           dispatch("saveAdmin", adminFlag);
           commit("SET_TITLE", userTitle);
-          alert("회원가입 완료!");
+          Swal.fire({
+            icon: "success",
+            title: "회원가입 완료!",
+            showConfirmButton: false,
+            timer: 1000,
+          });
           router.push({ name: "home" });
         })
         .catch((err) => {
           console.error(err);
-          alert("회원가입 실패");
+          Swal.fire({
+            icon: "error",
+            title: "회원가입 실패",
+            showConfirmButton: false,
+            timer: 1000,
+          });
+        });
+    },
+    modify({ getters }, formData) {
+      const token = getters.token;
+      axios({
+        url: spring.accounts.userModify(),
+        method: "put",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: formData,
+      })
+        .then((res) => {
+          console.log(res);
+          alert("정보수정 완료!");
+          router.push({ name: "MemberLogout" });
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("정보수정 실패");
         });
     },
     detail({ getters }) {
@@ -246,6 +297,25 @@ export const Accounts = {
         })
         .catch((err) => {
           console.log(err);
+        });
+    },
+    delete({ getters }) {
+      const token = getters.token;
+      axios({
+        url: spring.accounts.userDelete(),
+        method: "delete",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          alert("탈퇴 완료!");
+          router.push({ name: "MemberLogout" });
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("탈퇴 실패!");
         });
     },
     fetchCurrentUser({ commit, getters, dispatch }) {

@@ -18,13 +18,13 @@
       <!--        <v-col>문의 리스트(회원)</v-col>-->
       <!--      </v-row>-->
       <v-row style="background-color: lightgrey">
-        <v-col>글번호 </v-col>
+        <v-col>작성자 </v-col>
         <v-col>제목</v-col>
         <v-col>작성날짜</v-col>
         <v-col>상태</v-col>
       </v-row>
       <v-row v-for="qna in qnas" :key="qna.qnaid">
-        <v-col>{{ qna.qnaid }}</v-col>
+        <v-col>{{ qna.realId }}</v-col>
         <v-col @click="moveToDetail(qna.qnaid)">{{ qna.title }}</v-col>
         <v-col>{{ qna.qnaDate }}</v-col>
         <v-col v-if="qna.answerFlag">답변완료</v-col>

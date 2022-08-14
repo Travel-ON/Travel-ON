@@ -1,30 +1,10 @@
-<!-- eslint-disable no-alert -->
 <template>
   <div>
     <v-card style="padding: 80px 15%; margin-bottom: 40px" color="#e1effd">
       <v-form ref="form" v-model="valid" lazy-validation>
         <div style="display: flex">
           <div style="width: 70%; margin-right: 20px">
-            <v-text-field
-              label="아이디"
-              v-model="credentials.id"
-              required
-              :rules="nameRules"
-              bg-color="#c9deff"
-            ></v-text-field>
-          </div>
-          <div style="width: 30%">
-            <v-btn
-              @click="idCheck(credentials.id)"
-              :disabled="idDisable"
-              :prepend-icon="idChecked ? 'mdi-check-circle' : 'mdi-close-circle'"
-              :color="idChecked ? '#c9deff' : 'red-lighten-4'"
-              style="margin-top: 10px; left: 0"
-              >중복 검사</v-btn
-            >
-            <div v-if="!idChecked" style="margin-top: 12px; font-size: 16px; color: #b00020">
-              아이디 중복을 확인해 주세요.
-            </div>
+            <v-text-field label="아이디" v-model="credentials.id" required bg-color="#eeeee" readonly></v-text-field>
           </div>
         </div>
         <div style="display: flex">
@@ -53,28 +33,6 @@
         </div>
         <div>
           <v-text-field
-            label="비밀번호"
-            v-model="credentials.password"
-            required
-            :rules="passwordRules"
-            @click:append="passwordShow = !passwordShow"
-            type="password"
-            bg-color="#c9deff"
-          ></v-text-field>
-        </div>
-        <div>
-          <v-text-field
-            label="비밀번호 확인"
-            v-model="credentials.passwordConfirm"
-            required
-            :rules="passwordConfirmRules"
-            @click:append="passwordConfirmShow = !passwordConfirmShow"
-            type="password"
-            bg-color="#c9deff"
-          ></v-text-field>
-        </div>
-        <div>
-          <v-text-field
             label="e-mail"
             v-model="credentials.email"
             required
@@ -99,7 +57,7 @@
     </v-card>
     <v-btn
       :disabled="!valid"
-      @click="regist(credentials)"
+      @click="clickModify()"
       size="x-large"
       color="#c9deff"
       style="margin-bottom: 40px"
@@ -111,16 +69,21 @@
 
 <script>
 import axios from "axios";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import spring from "@/api/spring_boot";
+import Swal from "sweetalert2";
 
 export default {
   data() {
     return {
       credentials: {
         id: "",
-        password: "",
-        passwordConfirm: "",
+        email: "",
+        password: null,
+        nickname: "",
+        sidoCode: "",
+      },
+      info: {
         email: "",
         nickname: "",
         sidoCode: "",
@@ -145,22 +108,8 @@ export default {
         { code: "4300000000", name: "충북" },
       ],
       valid: true,
-      passwordShow: false,
-      passwordConfirmShow: false,
-      idDisable: true,
       nickDisable: true,
-      idChecked: "",
       nickChecked: "",
-      passwordRules: [
-        (v) => !!v || "비밀번호를 입력해주세요.",
-        (v) =>
-          /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,15}$/.test(v) ||
-          "비밀번호는 8 ~ 16자 영문, 숫자, 특수문자를 최소 한가지씩 조합하셔야 합니다.",
-      ],
-      passwordConfirmRules: [
-        (v) => !!v || "비밀번호를 다시 입력해주세요.",
-        (v) => v === this.credentials.password || "비밀번호가 일치하지 않습니다.",
-      ],
       nicknameRules: [
         (v) => !!v || "닉네임을 입력해주세요.",
         (v) => v.length <= 10 || "닉네임은 10자 이내로 생성해주세요.",
@@ -172,30 +121,68 @@ export default {
             v,
           ) || "E-mail형식을 확인해주세요.",
       ],
-      // addressRules: [
-      //   (v) => !!v || "주소를 입력해주세요.",
-      //   (v) =>
-      //     /(([가-힣A-Za-z·\d~\-.]{2,}(로|길).[\d]+)|([가-힣A-Za-z·\d~\-.]+(읍|동)))/.test(v) ||
-      //     "유효한 주소를 입력해주세요.(읍/동까지)",
-      // ],
     };
   },
   watch: {
-    // eslint-disable-next-line func-names
+    /* eslint-disable */
     "credentials.nickname": function () {
-      this.nicknameChecked = "";
-      this.nickDisable = false;
-      this.nicknameRules.forEach((element) => {
-        if (typeof element(this.credentials.nickname) !== "boolean") {
-          this.nickDisable = true;
-        }
-      });
+      if (this.credentials.nickname === this.info.nickname) {
+        this.nickChecked = this.info.nickname;
+        this.nickDisable = true;
+      } else {
+        this.nickChecked = "";
+        this.nickDisable = false;
+        this.nicknameRules.forEach((element) => {
+          if (typeof element(this.credentials.nickname) !== "boolean") {
+            this.nickDisable = true;
+          }
+        });
+      }
     },
   },
-  computed: {},
+  computed: {
+    ...mapGetters({ token: "token", isLoggedIn: "isLoggedIn" }),
+  },
+  created() {
+    if (this.isLoggedIn) {
+      axios({
+        url: spring.accounts.detail(),
+        method: "get",
+        headers: { Authorization: `Bearer ${this.token}` },
+      })
+        .then(({ data }) => {
+          console.log(data);
+          this.credentials.id = data.id;
+          this.credentials.email = data.email;
+          this.credentials.nickname = data.nickname;
+          this.credentials.sidoCode = data.sidoCode;
+
+          this.info.email = data.email;
+          this.info.nickname = data.nickname;
+          this.info.sidoCode = data.sidoCode;
+        })
+        .catch((err) => {
+          console.error(err);
+          Swal.fire({
+            title: "조회실패",
+            text: "잠시후 다시 시도해주세요!",
+            icon: "error",
+            confirmButtonText: "확인",
+          });
+          this.$router.push({
+            name: "home",
+          });
+        });
+    } else {
+      alert("잘못된 접근");
+      this.$router.push({
+        name: "home",
+      });
+    }
+  },
   mounted() {},
   methods: {
-    ...mapActions(["regist"]),
+    ...mapActions(["modify"]),
     nickCheck(nickname) {
       if (nickname !== "") {
         console.log(nickname);
@@ -216,6 +203,18 @@ export default {
       } else {
         alert("아무것도 입력하지 않으셨습니다.");
       }
+    },
+    clickModify() {
+      if (this.credentials.nickname === this.info.nickname) {
+        this.credentials.nickname = null;
+      }
+      if (this.credentials.email === this.info.email) {
+        this.credentials.email = null;
+      }
+      if (this.credentials.sidoCode === this.info.sidoCode) {
+        this.credentials.sidoCode = null;
+      }
+      this.modify(this.credentials);
     },
   },
 };
