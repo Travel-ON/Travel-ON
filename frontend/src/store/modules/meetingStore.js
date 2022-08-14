@@ -25,10 +25,16 @@ export const MeetingStore = {
     // chatting
     isChatPanel: false,
     messages: [],
-    secretRoom: false,
+    // 입장할때 이름이 전부떠서 체크해주기위한 변수
+    isNewbie: true,
   },
   getters: {
-    messages: (state) => state.messages,
+    chatItems(state) {
+      const items = state.subscribers.map(function (val) {
+        return JSON.parse(val.stream.connection.data).clientName;
+      });
+      return ["모두", ...items];
+    },
     subscribers: (state) => state.subscribers,
   },
   mutations: {
@@ -63,7 +69,9 @@ export const MeetingStore = {
     SET_AUDIO_FLAG(state, audioFlag) {
       state.audioFlag = audioFlag;
     },
-
+    SET_IS_NEWBIE(state, value) {
+      state.isNewbie = value;
+    },
     // chatting
     SET_IS_CHATPANEL(state, value) {
       state.isChatPanel = value;
@@ -170,15 +178,20 @@ export const MeetingStore = {
       // const session = state.OV.initSession();
       // --- Specify the actions when events take place in the session ---
       commit("SET_SESSION", state.OV.initSession());
-      // console.log("SET_SESSION");
-      // console.log(session);
-
       // On every new Stream received...
       // const subscribers = [];
       // commit("SET_SUBSCRIBERS", subscribers);
       state.session.on("streamCreated", ({ stream }) => {
         const subscriber = state.session.subscribe(stream);
         state.subscribers.push(subscriber);
+        if (!state.isNewbie) {
+          const data = {
+            from: "SYSTEM",
+            to: [],
+            message: `🎉${JSON.parse(stream.connection.data).clientName}님이 입장하였습니다🎉`,
+          };
+          dispatch("sendMessage", data);
+        }
       });
 
       // On every Stream destroyed...
@@ -188,6 +201,7 @@ export const MeetingStore = {
         let check = false;
         console.log("누가나갔다!!");
         console.log(state.hostName);
+        console.log(stream.connection.data);
         console.log(JSON.parse(stream.connection.data).clientName);
         console.log("====================================");
         if (state.hostName === JSON.parse(stream.connection.data).clientName) {
@@ -204,6 +218,13 @@ export const MeetingStore = {
           router.push({
             name: "home",
           });
+        } else {
+          const data = {
+            from: "SYSTEM",
+            to: [],
+            message: `✋${JSON.parse(stream.connection.data).clientName}님이 퇴장하였습니다✋`,
+          };
+          dispatch("sendMessage", data);
         }
       });
 
@@ -251,11 +272,20 @@ export const MeetingStore = {
               const eventData = JSON.parse(event.data);
               const data = {};
               const time = new Date();
-              data.message = eventData.content;
-              data.sender = JSON.parse(event.from.data).clientName;
+              data.message = eventData.message;
+              data.sender = eventData.from;
+              if (eventData.to[0] === undefined) data.receiver = "모두";
+              // eslint-disable-next-line prefer-destructuring
+              else data.receiver = eventData.to[0];
+              // data.sender = JSON.parse(event.from.data).clientName;
               data.time = moment(time).format("HH:mm");
-              state.messages.push(data);
-              // commit("SET_MESSAGES", data);
+              if (
+                data.sender === rootGetters.currentUser ||
+                data.receiver === rootGetters.currentUser ||
+                data.receiver === "모두"
+              ) {
+                state.messages.push(data);
+              }
             });
           })
           .catch((error) => {
@@ -292,6 +322,9 @@ export const MeetingStore = {
         // this.audio = true;
       }
     },
+    changeIsNewbie({ commit }) {
+      commit("SET_IS_NEWBIE", false);
+    },
     toggleAudio() {
       if (this.publisher.stream.audioActive) {
         this.publisher.publishAudio(false);
@@ -311,17 +344,10 @@ export const MeetingStore = {
         }, 50);
       }
     },
-    sendMessage({ state }, message) {
-      const messageData = {
-        content: message,
-        secretName: state.secretName,
-      };
-      console.log(`세션 출력 ${state.session}`);
-      console.log(`메세지 출력 ${message}`);
+    sendMessage({ state }, data) {
       state.session.signal({
         type: "chat",
-        data: JSON.stringify(messageData),
-        to: [],
+        data: JSON.stringify(data),
       });
     },
   },

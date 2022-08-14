@@ -10,11 +10,12 @@
               <p class="text-center">
                 <v-col>
                   <v-row id="video-container">
-                    <user-video :stream-manager="publisher" />
+                    <user-video :stream-manager="publisher" :class="{ 'col-12': one, 'col-6': two, 'col-4': three }" />
                     <user-video
                       v-for="sub in subscribers"
                       :key="sub.stream.connection.connectionId"
                       :stream-manager="sub"
+                      :class="{ 'col-12': one, 'col-6': two, 'col-4': three }"
                     />
                   </v-row>
                   <v-row class="mt-8">
@@ -59,10 +60,9 @@
     </v-row>
     <v-row>
       <!--      <v-col id="capture" :class="{ 'col-8': isChatPanel, 'col-12': !isChatPanel }"> </v-col>-->
-
-      <v-col class="right-panel" v-if="isChatPanel">
-        <ChatPanel class="chat-panel" height="800px" v-if="isChatPanel"> </ChatPanel>
-      </v-col>
+      <div class="right-panel" v-if="isChatPanel">
+        <ChatPanel class="chat-panel" height="800px" style="max-height: 800px" v-if="isChatPanel"> </ChatPanel>
+      </div>
     </v-row>
   </v-container>
   <v-footer dark padless>
@@ -81,6 +81,7 @@
           </v-card-text>
         </v-col>
         <v-col>
+          <!--  채팅버튼   -->
           <v-card-text>
             <v-btn class="btn mr-2" @click="toggleChatPanel()"> 채팅온오프 </v-btn>
           </v-card-text>
@@ -130,9 +131,17 @@ export default {
       "isLoggedIn",
     ]),
   },
-
+  watch: {
+    // subscribers() {
+    //   this.addClass();
+    // },
+  },
   data() {
     return {
+      one: true,
+      two: false,
+      three: false,
+      eight: false,
       residentMark: this.$route.params.residentMark,
       video: this.$route.params.video,
       audio: this.$route.params.audio,
@@ -150,6 +159,11 @@ export default {
       this.joinSession();
     }
   },
+  mounted() {
+    setTimeout(() => {
+      this.changeIsNewbie();
+    }, 3000);
+  },
   methods: {
     ...mapActions("MeetingStore", [
       "joinSession",
@@ -162,7 +176,86 @@ export default {
       "setVideoFlag",
       "setAudioFlag",
       "toggleChatPanel",
+      "changeIsNewbie",
     ]),
+    // addClass() {
+    //   const count = this.subscribers.length + 1;
+    //   if (count === 1) {
+    //     this.one = true;
+    //     this.two = false;
+    //     this.three = false;
+    //     this.eight = false;
+    //     this.$nextTick(() => {
+    //       const videos = this.$refs.querySelectorAll("video");
+    //       for (let i = 0, len = videos.length; i < len; i += 1) {
+    //         videos[i].classList.add("height70");
+    //         videos[i].classList.remove("height30");
+    //         videos[i].classList.remove("height15");
+    //       }
+    //     });
+    //   } else if (count === 2 || count === 4) {
+    //     this.one = false;
+    //     this.two = true;
+    //     this.three = false;
+    //     this.eight = false;
+    //     if (count === 2) {
+    //       this.$nextTick(() => {
+    //         const videos = this.$refs.querySelectorAll("video");
+    //         for (let i = 0, len = videos.length; i < len; i += 1) {
+    //           videos[i].classList.add("height70");
+    //           videos[i].classList.remove("height30");
+    //           videos[i].classList.remove("height15");
+    //         }
+    //       });
+    //     } else {
+    //       this.$nextTick(() => {
+    //         const videos = this.$refs.querySelectorAll("video");
+    //         for (let i = 0, len = videos.length; i < len; i += 1) {
+    //           videos[i].classList.add("height30");
+    //           videos[i].classList.remove("height70");
+    //           videos[i].classList.remove("height15");
+    //         }
+    //       });
+    //     }
+    //   } else if (count === 3 || count === 5 || count === 6) {
+    //     this.one = false;
+    //     this.two = false;
+    //     this.three = true;
+    //     this.eight = false;
+    //     if (count === 3) {
+    //       this.$nextTick(() => {
+    //         const videos = this.$refs.querySelectorAll("video");
+    //         for (let i = 0, len = videos.length; i < len; i += 1) {
+    //           videos[i].classList.add("height70");
+    //           videos[i].classList.remove("height30");
+    //           videos[i].classList.remove("height15");
+    //         }
+    //       });
+    //     } else {
+    //       this.one = false;
+    //       this.two = false;
+    //       this.three = false;
+    //       this.eight = true;
+    //       this.$nextTick(() => {
+    //         const videos = this.$refs.querySelectorAll("video");
+    //         for (let i = 0, len = videos.length; i < len; i += 1) {
+    //           videos[i].classList.add("height30");
+    //           videos[i].classList.remove("height70");
+    //           videos[i].classList.remove("height15");
+    //         }
+    //       });
+    //     }
+    //   } else {
+    //     this.$nextTick(() => {
+    //       const videos = this.$refs.querySelectorAll("video");
+    //       for (let i = 0, len = videos.length; i < len; i += 1) {
+    //         videos[i].classList.add("height15");
+    //         videos[i].classList.remove("height70");
+    //         videos[i].classList.remove("height30");
+    //       }
+    //     });
+    //   }
+    // },
     clickCloseRoom() {
       Swal.fire({
         title: "화상채팅방을 종료하실건가요?",
@@ -283,3 +376,4 @@ export default {
   },
 };
 </script>
+<style></style>
