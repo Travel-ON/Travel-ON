@@ -33,6 +33,13 @@ export default {
     regist: () => HOST + PLAN + "regist",
     getHistory: () => HOST + PLAN + "page",
     filter: () => HOST + PLAN + "page/filter",
+    modify: () => HOST + PLAN + "modify",
+    delete: (visitPlaceId) => HOST + PLAN + "delete/" + String(visitPlaceId),
+    getExpectHistory: () => HOST + PLAN + "expect/page",
+    registExpect: () => HOST + PLAN + "expect/regist",
+    deleteExpect: (visitExpectedId) => HOST + PLAN + "expect/delete/" + String(visitExpectedId),
+    modifyExpect: (visitExpectedId) => HOST + PLAN + "expect/modify/" + String(visitExpectedId),
+    filterExpect: () => HOST + PLAN + "expect/page/filter",
   },
   alarm: {
     alarmList: () => HOST + ALARM,

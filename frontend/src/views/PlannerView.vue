@@ -1,6 +1,8 @@
+<!-- eslint-disable vue/no-parsing-error -->
+<!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <template>
   <div style="display: flex; justify-content: space-between">
-    <div class="left-space"></div>
+    <div class="plan-left-space"></div>
     <div class="plan-main-space">
       <div
         :style="`position: absolute; right: -20px; top: ${40 + 50 * item}px`"
@@ -13,7 +15,66 @@
           width="50"
         ></v-img>
       </div>
-      <div v-if="selectedPage === 0">
+      <div style="position: absolute; display: flex; flex-direction: column; top: 78px; left: -182px">
+        <div style="display: flex; margin-bottom: 24px">
+          <div style="height: 64px; width: 36px; background-color: #78a0dc; border-radius: 16px 0 0 16px"></div>
+          <div
+            style="
+              height: 64px;
+              width: 144px;
+              background-color: #efefef;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-top: 2px solid #adadad;
+              border-bottom: 2px solid #adadad;
+            "
+          >
+            <div style="font-size: 24px">여행플래너</div>
+          </div>
+        </div>
+        <div style="display: flex; margin-bottom: 24px">
+          <div
+            :style="`
+              height: 64px;
+              width: 144px;
+              background-color: ${selectedPage === 0 ? '#78a0dc' : '#c5dcff'};
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 16px 0 0 16px;
+              margin-left: 36px;
+              font-weight: bold;
+              cursor: pointer;
+              color: ${selectedPage === 0 ? '#fff' : '#020715'};
+            `"
+            @click="selectedPage = 0"
+          >
+            <div style="font-size: 20px">방문한 장소</div>
+          </div>
+        </div>
+        <div style="display: flex; margin-bottom: 24px">
+          <div
+            :style="`
+              height: 64px;
+              width: 144px;
+              background-color: ${selectedPage === 1 ? '#78a0dc' : '#c5dcff'};
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 16px 0 0 16px;
+              margin-left: 36px;
+              font-weight: bold;
+              cursor: pointer;
+              color: ${selectedPage === 1 ? '#fff' : '#020715'};
+              `"
+            @click="selectedPage = 1"
+          >
+            <div style="font-size: 20px">방문 예정 장소</div>
+          </div>
+        </div>
+      </div>
+      <div>
         <div
           style="
             height: 80px;
@@ -24,18 +85,42 @@
             align-items: center;
           "
         >
-          <div><h1>방문한 장소</h1></div>
+          <div>
+            <h1 v-if="selectedPage === 0">방문한 장소</h1>
+            <h1 v-else-if="selectedPage === 1">방문 예정 장소</h1>
+          </div>
         </div>
         <div class="plan-content">
+          <!-- 좌측 출력 -->
           <PlanHistoryList
             v-if="selectedPage === 0"
             @switch-create="switchCreate()"
             @switch-detail="switchDetail"
             @switch-filter="switchFilter()"
           />
-          <PlanHistoryCreate v-if="selectedView === 0" />
-          <PlanHistoryDetail v-else-if="selectedView === 1" :plan="planDetail" />
-          <PlanHistoryFilter v-else-if="selectedView === 3" />
+          <ExpectHistoryList
+            v-else-if="selectedPage === 1"
+            @switch-create="switchCreate()"
+            @switch-detail="switchDetail"
+            @switch-filter="switchFilter()"
+          />
+          <!-- 우측 출력 -->
+          <PlanHistoryCreate v-if="selectedPage === 0 && selectedView === 0" />
+          <PlanHistoryDetail
+            v-else-if="selectedPage === 0 && selectedView === 1"
+            :plan="planDetail"
+            @switch-update="switchUpdate"
+            @deleted="selectedView = 0"
+          />
+          <PlanHistoryUpdate v-else-if="selectedPage === 0 && selectedView === 2" :plan="planDetail" />
+          <PlanHistoryFilter v-else-if="selectedPage === 0 && selectedView === 3" />
+          <ExpectHistoryCreate v-else-if="selectedPage === 1 && selectedView === 0" />
+          <ExpectHistoryDetail
+            v-else-if="selectedPage === 1 && selectedView === 1"
+            :expect="planDetail"
+            @deleted="selectedView = 0"
+          />
+          <ExpectHistoryFilter v-else-if="selectedPage === 1 && selectedView === 3" />
         </div>
       </div>
     </div>
@@ -48,15 +133,30 @@ import PlanHistoryCreate from "@/components/planner/PlanHistoryCreate.vue";
 import PlanHistoryList from "@/components/planner/PlanHistoryList.vue";
 import PlanHistoryDetail from "@/components/planner/PlanHistoryDetail.vue";
 import PlanHistoryFilter from "@/components/planner/PlanHistoryFilter.vue";
+import PlanHistoryUpdate from "@/components/planner/PlanHistoryUpdate.vue";
+import ExpectHistoryList from "@/components/planner/ExpectHistoryList.vue";
+import ExpectHistoryCreate from "@/components/planner/ExpectHistoryCreate.vue";
+import ExpectHistoryDetail from "@/components/planner/ExpectHistoryDetail.vue";
+import ExpectHistoryFilter from "@/components/planner/ExpectHistoryFilter.vue";
 
 export default {
   name: "PlannerView",
   data: () => ({
     selectedPage: 0, // 0: 방문 장소, 1: 방문 예정 장소
-    selectedView: 0, // 0: 작성뷰, 1: 열람뷰, 2: 수정뷰
-    planDetail: {},
+    selectedView: 0, // 0: 작성뷰, 1: 열람뷰, 2: 수정뷰, 3: 필터뷰
+    planDetail: {}, // 우측 뷰에서 참조하는 플랜 저장
   }),
-  components: { PlanHistoryCreate, PlanHistoryList, PlanHistoryDetail, PlanHistoryFilter },
+  components: {
+    PlanHistoryCreate,
+    PlanHistoryList,
+    PlanHistoryDetail,
+    PlanHistoryFilter,
+    PlanHistoryUpdate,
+    ExpectHistoryList,
+    ExpectHistoryCreate,
+    ExpectHistoryDetail,
+    ExpectHistoryFilter,
+  },
   methods: {
     switchCreate() {
       this.selectedView = 0;
@@ -65,11 +165,17 @@ export default {
       this.planDetail = plan;
       this.selectedView = 1;
     },
-    switchUpdate() {
+    switchUpdate(plan) {
+      this.planDetail = plan;
       this.selectedView = 2;
     },
     switchFilter() {
       this.selectedView = 3;
+    },
+  },
+  watch: {
+    selectedPage() {
+      this.selectedView = 0;
     },
   },
 };
