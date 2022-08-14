@@ -185,37 +185,38 @@ export const Accounts = {
       });
       router.push({ name: "home" });
     },
-    modify({ commit, dispatch }, credentials) {
-      console.log("modify 메서드 실행");
-      console.log(spring.accounts.modify());
-      console.log(credentials);
-      axios({
-        url: spring.accounts.modify(),
-        method: "post",
-        data: credentials, // credentials.username, cresentials.password
-      }).then(({ data }) => {
-        console.log(data);
-        const token = data.accessToken;
-        const nickName = data.nickname;
-        const userTitle = data.userTitle;
-        const adminFlag = data.adminFlag;
-
-        dispatch("saveToken", token);
-        commit("SET_CURRENT_USER", nickName);
-        commit("SET_ADMIN", adminFlag);
-        commit("SET_TITLE", userTitle);
-        dispatch("getLocation", true);
-        dispatch("getTrophy");
-        console.log(data);
-        Swal.fire({
-          icon: "success",
-          title: "회원정보 수정완료!",
-          showConfirmButton: false,
-          timer: 1000,
-        });
-        router.push({ name: "home" });
-      });
-    },
+    // 중복되서 하나는 주석처리
+    // modify({ commit, dispatch }, credentials) {
+    //   console.log("modify 메서드 실행");
+    //   console.log(spring.accounts.modify());
+    //   console.log(credentials);
+    //   axios({
+    //     url: spring.accounts.modify(),
+    //     method: "post",
+    //     data: credentials, // credentials.username, cresentials.password
+    //   }).then(({ data }) => {
+    //     console.log(data);
+    //     const token = data.accessToken;
+    //     const nickName = data.nickname;
+    //     const userTitle = data.userTitle;
+    //     const adminFlag = data.adminFlag;
+    //
+    //     dispatch("saveToken", token);
+    //     commit("SET_CURRENT_USER", nickName);
+    //     commit("SET_ADMIN", adminFlag);
+    //     commit("SET_TITLE", userTitle);
+    //     dispatch("getLocation", true);
+    //     dispatch("getTrophy");
+    //     console.log(data);
+    //     Swal.fire({
+    //       icon: "success",
+    //       title: "회원정보 수정완료!",
+    //       showConfirmButton: false,
+    //       timer: 1000,
+    //     });
+    //     router.push({ name: "home" });
+    //   });
+    // },
     regist({ commit, dispatch }, formData) {
       /*
         POST: 사용자 입력정보를 signup URL로 보내기
