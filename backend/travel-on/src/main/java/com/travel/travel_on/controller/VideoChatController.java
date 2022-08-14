@@ -84,6 +84,7 @@ public class VideoChatController {
                 Map<String,String> result = new HashMap<>();
                 result.put("roomCode",roomCode);
                 result.put("hostName",userDto.getNickname());
+                result.put("playGame","false");
                 return new ResponseEntity<Map>(result,HttpStatus.CREATED);
             }
             return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -124,6 +125,7 @@ public class VideoChatController {
             Map<String,String> result = new HashMap<>();
             result.put("roomCode",videoChattingRoom.getRoomCode());
             result.put("hostName",videoChattingRoom.getUser().getNickname());
+            result.put("playGame",videoChattingRoom.isPlayGame()?"true":"false");
             return new ResponseEntity<Map>(result,HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
@@ -148,6 +150,7 @@ public class VideoChatController {
                 Map<String,String> result = new HashMap<>();
                 result.put("roomCode",videoChattingRoom.getRoomCode());
                 result.put("hostName",videoChattingRoom.getUser().getNickname());
+                result.put("playGame",videoChattingRoom.isPlayGame()?"true":"false");
                 return new ResponseEntity<Map>(result,HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);
@@ -258,6 +261,43 @@ public class VideoChatController {
             int index = ThreadLocalRandom.current().nextInt(0, result.size());
 
             return new ResponseEntity<String>(result.get(index),HttpStatus.OK);
+        } catch (Exception e) {
+            return exceptionHandling(e);
+        }
+    }
+
+
+    @ApiOperation(value = "게임 시작")
+    @Transactional
+    @PutMapping("/game/{roomCode}")
+    public ResponseEntity<?> startGame(@ApiIgnore Authentication authentication, @PathVariable String roomCode) {
+        try {
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userId = userDetails.getUsername();
+            UserDto userDto = userService.select(userId);
+            if(userDto==null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            videoChattingRoomService.update(roomCode,true);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return exceptionHandling(e);
+        }
+    }
+
+    @ApiOperation(value = "게임 종료")
+    @Transactional
+    @DeleteMapping("/game/{roomCode}")
+    public ResponseEntity<?> stopGame(@ApiIgnore Authentication authentication, @PathVariable String roomCode) {
+        try {
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userId = userDetails.getUsername();
+            UserDto userDto = userService.select(userId);
+            if(userDto==null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            videoChattingRoomService.update(roomCode,false);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return exceptionHandling(e);
         }
