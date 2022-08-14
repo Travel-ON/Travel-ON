@@ -211,14 +211,11 @@ export default {
       "setVideoFlag",
       "setAudioFlag",
       "toggleChatPanel",
-<<<<<<< frontend/src/components/videochat/VideochatRoom.vue
       "changeIsNewbie",
-=======
       "toggleGamePanel",
       "startLiar",
       "startLiarTalk",
       "stopLiarTalk",
->>>>>>> frontend/src/components/videochat/VideochatRoom.vue
     ]),
     // addClass() {
     //   const count = this.subscribers.length + 1;
