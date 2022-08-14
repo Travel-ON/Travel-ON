@@ -5,8 +5,8 @@ const USER = "api/user/";
 // const QNA = "qna/";
 // const NOTICE = "notice/";
 const PLAN = "api/plan/";
-// const ALARM = "alarm/";
-// const VIDEOCHAT = "videochat/";
+const ALARM = "api/alarm/";
+const VIDEOCHAT = "api/videochat/";
 
 /* eslint-disable */
 export default {
@@ -33,5 +33,18 @@ export default {
     regist: () => HOST + PLAN + "regist",
     getHistory: () => HOST + PLAN + "page",
     filter: () => HOST + PLAN + "page/filter",
+  },
+  alarm: {
+    alarmList: () => HOST + ALARM,
+  },
+  videochat: {
+    room: (roomCode) => HOST + VIDEOCHAT + roomCode,
+    creat: () => HOST + VIDEOCHAT,
+    match: () => HOST + VIDEOCHAT + "match",
+    leave: (roomCode) => HOST + VIDEOCHAT + "leave/" + roomCode,
+    report: () => HOST + VIDEOCHAT + "report",
+    game: (roomCode) => HOST + VIDEOCHAT + "game/" + roomCode,
+    liarTopic: () => HOST + VIDEOCHAT + "liargame",
+    liarKeyword: (topic) => HOST + VIDEOCHAT + "liargame/" + topic,
   },
 };

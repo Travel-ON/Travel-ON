@@ -120,7 +120,8 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           axios({
-            url: `http://localhost:3000/api/videochat/${this.roomCode}`,
+            // url: `http://localhost:3000/api/videochat/${this.roomCode}`,
+            url: `http://i7b301.p.ssafy.io:3000/api/videochat/${this.roomCode}`,
             method: "delete",
             headers: { Authorization: `Bearer ${this.token}` },
           })
@@ -155,7 +156,8 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           axios({
-            url: `http://localhost:3000/api/videochat/leave/${this.roomCode}`,
+            // url: `http://localhost:3000/api/videochat/leave/${this.roomCode}`,
+            url: `http://i7b301.p.ssafy.io:3000/api/videochat/leave/${this.roomCode}`,
             method: "get",
             headers: { Authorization: `Bearer ${this.token}` },
           })
