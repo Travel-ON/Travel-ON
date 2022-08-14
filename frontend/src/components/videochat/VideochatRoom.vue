@@ -45,8 +45,29 @@
                       <v-icon color="white">mdi-share</v-icon> 방코드 확인</v-btn
                     >
 
-                    <v-btn class="btn mr-2" style="background-color: darkblue; color: white" @click="clickPlayGame">
+                    <v-btn
+                      class="btn mr-2"
+                      v-if="!playGame"
+                      style="background-color: darkblue; color: white"
+                      @click="clickPlayGame"
+                    >
                       <v-icon color="white">mdi-controller</v-icon> 게임하기</v-btn
+                    >
+                    <v-btn
+                      class="btn mr-2"
+                      v-if="startLiarTalkFlag"
+                      style="background-color: darkblue; color: white"
+                      @click="startLiarTalk"
+                    >
+                      <v-icon color="white">mdi-controller</v-icon> 대화시작</v-btn
+                    >
+                    <v-btn
+                      class="btn mr-2"
+                      v-if="stopLiarTalkFlag"
+                      style="background-color: darkblue; color: white"
+                      @click="stopLiarTalk"
+                    >
+                      <v-icon color="white">mdi-controller</v-icon> 대화종료</v-btn
                     >
                     <v-btn v-if="hostName === currentUser" class="btn mr-2" @click="clickCloseRoom">종료</v-btn>
                     <v-btn v-else class="btn mr-2" @click="clickLeaveRoom">나가기</v-btn>
@@ -59,10 +80,12 @@
       </v-col>
     </v-row>
     <v-row>
-      <!--      <v-col id="capture" :class="{ 'col-8': isChatPanel, 'col-12': !isChatPanel }"> </v-col>-->
-      <div class="right-panel" v-if="isChatPanel">
+      <v-col class="right-panel" v-if="isChatPanel">
         <ChatPanel class="chat-panel" height="800px" style="max-height: 800px" v-if="isChatPanel"> </ChatPanel>
-      </div>
+      </v-col>
+      <v-col class="right-panel" v-if="isGamePanel">
+        <GamePanel class="game-panel" height="800px" v-if="isGamePanel"> </GamePanel>
+      </v-col>
     </v-row>
   </v-container>
   <v-footer dark padless>
@@ -86,6 +109,11 @@
             <v-btn class="btn mr-2" @click="toggleChatPanel()"> 채팅온오프 </v-btn>
           </v-card-text>
         </v-col>
+        <v-col>
+          <v-card-text>
+            <v-btn class="btn mr-2" @click="toggleGamePanel()"> 게임진행화면 </v-btn>
+          </v-card-text>
+        </v-col>
       </v-row>
     </v-card>
   </v-footer>
@@ -93,9 +121,11 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
+import spring from "@/api/spring_boot";
 import axios from "axios";
 import Swal from "sweetalert2";
 import ChatPanel from "@/components/videochat/chatPanel.vue";
+import GamePanel from "@/components/videochat/gamePanel.vue";
 import UserVideo from "./UserVideo.vue";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -106,6 +136,7 @@ export default {
   components: {
     UserVideo,
     ChatPanel,
+    GamePanel,
   },
   computed: {
     ...mapState("MeetingStore", [
@@ -116,7 +147,11 @@ export default {
       "subscribers",
       "mySessionId",
       "isChatPanel",
+      "isGamePanel",
       "hostName",
+      "startLiarTalkFlag",
+      "stopLiarTalkFlag",
+      "playGame",
     ]),
     ...mapGetters([
       "sido",
@@ -176,7 +211,14 @@ export default {
       "setVideoFlag",
       "setAudioFlag",
       "toggleChatPanel",
+<<<<<<< frontend/src/components/videochat/VideochatRoom.vue
       "changeIsNewbie",
+=======
+      "toggleGamePanel",
+      "startLiar",
+      "startLiarTalk",
+      "stopLiarTalk",
+>>>>>>> frontend/src/components/videochat/VideochatRoom.vue
     ]),
     // addClass() {
     //   const count = this.subscribers.length + 1;
@@ -257,76 +299,88 @@ export default {
     //   }
     // },
     clickCloseRoom() {
-      Swal.fire({
-        title: "화상채팅방을 종료하실건가요?",
-        text: "종료하려면 OK를 눌러주세요!",
-        icon: "warning",
-        showCancelButton: true,
-        buttons: true,
-        dangerMode: true,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          axios({
-            // url: `http://i7b301.p.ssafy.io:3000/api/videochat/${this.roomCode}`,
-            url: `http://localhost:3000/api/videochat/${this.roomCode}`,
-            method: "delete",
-            headers: { Authorization: `Bearer ${this.token}` },
-          })
-            .then((res) => {
-              console.log(res);
-              this.leaveSession();
-
-              Swal.fire({
-                icon: "success",
-                title: "화상채팅방이 종료되었습니다!",
-                showConfirmButton: false,
-                timer: 1000,
-              });
-              this.$router.push({
-                name: "home",
-              });
+      if (this.playGame) {
+        Swal.fire({
+          title: "게임중에는 종료할 수 없습니다!",
+          icon: "error",
+        });
+      } else {
+        Swal.fire({
+          title: "화상채팅방을 종료하실건가요?",
+          text: "종료하려면 OK를 눌러주세요!",
+          icon: "warning",
+          showCancelButton: true,
+          buttons: true,
+          dangerMode: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            axios({
+              url: spring.videochat.room(this.roomCode),
+              method: "delete",
+              headers: { Authorization: `Bearer ${this.token}` },
             })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
-      });
+              .then((res) => {
+                console.log(res);
+                this.leaveSession();
+
+                Swal.fire({
+                  icon: "success",
+                  title: "화상채팅방이 종료되었습니다!",
+                  showConfirmButton: false,
+                  timer: 1000,
+                });
+                this.$router.push({
+                  name: "home",
+                });
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        });
+      }
     },
     clickLeaveRoom() {
-      Swal.fire({
-        title: "화상채팅방을 나가실건가요?",
-        text: "나가려면 OK를 눌러주세요!",
-        icon: "warning",
-        showCancelButton: true,
-        buttons: true,
-        dangerMode: true,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          axios({
-            // url: `http://i7b301.p.ssafy.io:3000/api/videochat/leave/${this.roomCode}`,
-            url: `http://localhost:3000/api/videochat/leave/${this.roomCode}`,
-            method: "get",
-            headers: { Authorization: `Bearer ${this.token}` },
-          })
-            .then((res) => {
-              console.log(res);
-              this.leaveSession();
-              Swal.fire({
-                icon: "success",
-                title: "화상채팅방이 종료되었습니다!",
-                showConfirmButton: false,
-                timer: 1000,
-              });
-              this.$router.push({
-                name: "home",
-              });
+      if (this.playGame) {
+        Swal.fire({
+          title: "게임중에는 나갈 수 없습니다!",
+          icon: "error",
+        });
+      } else {
+        Swal.fire({
+          title: "화상채팅방을 나가실건가요?",
+          text: "나가려면 OK를 눌러주세요!",
+          icon: "warning",
+          showCancelButton: true,
+          buttons: true,
+          dangerMode: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            axios({
+              url: spring.videochat.leave(this.roomCode),
+              method: "get",
+              headers: { Authorization: `Bearer ${this.token}` },
             })
-            .catch((err) => {
-              // alert("이미 있는 아이디 입니다!");
-              console.log(err);
-            });
-        }
-      });
+              .then((res) => {
+                console.log(res);
+                this.leaveSession();
+                Swal.fire({
+                  icon: "success",
+                  title: "화상채팅방이 종료되었습니다!",
+                  showConfirmButton: false,
+                  timer: 1000,
+                });
+                this.$router.push({
+                  name: "home",
+                });
+              })
+              .catch((err) => {
+                // alert("이미 있는 아이디 입니다!");
+                console.log(err);
+              });
+          }
+        });
+      }
     },
     copyToClipboard() {
       const t = document.createElement("textarea");
@@ -360,18 +414,46 @@ export default {
       });
     },
     clickPlayGame() {
-      Swal.fire({
-        title: "게임하고 싶으신가요?",
-        text: "사람들에게 동의를 구하고 게임을 시작해보세요!",
-        icon: "question",
+      if (this.subscribers.length < 2) {
+        Swal.fire({
+          icon: "error",
+          title: "게임은 3인 이상만 가능합니다",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      } else {
+        Swal.fire({
+          title: "게임하고 싶으신가요?",
+          text: "사람들에게 동의를 구하고 게임을 시작해보세요!",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "게임신청",
+          cancelButtonText: "취소",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // 게임 시작하면 게임하기 버튼 비활성화
+            this.selectGame();
+          }
+        });
+      }
+    },
+    async selectGame() {
+      const { value: game } = await Swal.fire({
+        title: "Select color",
+        input: "radio",
+        inputOptions: { liar: "라이어게임", roulette: "룰렛게임" },
         showCancelButton: true,
-        confirmButtonText: "게임신청",
-        cancelButtonText: "취소",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          Swal.fire("게임신청!", "신청기능구현해라~", "success");
-        }
+        inputValidator: (value) => {
+          if (!value) {
+            return "게임을 선택하세요!";
+          }
+          return "";
+        },
       });
+      Swal.fire({ html: `You selected: ${game}` });
+      if (game === "liar") {
+        this.startLiar();
+      }
     },
   },
 };

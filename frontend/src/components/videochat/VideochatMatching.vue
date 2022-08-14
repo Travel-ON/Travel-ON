@@ -82,6 +82,7 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
+import spring from "@/api/spring_boot";
 import axios from "axios";
 import Swal from "sweetalert2";
 import UserVideo from "./UserVideo.vue";
@@ -134,8 +135,7 @@ export default {
     },
     clickMatchingRoom() {
       axios({
-        url: "http://localhost:3000/api/videochat/match",
-        // url: "http://i7b301.p.ssafy.io:3000/api/videochat/match",
+        url: spring.videochat.match(),
         method: "post",
         headers: { Authorization: `Bearer ${this.token}` },
         data: {
@@ -145,6 +145,30 @@ export default {
       })
         .then((res) => {
           this.leaveSession();
+
+          if (res.data.playGame === "true") {
+            Swal.fire({
+              icon: "warning",
+              title: "현재 이 방은 게임중입니다!",
+              showConfirmButton: false,
+              timer: 1000,
+            });
+            axios({
+              url: spring.videochat.leave(res.data.roomCode),
+              method: "get",
+              headers: { Authorization: `Bearer ${this.token}` },
+            })
+              .then((response) => {
+                console.log(response);
+                this.$router.push({
+                  name: "home",
+                });
+              })
+              .catch((err) => {
+                // alert("이미 있는 아이디 입니다!");
+                console.log(err);
+              });
+          }
           this.$router.push({
             name: "VideochatRoom",
             params: {

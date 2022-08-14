@@ -88,6 +88,7 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
+import spring from "@/api/spring_boot";
 import axios from "axios";
 import Swal from "sweetalert2";
 import UserVideo from "./UserVideo.vue";
@@ -143,8 +144,7 @@ export default {
     },
     clickCreateRoom() {
       axios({
-        url: "http://localhost:3000/api/videochat/",
-        // url: "http://i7b301.p.ssafy.io:3000/api/videochat/",
+        url: spring.videochat.creat(),
         method: "post",
         headers: { Authorization: `Bearer ${this.token}` },
         data: {
