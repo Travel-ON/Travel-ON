@@ -1,4 +1,3 @@
-import { createApi } from "@/api";
 import spring from "@/api/spring_boot";
 import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
