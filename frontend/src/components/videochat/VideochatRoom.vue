@@ -45,7 +45,12 @@
                       <v-icon color="white">mdi-share</v-icon> 방코드 확인</v-btn
                     >
 
-                    <v-btn class="btn mr-2" style="background-color: darkblue; color: white" @click="clickPlayGame">
+                    <v-btn
+                      class="btn mr-2"
+                      v-if="!playGame"
+                      style="background-color: darkblue; color: white"
+                      @click="clickPlayGame"
+                    >
                       <v-icon color="white">mdi-controller</v-icon> 게임하기</v-btn
                     >
                     <v-btn
@@ -316,7 +321,7 @@ export default {
       });
     },
     clickPlayGame() {
-      if (this.subscribers.length < 2) {
+      if (this.subscribers.length < 1) {
         Swal.fire({
           icon: "error",
           title: "게임은 3인 이상만 가능합니다",
