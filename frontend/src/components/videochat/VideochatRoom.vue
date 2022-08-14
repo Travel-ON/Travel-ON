@@ -321,7 +321,7 @@ export default {
       });
     },
     clickPlayGame() {
-      if (this.subscribers.length < 1) {
+      if (this.subscribers.length < 2) {
         Swal.fire({
           icon: "error",
           title: "게임은 3인 이상만 가능합니다",
