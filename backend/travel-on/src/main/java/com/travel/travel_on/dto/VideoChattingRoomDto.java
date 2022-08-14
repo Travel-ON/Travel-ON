@@ -21,6 +21,7 @@ public class VideoChattingRoomDto {
     private boolean privateFlag;
     private int count;
     private String roomCode;
+    private boolean playGame;
 
     public VideoChattingRoomDto(VideoChattingRoom videoChattingRoom){
         this.videoChattingRoomId=videoChattingRoom.getVideoChattingRoomId();
@@ -29,5 +30,6 @@ public class VideoChattingRoomDto {
         this.privateFlag=videoChattingRoom.isPrivateFlag();
         this.count=videoChattingRoom.getCount();
         this.roomCode=videoChattingRoom.getRoomCode();
+        this.playGame=videoChattingRoom.isPlayGame();
     }
 }

@@ -1,14 +1,14 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
   <div style="flex: 6">
-    <div id="history-detail-title">
+    <div class="history-detail-title">
       <div style="display: flex; align-items: center; margin-left: 20px">
         <div style="margin-right: 10px"><v-icon>mdi-check</v-icon></div>
         <div style="font-weight: bold; font-size: 28px">방문장소 확인</div>
       </div>
     </div>
-    <div id="history-detail-body">
-      <div id="history-detail-body-shell">
+    <div class="history-detail-body">
+      <div class="history-detail-body-shell">
         <div style="text-align: right; font-size: 12px">
           {{
             `${new Date(plan.visitDate).getFullYear()}년 ${new Date(plan.visitDate).getMonth() + 1}월 ${new Date(
@@ -22,7 +22,7 @@
             {{ `${plan.sidoName} ${plan.gugunName}` }}
           </div>
         </div>
-        <div id="plan-visit-place">
+        <div class="plan-visit-place">
           {{ plan.visitedPlace }}
         </div>
         <div style="display: flex; margin: 0 20px; align-items: center">
@@ -68,24 +68,24 @@ export default {
 </script>
 
 <style>
-#history-detail-title {
+.history-detail-title {
   height: 90px;
   display: flex;
   align-items: center;
 }
-#history-detail-body {
+.history-detail-body {
   display: flex;
   justify-content: center;
   margin: 0 50px;
 }
-#history-detail-body-shell {
+.history-detail-body-shell {
   width: 560px;
   padding: 20px 20px 0px;
   background-color: #c5dcff;
   border-radius: 12px;
   margin-bottom: 30px;
 }
-#plan-visit-place {
+.plan-visit-place {
   margin: 0 20px;
   text-align: left;
   font-size: 32px;
