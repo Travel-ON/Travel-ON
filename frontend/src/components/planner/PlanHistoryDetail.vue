@@ -27,7 +27,7 @@
         </div>
         <div style="display: flex; margin: 0 20px; align-items: center">
           <div style="margin-right: 5px; color: #f5c343; font-size: 16px">{{ plan.ratePoint.toFixed(1) }}</div>
-          <div>
+          <div v-if="plan.ratePoint">
             <v-rating
               v-model="plan.ratePoint"
               active-color="#f5c343"
@@ -40,7 +40,7 @@
           </div>
         </div>
         <div
-          v-if="plan.review !== ''"
+          v-if="plan.review !== '' && !plan.review"
           style="
             border: 2px solid #efefef;
             background-color: #efefef;
@@ -62,16 +62,15 @@
         style="font-weight: bold; color: #efefef; margin-right: 30px"
         @click="switchUpdate(plan)"
         width="180px"
-        >수정하기</v-btn
+        >기록수정</v-btn
       >
       <v-btn
-        color="#f05a50"
-        bg-color="#efefef"
+        color="#efefef"
         size="x-large"
-        style="font-weight: bold"
+        style="font-weight: bold; color: #50a0f0"
         @click="deletePlan()"
         width="180px"
-        >삭제하기</v-btn
+        >기록삭제</v-btn
       >
     </div>
   </div>
@@ -107,6 +106,7 @@ export default {
             alert("플랜 삭제 성공하였습니다.");
             console.log(res);
             this.getPlanList();
+            this.$emit("deleted");
           })
           .catch((err) => {
             alert("플랜 삭제 실패하였습니다.");
