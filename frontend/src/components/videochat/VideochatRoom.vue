@@ -3,39 +3,40 @@
     <v-row id="join">
       <v-col id="join-dialog" class="jumbotron vertical-center">
         <h1>채팅방화면</h1>
+        <div>{{ mySessionId }}</div>
         <v-row style="margin-top: 20px">
           <v-col>
             <div class="form-group">
               <p class="text-center">
                 <v-col>
                   <v-row id="video-container">
-                    <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
+                    <user-video :stream-manager="publisher" :class="{ 'col-12': one, 'col-6': two, 'col-4': three }" />
                     <user-video
                       v-for="sub in subscribers"
                       :key="sub.stream.connection.connectionId"
                       :stream-manager="sub"
-                      @click="$emit(updateMainVideoStreamManager(sub))"
+                      :class="{ 'col-12': one, 'col-6': two, 'col-4': three }"
                     />
                   </v-row>
                   <v-row class="mt-8">
                     <div v-if="publisher.stream.videoActive">
-                      <v-btn id="btn_video" class="btn mr-2" style="background-color: #6499ff" @click="clickMuteVideo">
+                      <v-btn id="btn_video" class="btn mr-2" style="background-color: #6499ff" @click="toggleVideo">
                         <v-icon color="white">mdi-video-outline</v-icon> 비디오 중지</v-btn
                       >
                     </div>
                     <div v-else>
-                      <v-btn id="btn_video" class="btn mr-2" style="background-color: #979797" @click="clickMuteVideo">
+                      <v-btn id="btn_video" class="btn mr-2" style="background-color: #979797" @click="toggleVideo">
                         <v-icon color="white">mdi-video-outline</v-icon> 비디오 시작</v-btn
                       >
                     </div>
 
                     <div v-if="publisher.stream.audioActive">
-                      <v-btn id="btn_audio" class="btn mr-2" style="background-color: #6499ff" @click="clickMuteAudio">
+                      <v-btn id="btn_audio" class="btn mr-2" style="background-color: #6499ff" @click="toggleAudio">
                         <v-icon color="white">mdi-microphone-outline</v-icon> 음소거 설정</v-btn
                       >
                     </div>
                     <div v-else>
-                      <v-btn id="btn_audio" class="btn mr-2" style="background-color: #979797" @click="clickMuteAudio">
+                      <v-btn id="btn_audio" class="btn mr-2" style="background-color: #979797" @click="toggleAudio">
                         <v-icon color="white">mdi-microphone-off</v-icon> 음소거 해제</v-btn
                       >
                     </div>
@@ -59,10 +60,9 @@
     </v-row>
     <v-row>
       <!--      <v-col id="capture" :class="{ 'col-8': isChatPanel, 'col-12': !isChatPanel }"> </v-col>-->
-
-      <v-col class="right-panel" v-if="isChatPanel">
-        <ChatPanel class="chat-panel" height="100px" v-if="isChatPanel"> </ChatPanel>
-      </v-col>
+      <div class="right-panel" v-if="isChatPanel">
+        <ChatPanel class="chat-panel" height="800px" style="max-height: 800px" v-if="isChatPanel"> </ChatPanel>
+      </div>
     </v-row>
   </v-container>
   <v-footer dark padless>
@@ -81,6 +81,7 @@
           </v-card-text>
         </v-col>
         <v-col>
+          <!--  채팅버튼   -->
           <v-card-text>
             <v-btn class="btn mr-2" @click="toggleChatPanel()"> 채팅온오프 </v-btn>
           </v-card-text>
@@ -93,17 +94,11 @@
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
 import axios from "axios";
-import { OpenVidu } from "openvidu-browser";
 import Swal from "sweetalert2";
 import ChatPanel from "@/components/videochat/chatPanel.vue";
 import UserVideo from "./UserVideo.vue";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
-
-// const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8443`;
-// const OPENVIDU_SERVER_SECRET = "ssafy";
-const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
-const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
   name: "VideochatRoom",
@@ -113,24 +108,40 @@ export default {
     ChatPanel,
   },
   computed: {
-    ...mapGetters({
-      currentUser: "currentUser",
-      currentUserId: "currentUserId",
-      token: "token",
-      title: "title",
-      isLoggedIn: "isLoggedIn",
-    }),
-    ...mapState("MeetingStore", ["isChatPanel"]),
+    ...mapState("MeetingStore", [
+      "OV",
+      "session",
+      "mainStreamManager",
+      "publisher",
+      "subscribers",
+      "mySessionId",
+      "isChatPanel",
+      "hostName",
+    ]),
+    ...mapGetters([
+      "sido",
+      "gugun",
+      "dong",
+      "dongCode",
+      "resident",
+      "currentUser",
+      "currentUserId",
+      "token",
+      "title",
+      "isLoggedIn",
+    ]),
   },
-
+  watch: {
+    // subscribers() {
+    //   this.addClass();
+    // },
+  },
   data() {
     return {
-      OV: undefined,
-      session: undefined,
-      mainStreamManager: undefined,
-      publisher: undefined,
-      subscribers: [],
-
+      one: true,
+      two: false,
+      three: false,
+      eight: false,
       residentMark: this.$route.params.residentMark,
       video: this.$route.params.video,
       audio: this.$route.params.audio,
@@ -140,126 +151,111 @@ export default {
   },
   created() {
     if (this.isLoggedIn) {
+      this.setSessionID(this.roomCode);
+      this.setHostName(this.hostName);
+      this.setResidentMark(this.residentMark);
+      this.setVideoFlag(this.video);
+      this.setAudioFlag(this.audio);
       this.joinSession();
     }
   },
+  mounted() {
+    setTimeout(() => {
+      this.changeIsNewbie();
+    }, 3000);
+  },
   methods: {
-    ...mapActions("MeetingStore", ["toggleChatPanel"]),
-    joinSession() {
-      // 오픈비두 세션 초기화
-      // --- Get an OpenVidu object ---
-      this.OV = new OpenVidu();
-      // --- Init a session ---
-      this.session = this.OV.initSession();
-
-      // --- Specify the actions when events take place in the session ---
-
-      // On every new Stream received...
-      this.session.on("streamCreated", ({ stream }) => {
-        const subscriber = this.session.subscribe(stream);
-        this.subscribers.push(subscriber);
-      });
-
-      // On every Stream destroyed...
-      this.session.on("streamDestroyed", ({ stream }) => {
-        const index = this.subscribers.indexOf(stream.streamManager, 0);
-        let check = false;
-        if (this.hostName === JSON.parse(stream.connection.data).clientName) {
-          check = true;
-        }
-        if (index >= 0) {
-          this.subscribers.splice(index, 1);
-        }
-        if (check) {
-          this.leaveSession();
-          Swal.fire("화상채팅방 종료", "호스트에 의해 화상채팅방이 종료되었습니다.", "warning");
-          this.$router.push({
-            name: "home",
-          });
-        }
-      });
-
-      // On every asynchronous exception...
-      this.session.on("exception", ({ exception }) => {
-        console.warn(exception);
-      });
-
-      // --- Connect to the session with a valid user token ---
-
-      // 'getToken' method is simulating what your server-side should do.
-      // 'token' parameter should be retrieved and returned by your own backend
-      this.getToken(this.roomCode).then((token) => {
-        this.session
-          .connect(token, {
-            clientName: this.currentUser,
-            clientTitle: this.title,
-            isResident: this.residentMark,
-            hostName: this.hostName,
-            isRoom: true,
-            clientUserId: this.currentUserId,
-          })
-          .then(() => {
-            // --- Get your own camera stream with the desired properties ---
-
-            const publisher = this.OV.initPublisher(undefined, {
-              audioSource: undefined, // The source of audio. If undefined default microphone
-              videoSource: undefined, // The source of video. If undefined default webcam
-              publishAudio: this.audio === "true", // Whether you want to start publishing with your audio unmuted or not
-              publishVideo: this.video === "true", // Whether you want to start publishing with your video enabled or not
-              resolution: "640x480", // The resolution of your video
-              frameRate: 30, // The frame rate of your video
-              insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-              mirror: false, // Whether to mirror your local video or not
-            });
-
-            this.mainStreamManager = publisher;
-            this.publisher = publisher;
-
-            // --- Publish your stream ---
-
-            this.session.publish(this.publisher);
-          })
-          .catch((error) => {
-            console.log("There was an error connecting to the session:", error.code, error.message);
-          });
-      });
-
-      window.addEventListener("beforeunload", this.leaveSession);
-    },
-
-    leaveSession() {
-      // --- Leave the session by calling 'disconnect' method over the Session object ---
-      if (this.session) this.session.disconnect();
-
-      this.session = undefined;
-      this.mainStreamManager = undefined;
-      this.publisher = undefined;
-      this.subscribers = [];
-      this.OV = undefined;
-
-      window.removeEventListener("beforeunload", this.leaveSession);
-    },
-
-    updateMainVideoStreamManager(stream) {
-      if (this.mainStreamManager === stream) return;
-      this.mainStreamManager = stream;
-    },
-
-    // yuna start
-    clickMuteVideo() {
-      if (this.publisher.stream.videoActive) {
-        this.publisher.publishVideo(false);
-      } else {
-        this.publisher.publishVideo(true);
-      }
-    },
-    clickMuteAudio() {
-      if (this.publisher.stream.audioActive) {
-        this.publisher.publishAudio(false);
-      } else {
-        this.publisher.publishAudio(true);
-      }
-    },
+    ...mapActions("MeetingStore", [
+      "joinSession",
+      "leaveSession",
+      "toggleVideo",
+      "toggleAudio",
+      "setSessionID",
+      "setHostName",
+      "setResidentMark",
+      "setVideoFlag",
+      "setAudioFlag",
+      "toggleChatPanel",
+      "changeIsNewbie",
+    ]),
+    // addClass() {
+    //   const count = this.subscribers.length + 1;
+    //   if (count === 1) {
+    //     this.one = true;
+    //     this.two = false;
+    //     this.three = false;
+    //     this.eight = false;
+    //     this.$nextTick(() => {
+    //       const videos = this.$refs.querySelectorAll("video");
+    //       for (let i = 0, len = videos.length; i < len; i += 1) {
+    //         videos[i].classList.add("height70");
+    //         videos[i].classList.remove("height30");
+    //         videos[i].classList.remove("height15");
+    //       }
+    //     });
+    //   } else if (count === 2 || count === 4) {
+    //     this.one = false;
+    //     this.two = true;
+    //     this.three = false;
+    //     this.eight = false;
+    //     if (count === 2) {
+    //       this.$nextTick(() => {
+    //         const videos = this.$refs.querySelectorAll("video");
+    //         for (let i = 0, len = videos.length; i < len; i += 1) {
+    //           videos[i].classList.add("height70");
+    //           videos[i].classList.remove("height30");
+    //           videos[i].classList.remove("height15");
+    //         }
+    //       });
+    //     } else {
+    //       this.$nextTick(() => {
+    //         const videos = this.$refs.querySelectorAll("video");
+    //         for (let i = 0, len = videos.length; i < len; i += 1) {
+    //           videos[i].classList.add("height30");
+    //           videos[i].classList.remove("height70");
+    //           videos[i].classList.remove("height15");
+    //         }
+    //       });
+    //     }
+    //   } else if (count === 3 || count === 5 || count === 6) {
+    //     this.one = false;
+    //     this.two = false;
+    //     this.three = true;
+    //     this.eight = false;
+    //     if (count === 3) {
+    //       this.$nextTick(() => {
+    //         const videos = this.$refs.querySelectorAll("video");
+    //         for (let i = 0, len = videos.length; i < len; i += 1) {
+    //           videos[i].classList.add("height70");
+    //           videos[i].classList.remove("height30");
+    //           videos[i].classList.remove("height15");
+    //         }
+    //       });
+    //     } else {
+    //       this.one = false;
+    //       this.two = false;
+    //       this.three = false;
+    //       this.eight = true;
+    //       this.$nextTick(() => {
+    //         const videos = this.$refs.querySelectorAll("video");
+    //         for (let i = 0, len = videos.length; i < len; i += 1) {
+    //           videos[i].classList.add("height30");
+    //           videos[i].classList.remove("height70");
+    //           videos[i].classList.remove("height15");
+    //         }
+    //       });
+    //     }
+    //   } else {
+    //     this.$nextTick(() => {
+    //       const videos = this.$refs.querySelectorAll("video");
+    //       for (let i = 0, len = videos.length; i < len; i += 1) {
+    //         videos[i].classList.add("height15");
+    //         videos[i].classList.remove("height70");
+    //         videos[i].classList.remove("height30");
+    //       }
+    //     });
+    //   }
+    // },
     clickCloseRoom() {
       Swal.fire({
         title: "화상채팅방을 종료하실건가요?",
@@ -341,8 +337,6 @@ export default {
       document.body.removeChild(t);
     },
     clickSharecode() {
-      // content.select();
-      // copyToClipboard("Hello World");
       Swal.fire("방 코드 🔑", `${this.roomCode}`, "info", {
         button: "확인",
       });
@@ -379,82 +373,7 @@ export default {
         }
       });
     },
-    // yuna end
-
-    /**
-     * --------------------------
-     * SERVER-SIDE RESPONSIBILITY
-     * --------------------------
-     * These methods retrieve the mandatory user token from OpenVidu Server.
-     * This behavior MUST BE IN YOUR SERVER-SIDE IN PRODUCTION (by using
-     * the API REST, openvidu-java-client or openvidu-node-client):
-     *   1) Initialize a Session in OpenVidu Server	(POST /openvidu/api/sessions)
-     *   2) Create a Connection in OpenVidu Server (POST /openvidu/api/sessions/<SESSION_ID>/connection)
-     *   3) The Connection.token must be consumed in Session.connect() method
-     */
-
-    getToken(roomCode) {
-      return this.createSession(roomCode).then((sessionId) => this.createToken(sessionId));
-    },
-
-    // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-session
-    createSession(sessionId) {
-      return new Promise((resolve, reject) => {
-        axios
-          .post(
-            `${OPENVIDU_SERVER_URL}/openvidu/api/sessions`,
-            JSON.stringify({
-              customSessionId: sessionId,
-            }),
-            {
-              auth: {
-                username: "OPENVIDUAPP",
-                password: OPENVIDU_SERVER_SECRET,
-              },
-            },
-          )
-          .then((response) => response.data)
-          .then((data) => resolve(data.id))
-          .catch((error) => {
-            if (error.response.status === 409) {
-              resolve(sessionId);
-            } else {
-              console.warn(
-                `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}`,
-              );
-              if (
-                // eslint-disable-next-line no-alert
-                window.confirm(
-                  `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}\n\nClick OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${OPENVIDU_SERVER_URL}"`,
-                )
-              ) {
-                Location.assign(`${OPENVIDU_SERVER_URL}/accept-certificate`);
-              }
-              reject(error.response);
-            }
-          });
-      });
-    },
-
-    // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-connection
-    createToken(sessionId) {
-      return new Promise((resolve, reject) => {
-        axios
-          .post(
-            `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
-            {},
-            {
-              auth: {
-                username: "OPENVIDUAPP",
-                password: OPENVIDU_SERVER_SECRET,
-              },
-            },
-          )
-          .then((response) => response.data)
-          .then((data) => resolve(data.token))
-          .catch((error) => reject(error.response));
-      });
-    },
   },
 };
 </script>
+<style></style>

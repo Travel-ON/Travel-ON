@@ -3,19 +3,13 @@
     <v-row id="join">
       <v-col id="join-dialog" class="jumbotron vertical-center">
         <v-btn class="btn mr-2" @click="clickHome">홈으로</v-btn>
-        <h1>방 만들기 화면</h1>
+        <h1>방 매칭 화면</h1>
         <v-row style="margin-top: 20px">
           <v-col style="background-color: skyblue">
             <div>현위치: {{ sido }} {{ gugun }} {{ dong }} <v-icon x-small>mdi-map-marker-radius</v-icon></div>
             <h3 class="mt-3">설정</h3>
             <v-row class="setting" style="background-color: white; margin: 5px">
               <v-container fluid>
-                <v-container class="px-0" fluid>
-                  <v-checkbox v-model="secretRoom" label="비공개 설정"></v-checkbox>
-                </v-container>
-                <v-container class="px-0" fluid>
-                  <v-select v-model="select" :items="counts" label="최대 인원"></v-select>
-                </v-container>
                 <div>지역범위 설정</div>
                 <v-radio-group v-model="areaScope" mandatory>
                   <v-radio :label="`시: ${sido}`" value="sido"></v-radio>
@@ -35,9 +29,9 @@
               <p>[미리보기 화면]</p>
               <p class="text-center">
                 <v-container class="px-0" fluid>
-                  <v-row style="position: relative" justify="center">
+                  <div style="position: relative">
                     <user-video :stream-manager="publisher" />
-                    <v-col
+                    <div
                       v-if="resident && residentMark"
                       style="
                         width: 130px;
@@ -50,8 +44,8 @@
                       "
                     >
                       <v-icon>mdi-clover</v-icon> 현지인 <v-icon>mdi-clover</v-icon>
-                    </v-col>
-                  </v-row>
+                    </div>
+                  </div>
                 </v-container>
               </p>
               <div style="display: flex">
@@ -76,7 +70,7 @@
                     <v-icon color="white">mdi-microphone-off</v-icon> 음소거 해제</v-btn
                   >
                 </div>
-                <v-btn class="btn mr-2" @click="clickCreateRoom">방 만들기</v-btn>
+                <v-btn class="btn mr-2" @click="clickMatchingRoom">방 매칭하기</v-btn>
               </div>
             </div>
           </v-col>
@@ -95,7 +89,7 @@ import UserVideo from "./UserVideo.vue";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 export default {
-  name: "VideochatCreate",
+  name: "VideochatMatching",
 
   components: {
     UserVideo,
@@ -109,9 +103,6 @@ export default {
     return {
       areaScope: "sido",
       residentMark: true,
-      select: 4,
-      counts: [4, 6, 8],
-      secretRoom: false,
       video: true,
       audio: true,
     };
@@ -141,17 +132,15 @@ export default {
         this.audio = true;
       }
     },
-    clickCreateRoom() {
+    clickMatchingRoom() {
       axios({
-        url: "http://localhost:3000/api/videochat/",
-        // url: "http://i7b301.p.ssafy.io:3000/api/videochat/",
+        url: "http://localhost:3000/api/videochat/match",
+        // url: "http://i7b301.p.ssafy.io:3000/api/videochat/match",
         method: "post",
         headers: { Authorization: `Bearer ${this.token}` },
         data: {
           dongCode: this.dongCode,
           areaScope: this.areaScope,
-          privateFlag: this.secretRoom,
-          count: this.select,
         },
       })
         .then((res) => {
@@ -170,7 +159,7 @@ export default {
         .catch((err) => {
           Swal.fire({
             icon: "error",
-            title: "방만들기 실패!",
+            title: "방 매칭 실패!",
             showConfirmButton: false,
             timer: 1000,
           });
