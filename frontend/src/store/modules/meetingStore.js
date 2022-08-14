@@ -9,7 +9,8 @@ import router from "@/router";
 
 const api = createApi();
 const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
-const OPENVIDU_SERVER_SECRET = "ssafy";
+// const OPENVIDU_SERVER_SECRET = "ssafy";
+const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 export const MeetingStore = {
@@ -39,9 +40,6 @@ export const MeetingStore = {
     SET_OV(state, OV) {
       state.OV = OV;
     },
-    // SET_OVTOKEN(state, token) {
-    //   state.ovToken = token;
-    // },
     SET_SESSION(state, session) {
       state.session = session;
     },
@@ -214,14 +212,15 @@ export const MeetingStore = {
 
       // On every Stream destroyed...
       state.session.on("streamDestroyed", ({ stream }) => {
+        console.log(stream);
         const index = state.subscribers.indexOf(stream.streamManager, 0);
 
         let check = false;
-        console.log("누가나갔다!!");
-        console.log(state.hostName);
-        console.log(JSON.parse(stream.connection.data).clientName);
-        console.log("====================================");
-        if (state.hostName === JSON.parse(stream.connection.data).clientName) {
+
+        if (
+          state.sessionId !== "impermanent_session" &&
+          state.hostName === JSON.parse(stream.connection.data).clientName
+        ) {
           check = true;
         }
 
@@ -322,17 +321,15 @@ export const MeetingStore = {
     toggleVideo({ state }) {
       if (state.publisher.stream.videoActive) {
         state.publisher.publishVideo(false);
-        // this.video = false;
       } else {
         state.publisher.publishVideo(true);
-        // this.audio = true;
       }
     },
-    toggleAudio() {
-      if (this.publisher.stream.audioActive) {
-        this.publisher.publishAudio(false);
+    toggleAudio({ state }) {
+      if (state.publisher.stream.audioActive) {
+        state.publisher.publishAudio(false);
       } else {
-        this.publisher.publishAudio(true);
+        state.publisher.publishAudio(true);
       }
     },
     toggleChatPanel({ state, commit }) {
