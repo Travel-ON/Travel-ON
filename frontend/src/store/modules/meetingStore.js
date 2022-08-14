@@ -7,7 +7,6 @@ import moment from "moment";
 // import { startsWith } from "core-js/core/string";
 import router from "@/router";
 
-const api = createApi();
 const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
 // const OPENVIDU_SERVER_SECRET = "ssafy";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
@@ -31,7 +30,8 @@ export const MeetingStore = {
     // chatting
     isChatPanel: false,
     messages: [],
-    secretRoom: false,
+    // 입장할때 이름이 전부떠서 체크해주기위한 변수
+    isNewbie: true,
 
     // game
     playGame: false,
@@ -50,6 +50,12 @@ export const MeetingStore = {
     voteCount: 0,
   },
   getters: {
+    chatItems(state) {
+      const items = state.subscribers.map(function (val) {
+        return JSON.parse(val.stream.connection.data).clientName;
+      });
+      return ["모두", ...items];
+    },
     messages: (state) => state.messages,
     gameCommentarys: (state) => state.gameCommentarys,
     subscribers: (state) => state.subscribers,
@@ -86,7 +92,9 @@ export const MeetingStore = {
     SET_AUDIO_FLAG(state, audioFlag) {
       state.audioFlag = audioFlag;
     },
-
+    SET_IS_NEWBIE(state, value) {
+      state.isNewbie = value;
+    },
     // chatting
     SET_IS_CHATPANEL(state, value) {
       state.isChatPanel = value;
@@ -218,31 +226,6 @@ export const MeetingStore = {
           });
       });
     },
-    // pre meeting
-    createSessionId({ dispatch }) {
-      api({
-        url: `/videochat/`,
-        method: "POST",
-        headers: { Authorization: `Bearer ${this.token}` },
-        data: {
-          dongCode: this.dongCode,
-          areaScope: this.areaScope,
-          privateFlag: this.secretRoom,
-          count: this.select,
-        },
-      }).then((res) => {
-        // 긁어온거 copy
-        dispatch("joinSession", {
-          residentMark: this.residentMark,
-          video: this.video,
-          audio: this.audio,
-          code: res.data.roomCode,
-          hostName: res.data.hostName,
-        });
-      });
-    },
-    enterSession() {},
-
     joinSession({ state, commit, dispatch, rootGetters }) {
       // 오픈비두 세션 초기화
       // --- Get an OpenVidu object ---
@@ -252,15 +235,20 @@ export const MeetingStore = {
       // const session = state.OV.initSession();
       // --- Specify the actions when events take place in the session ---
       commit("SET_SESSION", state.OV.initSession());
-      // console.log("SET_SESSION");
-      // console.log(session);
-
       // On every new Stream received...
       // const subscribers = [];
       // commit("SET_SUBSCRIBERS", subscribers);
       state.session.on("streamCreated", ({ stream }) => {
         const subscriber = state.session.subscribe(stream);
         state.subscribers.push(subscriber);
+        if (!state.isNewbie) {
+          const data = {
+            from: "SYSTEM",
+            to: [],
+            message: `🎉${JSON.parse(stream.connection.data).clientName}님이 입장하였습니다🎉`,
+          };
+          dispatch("sendMessage", data);
+        }
       });
 
       // On every Stream destroyed...
@@ -269,7 +257,6 @@ export const MeetingStore = {
         const index = state.subscribers.indexOf(stream.streamManager, 0);
 
         let check = false;
-
         if (
           state.sessionId !== "impermanent_session" &&
           state.hostName === JSON.parse(stream.connection.data).clientName
@@ -287,6 +274,13 @@ export const MeetingStore = {
           router.push({
             name: "home",
           });
+        } else {
+          const data = {
+            from: "SYSTEM",
+            to: [],
+            message: `✋${JSON.parse(stream.connection.data).clientName}님이 퇴장하였습니다✋`,
+          };
+          dispatch("sendMessage", data);
         }
       });
 
@@ -334,11 +328,20 @@ export const MeetingStore = {
               const eventData = JSON.parse(event.data);
               const data = {};
               const time = new Date();
-              data.message = eventData.content;
-              data.sender = JSON.parse(event.from.data).clientName;
+              data.message = eventData.message;
+              data.sender = eventData.from;
+              if (eventData.to[0] === undefined) data.receiver = "모두";
+              // eslint-disable-next-line prefer-destructuring
+              else data.receiver = eventData.to[0];
+              // data.sender = JSON.parse(event.from.data).clientName;
               data.time = moment(time).format("HH:mm");
-              state.messages.push(data);
-              // commit("SET_MESSAGES", data);
+              if (
+                data.sender === rootGetters.currentUser ||
+                data.receiver === rootGetters.currentUser ||
+                data.receiver === "모두"
+              ) {
+                state.messages.push(data);
+              }
             });
 
             state.session.on("signal:liar", (event) => {
@@ -603,17 +606,15 @@ export const MeetingStore = {
 
       window.removeEventListener("beforeunload", this.leaveSession);
     },
-    updateMainVideoStreamManager({ state, commit }, stream) {
-      if (state.mainStreamManager === stream) return;
-      commit("SET_MAINSTREAMMANAGER", stream);
-      // state.mainStreamManager = stream;
-    },
     toggleVideo({ state }) {
       if (state.publisher.stream.videoActive) {
         state.publisher.publishVideo(false);
       } else {
         state.publisher.publishVideo(true);
       }
+    },
+    changeIsNewbie({ commit }) {
+      commit("SET_IS_NEWBIE", false);
     },
     toggleAudio({ state }) {
       if (state.publisher.stream.audioActive) {
@@ -634,17 +635,10 @@ export const MeetingStore = {
         }, 50);
       }
     },
-    sendMessage({ state }, message) {
-      const messageData = {
-        content: message,
-        secretName: state.secretName,
-      };
-      console.log(`세션 출력 ${state.session}`);
-      console.log(`메세지 출력 ${message}`);
+    sendMessage({ state }, data) {
       state.session.signal({
         type: "chat",
-        data: JSON.stringify(messageData),
-        to: [],
+        data: JSON.stringify(data),
       });
     },
 
