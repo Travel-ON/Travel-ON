@@ -89,6 +89,7 @@
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
+import spring from "@/api/spring_boot";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -148,8 +149,7 @@ export default {
     },
     getAlarmList() {
       axios({
-        // url: "http://localhost:3000/api/alarm/",
-        url: "http://i7b301.p.ssafy.io:3000/api/alarm/",
+        url: spring.alarm.alarmList(),
         method: "get",
         headers: { Authorization: `Bearer ${this.token}` },
       })
@@ -186,8 +186,7 @@ export default {
         }).then((result) => {
           if (result.isConfirmed) {
             axios({
-              // url: "http://localhost:3000/api/alarm/",
-              url: "http://i7b301.p.ssafy.io:3000/api/alarm/",
+              url: spring.alarm.alarmList(),
               method: "delete",
               headers: { Authorization: `Bearer ${this.token}` },
             })

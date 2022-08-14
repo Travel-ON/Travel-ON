@@ -1,5 +1,5 @@
 import { createApi } from "@/api";
-
+import spring from "@/api/spring_boot";
 import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -9,8 +9,8 @@ import router from "@/router";
 
 const api = createApi();
 const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
-const OPENVIDU_SERVER_SECRET = "ssafy";
-// const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+// const OPENVIDU_SERVER_SECRET = "ssafy";
+const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 export const MeetingStore = {
@@ -128,6 +128,9 @@ export const MeetingStore = {
     },
   },
   actions: {
+    setPlayGame({ commit }, status) {
+      commit("SET_PLAY_GAME", status);
+    },
     setSessionID({ commit }, roomCode) {
       commit("SET_SESSION_ID", roomCode);
     },
@@ -351,6 +354,19 @@ export const MeetingStore = {
               if (eventData.gameId === "liar") {
                 if (eventData.step === 1) {
                   // 라이어 게임 시작
+                  if (state.hostName === rootGetters.currentUser) {
+                    axios({
+                      url: spring.videochat.game(state.mySessionId),
+                      method: "put",
+                      headers: { Authorization: `Bearer ${rootGetters.token}` },
+                    })
+                      .then((res) => {
+                        console.log(res);
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                      });
+                  }
                   commit("SET_PLAY_GAME", true);
                   commit("SET_IS_GAMEPANEL", true);
                   state.gameCommentarys.push({ comment: "📣 라이어게임을 시작합니다!!!" });
@@ -359,8 +375,7 @@ export const MeetingStore = {
                   console.log(rootGetters.currentUser);
                   if (state.hostName === rootGetters.currentUser) {
                     axios({
-                      // url: "http://localhost:3000/api/videochat/liargame",
-                      url: "http://i7b301.p.ssafy.io:3000/api/videochat/liargame",
+                      url: spring.videochat.liarTopic(),
                       method: "get",
                       headers: { Authorization: `Bearer ${rootGetters.token}` },
                     })
@@ -479,7 +494,7 @@ export const MeetingStore = {
                           content: {
                             vote1st: sortable[0],
                             vote2nd: sortable[1],
-                            vote3rd: sortable[0],
+                            vote3rd: sortable[2],
                             findLiar: state.liar === sortable[0][0],
                           },
                         };
@@ -690,8 +705,7 @@ export const MeetingStore = {
       console.log(topic);
       if (topic) {
         axios({
-          // url: `http://localhost:3000/api/videochat/liargame/${topics[topic]}`,
-          url: `http://i7b301.p.ssafy.io:3000/api/videochat/liargame/${topics[topic]}`,
+          url: spring.videochat.liarKeyword(topics[topic]),
           method: "get",
           headers: { Authorization: `Bearer ${rootGetters.token}` },
         })
@@ -828,7 +842,7 @@ export const MeetingStore = {
         });
       }
     },
-    endLiar({ state, commit }) {
+    endLiar({ state, commit, rootGetters }) {
       // 초기화
       state.gameCommentarys.push({
         comment: `📣 라이어게임이 종료되었습니다 `,
@@ -845,6 +859,20 @@ export const MeetingStore = {
       commit("SET_LIAR", "");
       commit("SET_VOTES", []);
       commit("SET_VOTE_COUNT", 0);
+
+      if (state.hostName === rootGetters.currentUser) {
+        axios({
+          url: spring.videochat.game(state.mySessionId),
+          method: "delete",
+          headers: { Authorization: `Bearer ${rootGetters.token}` },
+        })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     },
   },
 };

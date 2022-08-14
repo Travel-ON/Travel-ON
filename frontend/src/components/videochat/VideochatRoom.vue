@@ -117,6 +117,7 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
+import spring from "@/api/spring_boot";
 import axios from "axios";
 import Swal from "sweetalert2";
 import ChatPanel from "@/components/videochat/chatPanel.vue";
@@ -216,8 +217,7 @@ export default {
         }).then((result) => {
           if (result.isConfirmed) {
             axios({
-              url: `http://i7b301.p.ssafy.io:3000/api/videochat/${this.roomCode}`,
-              // url: `http://localhost:3000/api/videochat/${this.roomCode}`,
+              url: spring.videochat.room(this.roomCode),
               method: "delete",
               headers: { Authorization: `Bearer ${this.token}` },
             })
@@ -259,8 +259,7 @@ export default {
         }).then((result) => {
           if (result.isConfirmed) {
             axios({
-              url: `http://i7b301.p.ssafy.io:3000/api/videochat/leave/${this.roomCode}`,
-              // url: `http://localhost:3000/api/videochat/leave/${this.roomCode}`,
+              url: spring.videochat.leave(this.roomCode),
               method: "get",
               headers: { Authorization: `Bearer ${this.token}` },
             })
@@ -317,20 +316,28 @@ export default {
       });
     },
     clickPlayGame() {
-      Swal.fire({
-        title: "게임하고 싶으신가요?",
-        text: "사람들에게 동의를 구하고 게임을 시작해보세요!",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "게임신청",
-        cancelButtonText: "취소",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          Swal.fire("라이어게임시작!", "신청기능구현해라~", "success");
-          // 게임 시작하면 게임하기 버튼 비활성화
-          this.startLiar();
-        }
-      });
+      if (this.subscribers.length < 2) {
+        Swal.fire({
+          icon: "error",
+          title: "게임은 3인 이상만 가능합니다",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      } else {
+        Swal.fire({
+          title: "게임하고 싶으신가요?",
+          text: "사람들에게 동의를 구하고 게임을 시작해보세요!",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "게임신청",
+          cancelButtonText: "취소",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // 게임 시작하면 게임하기 버튼 비활성화
+            this.startLiar();
+          }
+        });
+      }
     },
   },
 };

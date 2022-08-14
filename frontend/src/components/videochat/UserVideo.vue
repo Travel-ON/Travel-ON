@@ -44,6 +44,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import spring from "@/api/spring_boot";
 import axios from "axios";
 import Swal from "sweetalert2";
 import OvVideo from "./OvVideo.vue";
@@ -117,8 +118,7 @@ export default {
         if (text) {
           Swal.fire(text);
           axios({
-            url: `http://i7b301.p.ssafy.io:3000/api/videochat/report`,
-            // url: `http://localhost:3000/api/videochat/report`,
+            url: spring.videochat.report(),
             method: "post",
             headers: { Authorization: `Bearer ${this.token}` },
             data: {

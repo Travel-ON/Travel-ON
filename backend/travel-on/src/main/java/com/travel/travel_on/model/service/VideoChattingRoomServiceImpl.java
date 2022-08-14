@@ -54,6 +54,14 @@ public class VideoChattingRoomServiceImpl implements VideoChattingRoomService{
     }
 
     @Override
+    public boolean update(String roomCode, boolean status) {
+        VideoChattingRoom videoChattingRoom = videoChattingRoomRepository.findByRoomCode(roomCode);
+        videoChattingRoom.setPlayGame(status);
+        videoChattingRoomRepository.save(videoChattingRoom);
+        return true;
+    }
+
+    @Override
     public VideoChattingRoom match(User user, String areaCode) {
 
         if(userVideoChattingRoomRepository.findByUser(user)!=null) {
