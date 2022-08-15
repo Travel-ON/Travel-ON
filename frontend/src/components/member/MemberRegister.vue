@@ -115,7 +115,7 @@
       </v-form>
     </v-card>
     <v-btn
-      :disabled="!valid && agrreCheck"
+      :disabled="!valid && !agreeCheck"
       @click="regist(credentials)"
       size="x-large"
       color="#c9deff"
