@@ -32,6 +32,8 @@ public class PlannerServiceImpl implements PlannerService{
     @Autowired
     GugunRepository gRepo;
 
+    @Autowired
+    UserRepository uRepo;
 
     @Override
     public List<VisitPlace> selectVisitAll(User user) {
@@ -84,6 +86,17 @@ public class PlannerServiceImpl implements PlannerService{
     }
 
     @Override
+    public List<VisitPlace> selectModalVisitAll(String nickName) {
+        Optional<User> oppUser = uRepo.findByNickname(nickName);
+        if(oppUser.isPresent()){
+            User user = oppUser.get();
+            List<VisitPlace> list = vRepo.findByUser(user);
+            return list;
+        }
+            return null;
+    }
+
+    @Override
     public List<VisitExpected> selectExpectedAll(User user) {
         List<VisitExpected> list = eRepo.findByUser(user);
 
@@ -130,6 +143,17 @@ public class PlannerServiceImpl implements PlannerService{
             }
             return vlist;
         }
+    }
+
+    @Override
+    public List<VisitExpected> selectModalExpectedAll(String nickName) {
+        Optional<User> oppUser = uRepo.findByNickname(nickName);
+        if(oppUser.isPresent()){
+            User user = oppUser.get();
+            List<VisitExpected> list = eRepo.findByUser(user);
+            return list;
+        }
+        return null;
     }
 
     @Override
