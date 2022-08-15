@@ -65,10 +65,6 @@
                       <v-icon color="white">mdi-controller</v-icon> 게임하기</v-btn
                     >
 
-                    <v-btn class="btn mr-2" style="background-color: darkblue; color: white" @click="clickPlayRoulette">
-                      <v-icon color="white">mdi-controller</v-icon> 룰렛돌리기</v-btn
-                    >
-
                     <v-btn
                       class="btn mr-2"
                       v-if="startLiarTalkFlag"
