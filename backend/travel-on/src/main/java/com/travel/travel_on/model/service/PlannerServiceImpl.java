@@ -166,7 +166,7 @@ public class PlannerServiceImpl implements PlannerService{
                 .user(user)
                 .visitedPlace(visitPlaceDto.getVisitedPlace())
                 .ratePoint(visitPlaceDto.getRatePoint())
-                .reivew(visitPlaceDto.getReivew())
+                .review(visitPlaceDto.getReview())
                 .sidoName(visitPlaceDto.getSidoName())
                 .gugunName(visitPlaceDto.getGugunName())
                 .visitDate(visitPlaceDto.getVisitDate())
