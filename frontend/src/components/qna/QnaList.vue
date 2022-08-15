@@ -33,7 +33,7 @@
 
       <v-container class="">
         <v-form>
-          <v-text-field v-model="keyword" label="제목검색"></v-text-field>
+          <v-text-field v-model="keyword" label="제목검색" @keydown.enter.prevent="submit"></v-text-field>
         </v-form>
         <v-btn color="indigo" text @click="submit">검색</v-btn>
       </v-container>
