@@ -390,7 +390,7 @@ export const MeetingStore = {
         return { subscriber: val, isChosed: false };
       });
       commit("SET_TESTSUBSCRIBERES", zz);
-      commit("SET_SUBSCRIBERS", []);
+      state.test = !state.test;
       console.log(zz);
       console.log(state.subscribe);
       console.log(state.testSubscribers);
@@ -406,7 +406,7 @@ export const MeetingStore = {
           if (testName[value] === "publisher") {
             console.log(state.testSubscribers.length);
             state.testSubscribers[state.testSubscribers.length - 1].isChosed = false;
-            commit("SET_TEST", !state.test);
+            state.test = !state.test;
             value += 1;
             if (value > state.testSubscribers.length) {
               value = 0;
@@ -417,7 +417,7 @@ export const MeetingStore = {
             JSON.parse(state.testSubscribers[value - 1].subscriber.stream.connection.data).clientName
           ) {
             if (value === 1) {
-              commit("SET_TEST", !state.test);
+              state.test = !state.test;
             } else if (value === 2) {
               console.log("ㅎㅎ");
             } else {

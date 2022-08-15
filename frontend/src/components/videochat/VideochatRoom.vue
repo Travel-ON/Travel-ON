@@ -138,6 +138,7 @@ export default {
       "hostName",
 
       // test
+      "test",
       "testSubscribers",
     ]),
     ...mapGetters([

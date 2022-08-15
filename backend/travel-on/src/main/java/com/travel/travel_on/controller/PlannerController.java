@@ -69,7 +69,7 @@ public class PlannerController {
             if(userDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
             List<VisitPlace> list;
-            list = plannerService.selectVisitFilter(filter);
+            list = plannerService.selectVisitFilter(userDto.toEntity(), filter);
 
             List<VisitPlaceDto> result = list.stream()
                     .map(r -> new VisitPlaceDto(r))
@@ -115,7 +115,7 @@ public class PlannerController {
             if(userDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
             List<VisitExpected> list;
-            list = plannerService.selectExpectedFilter(filter);
+            list = plannerService.selectExpectedFilter(userDto.toEntity(), filter);
 
             List<VisitExpectedDto> result = list.stream()
                     .map(r -> new VisitExpectedDto(r))

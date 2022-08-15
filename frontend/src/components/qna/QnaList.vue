@@ -24,7 +24,7 @@
         <v-col>상태</v-col>
       </v-row>
       <v-row v-for="qna in qnas" :key="qna.qnaid">
-        <v-col>{{ qna.realId }}</v-col>
+        <v-col>{{ qna.nickname }}</v-col>
         <v-col @click="moveToDetail(qna.qnaid)">{{ qna.title }}</v-col>
         <v-col>{{ qna.qnaDate }}</v-col>
         <v-col v-if="qna.answerFlag">답변완료</v-col>
