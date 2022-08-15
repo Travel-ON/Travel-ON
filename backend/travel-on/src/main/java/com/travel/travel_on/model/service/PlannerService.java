@@ -13,11 +13,11 @@ public interface PlannerService {
 
     List<VisitPlace> selectVisitAll(User user);
 
-    List<VisitPlace> selectVisitFilter(FilterDto filterDto);
+    List<VisitPlace> selectVisitFilter(User user, FilterDto filterDto);
 
     List<VisitExpected> selectExpectedAll(User user);
 
-    List<VisitExpected> selectExpectedFilter(FilterDto filterDto);
+    List<VisitExpected> selectExpectedFilter(User user, FilterDto filterDto);
 
     VisitPlaceDto selectVisitOne(Integer id);
 

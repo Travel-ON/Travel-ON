@@ -30,8 +30,8 @@ public class VisitPlace implements Serializable {
     @Column(name = "rate_point", nullable = true)
     private Double ratePoint;
 
-    @Column(name = "review", nullable = true)
-    private String review;
+    @Column(name = "reivew", nullable = true)
+    private String reivew;
 
     @Column(name = "sido_name", length = 20, nullable = false)
     private String sidoName;
