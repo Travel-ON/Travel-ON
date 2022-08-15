@@ -10,10 +10,21 @@
               <p class="text-center">
                 <v-col>
                   <v-row id="video-container">
-                    <user-video :stream-manager="publisher" :class="{ 'col-12': one, 'col-6': two, 'col-4': three }" />
+                    <div :style="roulettePointer === currentUser ? 'border: 10px solid yellow' : ''">
+                      <user-video
+                        :stream-manager="publisher"
+                        :class="{ 'col-12': one, 'col-6': two, 'col-4': three }"
+                        @click="$emit(updateMainVideoStreamManager(publisher))"
+                      />
+                    </div>
                     <user-video
                       v-for="sub in subscribers"
                       :key="sub.stream.connection.connectionId"
+                      :style="
+                        roulettePointer === JSON.parse(sub.stream.connection.data).clientName
+                          ? 'border: 10px solid yellow'
+                          : ''
+                      "
                       :stream-manager="sub"
                       :class="{ 'col-12': one, 'col-6': two, 'col-4': three }"
                     />
@@ -53,6 +64,7 @@
                     >
                       <v-icon color="white">mdi-controller</v-icon> 게임하기</v-btn
                     >
+
                     <v-btn
                       class="btn mr-2"
                       v-if="startLiarTalkFlag"
@@ -69,6 +81,7 @@
                     >
                       <v-icon color="white">mdi-controller</v-icon> 대화종료</v-btn
                     >
+
                     <v-btn v-if="hostName === currentUser" class="btn mr-2" @click="clickCloseRoom">종료</v-btn>
                     <v-btn v-else class="btn mr-2" @click="clickLeaveRoom">나가기</v-btn>
                   </v-row>
@@ -149,9 +162,12 @@ export default {
       "isChatPanel",
       "isGamePanel",
       "hostName",
+
+      // liar
       "startLiarTalkFlag",
       "stopLiarTalkFlag",
       "playGame",
+      "roulettePointer",
     ]),
     ...mapGetters([
       "sido",
@@ -216,6 +232,7 @@ export default {
       "startLiar",
       "startLiarTalk",
       "stopLiarTalk",
+      "startRoulette",
     ]),
     // addClass() {
     //   const count = this.subscribers.length + 1;
@@ -436,7 +453,7 @@ export default {
     },
     async selectGame() {
       const { value: game } = await Swal.fire({
-        title: "Select color",
+        title: "어떤 게임을 하고 싶은가요?",
         input: "radio",
         inputOptions: { liar: "라이어게임", roulette: "룰렛게임" },
         showCancelButton: true,
@@ -447,10 +464,14 @@ export default {
           return "";
         },
       });
-      Swal.fire({ html: `You selected: ${game}` });
       if (game === "liar") {
         this.startLiar();
+      } else {
+        this.clickPlayRoulette();
       }
+    },
+    clickPlayRoulette() {
+      this.startRoulette();
     },
   },
 };
