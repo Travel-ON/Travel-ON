@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import moment from "moment";
 // import { startsWith } from "core-js/core/string";
 import router from "@/router";
+import kakao from "@/api/kakao_api";
 
 const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
 // const OPENVIDU_SERVER_SECRET = "ssafy";
@@ -334,7 +335,34 @@ export const MeetingStore = {
               else data.receiver = eventData.to[0];
               // data.sender = JSON.parse(event.from.data).clientName;
               data.time = moment(time).format("HH:mm");
-              if (
+              if (eventData.isHashTag) {
+                axios({
+                  url: kakao.region.imageSearch(),
+                  headers: { Authorization: "KakaoAK a7cedeb35de4c99731ff3ee0bc0ade21" },
+                  method: "GET",
+                  params: {
+                    query: eventData.message,
+                    sort: "accuracy",
+                    size: 4,
+                  },
+                })
+                  .then((res) => {
+                    console.log(res.data);
+                    data.url = res.data.documents[0].image_url;
+                    data.doc_url = `https://search.naver.com/search.naver?where=image&query=${data.message}`;
+                    if (
+                      data.sender === rootGetters.currentUser ||
+                      data.receiver === rootGetters.currentUser ||
+                      data.receiver === "모두"
+                    ) {
+                      console.log("최종url", data.url);
+                      state.messages.push(data);
+                    }
+                  })
+                  .catch((err) => {
+                    console.log("이미지 api에러발생===", err);
+                  });
+              } else if (
                 data.sender === rootGetters.currentUser ||
                 data.receiver === rootGetters.currentUser ||
                 data.receiver === "모두"

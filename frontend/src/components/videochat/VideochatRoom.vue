@@ -79,14 +79,14 @@
         </v-row>
       </v-col>
     </v-row>
-    <v-row>
+    <div>
       <v-col class="right-panel" v-if="isChatPanel">
         <ChatPanel class="chat-panel" height="800px" style="max-height: 800px" v-if="isChatPanel"> </ChatPanel>
       </v-col>
       <v-col class="right-panel" v-if="isGamePanel">
         <GamePanel class="game-panel" height="800px" v-if="isGamePanel"> </GamePanel>
       </v-col>
-    </v-row>
+    </div>
   </v-container>
   <v-footer dark padless>
     <v-card class="flex-grow-1" tile>
