@@ -95,10 +95,27 @@
             bg-color="#c9deff"
           ></v-select>
         </div>
+        <div style="display: flex">
+          <div>
+            <v-checkbox v-model="agreeCheck"></v-checkbox>
+            <div>약관을 읽고 개인정보 이용 동의를 체크 해주세요.</div>
+          </div>
+          <v-btn class="ma-2" color="primary" @click="expand = !expand"> 약관 보기 </v-btn>
+
+          <v-expand-transition>
+            <v-card v-show="expand" height="500" width="500" class="overflow-y-auto">
+              <v-card-text>
+                <div class="mb-4">하하하</div>
+              </v-card-text>
+            </v-card>
+          </v-expand-transition>
+
+          <div class="mx-4 hidden-sm-and-down"></div>
+        </div>
       </v-form>
     </v-card>
     <v-btn
-      :disabled="!valid"
+      :disabled="!valid && agrreCheck"
       @click="regist(credentials)"
       size="x-large"
       color="#c9deff"
@@ -126,6 +143,8 @@ export default {
         nickname: "",
         sidoCode: "",
       },
+      expand: false,
+      agreeCheck: false,
       sido: [
         { code: "4200000000", name: "강원" },
         { code: "4100000000", name: "경기" },

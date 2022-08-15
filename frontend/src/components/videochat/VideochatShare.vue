@@ -30,7 +30,7 @@
               <p class="text-center">
                 <v-container class="px-0" fluid>
                   <div style="position: relative">
-                    <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
+                    <user-video :stream-manager="publisher" />
                     <div
                       v-if="resident && residentMark"
                       style="position: absolute; top: 10px; right: 50%; background-color: #6499ff; color: white"
@@ -74,6 +74,7 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
+import spring from "@/api/spring_boot";
 import axios from "axios";
 import Swal from "sweetalert2";
 import UserVideo from "./UserVideo.vue";
@@ -104,13 +105,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("MeetingStore", [
-      "joinSession",
-      "leaveSession",
-      "updateMainVideoStreamManager",
-      "toggleVideo",
-      "toggleVideo",
-    ]),
+    ...mapActions("MeetingStore", ["joinSession", "leaveSession", "toggleVideo", "toggleVideo"]),
     toggleVideo() {
       if (this.publisher.stream.videoActive) {
         this.publisher.publishVideo(false);
@@ -131,13 +126,35 @@ export default {
     },
     clickMatchingRoom() {
       axios({
-        url: `http://localhost:3000/api/videochat/${this.roomCode}`,
-        // url: `http://i7b301.p.ssafy.io:3000/api/videochat/${this.roomCode}`,
+        url: spring.videochat.room(this.roomCode),
         method: "get",
         headers: { Authorization: `Bearer ${this.token}` },
       })
         .then((res) => {
           this.leaveSession();
+          if (res.data.playGame === "true") {
+            Swal.fire({
+              icon: "warning",
+              title: "현재 이 방은 게임중입니다!",
+              showConfirmButton: false,
+              timer: 1000,
+            });
+            axios({
+              url: spring.videochat.leave(res.data.roomCode),
+              method: "get",
+              headers: { Authorization: `Bearer ${this.token}` },
+            })
+              .then((response) => {
+                console.log(response);
+                this.$router.push({
+                  name: "home",
+                });
+              })
+              .catch((err) => {
+                // alert("이미 있는 아이디 입니다!");
+                console.log(err);
+              });
+          }
           this.$router.push({
             name: "VideochatRoom",
             params: {
