@@ -5,20 +5,29 @@ export const Plans = {
   /* eslint-disable */
   state: () => ({
     planHistoryList: [],
+    planHistoryListModal: [],
     convertedHistoryList: [],
+    convertedHistoryListModal: [],
     expectHistoryList: [],
+    expectHistoryListModal: [],
     convertedExpectHistoryList: [],
   }),
   getters: {
     planHistoryList: (state) => state.planHistoryList,
+    planHistoryListModal: (state) => state.planHistoryListModal,
     convertedHistoryList: (state) => state.convertedHistoryList,
+    convertedHistoryListModal: (state) => state.convertedHistoryListModal,
     expectHistoryList: (state) => state.expectHistoryList,
+    expectHistoryListModal: (state) => state.expectHistoryListModal,
     convertedExpectHistoryList: (state) => state.convertedExpectHistoryList,
   },
   mutations: {
     SET_PLAN_HISTORY_LIST: (state, planHistoryList) => (state.planHistoryList = planHistoryList),
+    SET_PLAN_HISTORY_LIST_MODAL: (state, planHistoryListModal) => (state.planHistoryListModal = planHistoryListModal),
     SET_CONVERTED_HISTORY_LIST: (state, convertedHistoryList) => (state.convertedHistoryList = convertedHistoryList),
+    SET_CONVERTED_HISTORY_LIST_MODAL: (state, convertedHistoryListModal) => (state.convertedHistoryListModal = convertedHistoryListModal),
     SET_EXPECT_HISTORY_LIST: (state, expectHistoryList) => (state.expectHistoryList = expectHistoryList),
+    SET_EXPECT_HISTORY_LIST_MODAL: (state, expectHistoryListModal) => (state.expectHistoryListModal = expectHistoryListModal),
     SET_CONVERTED_EXPECT_HISTORY_LIST: (state, convertedExpectHistoryList) => (state.convertedExpectHistoryList = convertedExpectHistoryList),
   },
   actions: {
@@ -58,6 +67,20 @@ export const Plans = {
         }
         commit("SET_CONVERTED_HISTORY_LIST", convertedHistoryList);
     },
+    convertPlanListModal({ getters, commit }) {
+      console.log("플랜 변환 시작")
+      let convertedHistoryListModal = [];
+      let tempDate = null;
+      getters.planHistoryList.forEach((element) => {
+        if (element.visitDate !== tempDate) {
+          // 임시 저장 날짜와 엘리먼트 날짜가 다르면
+          convertedHistoryListModal.push(element.visitDate); // 날짜 정보 임시 저장
+          tempDate = element.visitDate; // 임시 저장 날짜 갱신
+        }
+        convertedHistoryListModal.push(element); // 엘리먼트 임시 저장
+      });
+      commit("SET_CONVERTED_HISTORY_LIST_MODAL", convertedHistoryListModal);
+  },
     getPlanList({ getters, commit, dispatch }) {
       axios({
         url: spring.plan.getHistory(),
@@ -71,6 +94,24 @@ export const Plans = {
           console.log(res.data)
           commit("SET_PLAN_HISTORY_LIST", res.data);
           dispatch("convertPlanList");
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    getPlanListModal({ getters, commit, dispatch }) {
+      axios({
+        url: spring.plan.getHistory(),
+        method: "get",
+        headers: {
+          Authorization: `Bearer ${getters.token}`,
+        },
+      })
+        .then((res) => {
+          console.log("플랜 목록 수집 성공");
+          console.log(res.data)
+          commit("SET_PLAN_HISTORY_LIST", res.data);
+          dispatch("convertPlanListModal");
         })
         .catch((err) => {
           console.error(err);
