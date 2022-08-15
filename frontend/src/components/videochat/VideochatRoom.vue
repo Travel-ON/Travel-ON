@@ -10,6 +10,27 @@
               <p class="text-center">
                 <v-col>
                   <v-row id="video-container">
+                    <!-- <div :style="test ? 'border: 10px solid yellow' : ''">
+                      <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
+                    </div> -->
+                    <!-- <user-video
+                      v-for="sub in subscribers"
+                      :key="sub.stream.connection.connectionId"
+                      :stream-manager="sub"
+                      @click="$emit(updateMainVideoStreamManager(sub))"
+                    /> -->
+
+                    <!-- <user-video
+                      v-for="sub in testSubscribers === [] ? testSubscribers : subscribers"
+                      :key="
+                        testSubscribers === []
+                          ? sub.subscriber.stream.connection.connectionId
+                          : sub.stream.connection.connectionId
+                      "
+                      :style="testSubscribers.isChosed ? 'border: 10px solid yellow' : ''"
+                      :stream-manager="testSubscribers === [] ? sub.subscriber : sub"
+                      @click="$emit(updateMainVideoStreamManager(testSubscribers === [] ? sub.subscriber : sub))" -->
+
                     <user-video :stream-manager="publisher" :class="{ 'col-12': one, 'col-6': two, 'col-4': three }" />
                     <user-video
                       v-for="sub in subscribers"
@@ -53,6 +74,11 @@
                     >
                       <v-icon color="white">mdi-controller</v-icon> 게임하기</v-btn
                     >
+
+                    <v-btn class="btn mr-2" style="background-color: darkblue; color: white" @click="clickPlayRoulette">
+                      <v-icon color="white">mdi-controller</v-icon> 룰렛돌리기</v-btn
+                    >
+
                     <v-btn
                       class="btn mr-2"
                       v-if="startLiarTalkFlag"
@@ -69,6 +95,7 @@
                     >
                       <v-icon color="white">mdi-controller</v-icon> 대화종료</v-btn
                     >
+
                     <v-btn v-if="hostName === currentUser" class="btn mr-2" @click="clickCloseRoom">종료</v-btn>
                     <v-btn v-else class="btn mr-2" @click="clickLeaveRoom">나가기</v-btn>
                   </v-row>
@@ -149,6 +176,12 @@ export default {
       "isChatPanel",
       "isGamePanel",
       "hostName",
+
+      // test
+      "test",
+      "testSubscribers",
+
+      // liar
       "startLiarTalkFlag",
       "stopLiarTalkFlag",
       "playGame",
@@ -182,6 +215,9 @@ export default {
       audio: this.$route.params.audio,
       roomCode: this.$route.params.roomCode,
       hostName: this.$route.params.hostName,
+
+      // test
+      testName: {},
     };
   },
   created() {
@@ -211,6 +247,9 @@ export default {
       "setVideoFlag",
       "setAudioFlag",
       "toggleChatPanel",
+
+      "testRoulette",
+
       "changeIsNewbie",
       "toggleGamePanel",
       "startLiar",
@@ -451,6 +490,22 @@ export default {
       if (game === "liar") {
         this.startLiar();
       }
+    },
+    clickPlayRoulette() {
+      Swal.fire({
+        title: "룰렛 ㄱㄱ",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+
+      this.testName[0] = "publisher";
+      for (let i = 0; i < this.subscribers.length; i += 1) {
+        console.log(this.subscribers[i]);
+        this.testName[i + 1] = JSON.parse(this.subscribers[i].stream.connection.data).clientName;
+      }
+
+      this.testRoulette(this.testName);
     },
   },
 };
