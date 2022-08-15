@@ -64,6 +64,11 @@
                     >
                       <v-icon color="white">mdi-controller</v-icon> 게임하기</v-btn
                     >
+
+                    <v-btn class="btn mr-2" style="background-color: darkblue; color: white" @click="clickPlayRoulette">
+                      <v-icon color="white">mdi-controller</v-icon> 룰렛돌리기</v-btn
+                    >
+
                     <v-btn
                       class="btn mr-2"
                       v-if="startLiarTalkFlag"
@@ -80,6 +85,7 @@
                     >
                       <v-icon color="white">mdi-controller</v-icon> 대화종료</v-btn
                     >
+
                     <v-btn v-if="hostName === currentUser" class="btn mr-2" @click="clickCloseRoom">종료</v-btn>
                     <v-btn v-else class="btn mr-2" @click="clickLeaveRoom">나가기</v-btn>
                   </v-row>
@@ -160,6 +166,12 @@ export default {
       "isChatPanel",
       "isGamePanel",
       "hostName",
+
+      // test
+      "test",
+      "testSubscribers",
+
+      // liar
       "startLiarTalkFlag",
       "stopLiarTalkFlag",
       "playGame",
@@ -194,6 +206,9 @@ export default {
       audio: this.$route.params.audio,
       roomCode: this.$route.params.roomCode,
       hostName: this.$route.params.hostName,
+
+      // test
+      testName: {},
     };
   },
   created() {
@@ -223,6 +238,9 @@ export default {
       "setVideoFlag",
       "setAudioFlag",
       "toggleChatPanel",
+
+      "testRoulette",
+
       "changeIsNewbie",
       "toggleGamePanel",
       "startLiar",

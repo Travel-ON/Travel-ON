@@ -41,16 +41,16 @@ public class PlannerServiceImpl implements PlannerService{
     }
 
     @Override
-    public List<VisitPlace> selectVisitFilter(FilterDto filterDto) {
+    public List<VisitPlace> selectVisitFilter(User user, FilterDto filterDto) {
         List<VisitPlace> list;
         List<VisitPlace> vlist = new LinkedList<>();
 
         if(filterDto.getVisitPlace() == null && filterDto.getGugunName() == null && filterDto.getSidoName() == null){
-            list = vRepo.findByVisitDateBetween(filterDto.getStartDate(), filterDto.getEndDate());
+            list = vRepo.findByUserAndVisitDateBetween(user, filterDto.getStartDate(), filterDto.getEndDate());
 
             return list;
         }else if(filterDto.getVisitPlace() == null && filterDto.getGugunName() == null){
-            list = vRepo.findByVisitDateBetween(filterDto.getStartDate(), filterDto.getEndDate());
+            list = vRepo.findByUserAndVisitDateBetween(user, filterDto.getStartDate(), filterDto.getEndDate());
 
             for(VisitPlace visitPlace : list){
                 if(visitPlace.getSidoName().contains(filterDto.getSidoName())){
@@ -59,7 +59,7 @@ public class PlannerServiceImpl implements PlannerService{
             }
             return vlist;
         }else if(filterDto.getVisitPlace() == null){
-            list = vRepo.findByVisitDateBetween(filterDto.getStartDate(), filterDto.getEndDate());
+            list = vRepo.findByUserAndVisitDateBetween(user, filterDto.getStartDate(), filterDto.getEndDate());
 
             for(VisitPlace visitPlace : list){
                 if(visitPlace.getGugunName().contains(filterDto.getGugunName())
@@ -69,7 +69,7 @@ public class PlannerServiceImpl implements PlannerService{
             }
             return vlist;
         }else{
-            list = vRepo.findByVisitDateBetween(filterDto.getStartDate(), filterDto.getEndDate());
+            list = vRepo.findByUserAndVisitDateBetween(user, filterDto.getStartDate(), filterDto.getEndDate());
 
             for(VisitPlace visitPlace : list){
                 if(visitPlace.getVisitedPlace().contains(filterDto.getVisitPlace())
@@ -91,16 +91,16 @@ public class PlannerServiceImpl implements PlannerService{
     }
 
     @Override
-    public List<VisitExpected> selectExpectedFilter(FilterDto filterDto) {
+    public List<VisitExpected> selectExpectedFilter(User user, FilterDto filterDto) {
         List<VisitExpected> list;
         List<VisitExpected> vlist = new LinkedList<>();
 
         if(filterDto.getVisitPlace() == null && filterDto.getGugunName() == null && filterDto.getSidoName() == null){
-            list = eRepo.findByExpectedDateBetween(filterDto.getStartDate(), filterDto.getEndDate());
+            list = eRepo.findByUserAndExpectedDateBetween(user, filterDto.getStartDate(), filterDto.getEndDate());
 
             return list;
         }else if(filterDto.getVisitPlace() == null && filterDto.getGugunName() == null){
-            list = eRepo.findByExpectedDateBetween(filterDto.getStartDate(), filterDto.getEndDate());
+            list = eRepo.findByUserAndExpectedDateBetween(user, filterDto.getStartDate(), filterDto.getEndDate());
 
             for(VisitExpected visitExpected : list){
                 if(visitExpected.getSidoName().contains(filterDto.getSidoName())){
@@ -109,7 +109,7 @@ public class PlannerServiceImpl implements PlannerService{
             }
             return vlist;
         }else if(filterDto.getVisitPlace() == null){
-            list = eRepo.findByExpectedDateBetween(filterDto.getStartDate(), filterDto.getEndDate());
+            list = eRepo.findByUserAndExpectedDateBetween(user, filterDto.getStartDate(), filterDto.getEndDate());
 
             for(VisitExpected visitExpected : list){
                 if(visitExpected.getGugunName().contains(filterDto.getGugunName())
@@ -119,7 +119,7 @@ public class PlannerServiceImpl implements PlannerService{
             }
             return vlist;
         }else{
-            list = eRepo.findByExpectedDateBetween(filterDto.getStartDate(), filterDto.getEndDate());
+            list = eRepo.findByUserAndExpectedDateBetween(user, filterDto.getStartDate(), filterDto.getEndDate());
 
             for(VisitExpected visitExpected : list){
                 if(visitExpected.getExpectedPlace().contains(filterDto.getVisitPlace())
@@ -166,7 +166,7 @@ public class PlannerServiceImpl implements PlannerService{
                 .user(user)
                 .visitedPlace(visitPlaceDto.getVisitedPlace())
                 .ratePoint(visitPlaceDto.getRatePoint())
-                .review(visitPlaceDto.getReview())
+                .reivew(visitPlaceDto.getReivew())
                 .sidoName(visitPlaceDto.getSidoName())
                 .gugunName(visitPlaceDto.getGugunName())
                 .visitDate(visitPlaceDto.getVisitDate())

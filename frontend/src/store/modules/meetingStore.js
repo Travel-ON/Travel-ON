@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign */
 import spring from "@/api/spring_boot";
 import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
@@ -7,8 +8,10 @@ import moment from "moment";
 import router from "@/router";
 
 const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
-// const OPENVIDU_SERVER_SECRET = "ssafy";
+// const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8443`;
+
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+// const OPENVIDU_SERVER_SECRET = "ssafy";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 export const MeetingStore = {
@@ -29,6 +32,12 @@ export const MeetingStore = {
     // chatting
     isChatPanel: false,
     messages: [],
+
+    // 룰렛 test
+    test: false,
+    testArr: [],
+    testSubscribers: [],
+
     // 입장할때 이름이 전부떠서 체크해주기위한 변수
     isNewbie: true,
 
@@ -61,6 +70,7 @@ export const MeetingStore = {
     messages: (state) => state.messages,
     gameCommentarys: (state) => state.gameCommentarys,
     subscribers: (state) => state.subscribers,
+    testSubscribers: (state) => state.testSubscribers,
   },
   mutations: {
     // Openvidu
@@ -105,6 +115,9 @@ export const MeetingStore = {
       // state.messages.push(data);
       state.messages = messages;
     },
+
+    // test
+    SET_TESTSUBSCRIBERES: (state, testSubscribers) => (state.testSubscribers = testSubscribers),
 
     // game
     SET_PLAY_GAME(state, value) {
@@ -617,6 +630,17 @@ export const MeetingStore = {
                 }
               }
             });
+
+            // state.session.on("signal:game", (event) => {
+            //   const eventData = JSON.parse(event.data);
+            //   const data = {};
+            //   const time = new Date();
+            //   data.message = eventData.content;
+            //   data.sender = JSON.parse(event.from.data).clientName;
+            //   data.time = moment(time).format("HH:mm");
+            //   state.messages.push(data);
+            //   // commit("SET_MESSAGES", data);
+            // });
           })
           .catch((error) => {
             console.log("There was an error connecting to the session:", error.code, error.message);
@@ -680,6 +704,58 @@ export const MeetingStore = {
         data: JSON.stringify(data),
       });
     },
+    testRoulette({ state, commit }, payload) {
+      let delay = 0;
+      const testName = payload;
+      let zz = [];
+      zz = state.subscribers.map(function (val) {
+        return { subscriber: val, isChosed: false };
+      });
+      commit("SET_TESTSUBSCRIBERES", zz);
+      commit("SET_SUBSCRIBERS", []);
+      console.log(zz);
+      console.log(state.subscribe);
+      console.log(state.testSubscribers);
+
+      let value = 0;
+      for (let i = 0; i < 10; i += 1) {
+        delay += 1000;
+        console.log(value);
+
+        // eslint-disable-next-line no-loop-func
+        setTimeout(async () => {
+          console.log(value);
+          if (testName[value] === "publisher") {
+            console.log(state.testSubscribers.length);
+            state.testSubscribers[state.testSubscribers.length - 1].isChosed = false;
+            commit("SET_TEST", !state.test);
+            value += 1;
+            if (value > state.testSubscribers.length) {
+              value = 0;
+            }
+            console.log(state.testSubscribers[value - 1]);
+          } else if (
+            testName[value] ===
+            JSON.parse(state.testSubscribers[value - 1].subscriber.stream.connection.data).clientName
+          ) {
+            if (value === 1) {
+              commit("SET_TEST", !state.test);
+            } else if (value === 2) {
+              console.log("ㅎㅎ");
+            } else {
+              state.testSubscribers[value - 1].isChosed = false;
+            }
+            state.testSubscribers[value - 1].isChosed = !state.testSubscribers[value - 1].isChosed;
+            console.log(value);
+            console.log(state.testSubscribers[value - 1].isChosed);
+            value += 1;
+            if (value >= state.testSubscribers.length) {
+              value = 0;
+            }
+          }
+        }, delay);
+      }
+    },
 
     /* ... 게임중 사람들이 들어오거나 나가는 경우 생각! 라이어 게임은 3인 이상 가능
       -- 방장이 진행자 겸 참여자 (라이어는 모르지만 게임 진행은 함) --
@@ -707,6 +783,7 @@ export const MeetingStore = {
         to: [],
       });
     },
+
     toggleGamePanel({ state, commit }) {
       commit("SET_IS_GAMEPANEL", !state.isGamePanel);
       if (state.isGamePanel === true) {
