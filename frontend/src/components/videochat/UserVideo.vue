@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import spring from "@/api/spring_boot";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -97,6 +97,7 @@ export default {
   },
 
   methods: {
+    ...mapActions("MeetingStore", ["sendMessage"]),
     getConnectionData() {
       const { connection } = this.streamManager.stream;
       return JSON.parse(connection.data);
@@ -147,6 +148,8 @@ export default {
         }
       } else if (item.title === "강퇴하기") {
         alert(this.clientName.concat(" 강퇴!"));
+        const data = { type: "kickout", from: this.currentUser, to: this.clientName };
+        this.sendMessage(data);
       }
     },
   },
@@ -154,9 +157,6 @@ export default {
 </script>
 <style scoped>
 .label {
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding: 1px 10px;
 }
 </style>
