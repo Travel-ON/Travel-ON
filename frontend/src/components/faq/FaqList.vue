@@ -1,16 +1,15 @@
 <template>
   <div>
     <v-container>
-      <div v-for="item in faq" :key="item.faqId">
-        <v-row>
-          <v-col>Q</v-col>
-          <v-col>{{ item.question }}</v-col>
-          <v-col @click="toggleOn">V</v-col>
-        </v-row>
-        <v-row>
-          <v-col v-show="isStatusOn">{{ item.answer }}</v-col>
-        </v-row>
-      </div>
+      <v-expansion-panels v-model="panel" multiple>
+        <v-expansion-panel
+          v-for="item in faq"
+          :key="item.faqId"
+          :title="`Q. ${item.question}`"
+          :text="`A. ${item.answer}`"
+        >
+        </v-expansion-panel>
+      </v-expansion-panels>
       <div class="text-center">
         <v-container>
           <v-row justify="center">
@@ -24,7 +23,11 @@
       </div>
       <v-container class="">
         <v-form>
-          <v-text-field v-model="keyword" placeholder="검색어를 입력하세요"></v-text-field>
+          <v-text-field
+            v-model="keyword"
+            placeholder="검색어를 입력하세요"
+            @keydown.enter.prevent="searchPage()"
+          ></v-text-field>
         </v-form>
         <v-btn color="indigo" @click="searchPage()">검색</v-btn>
       </v-container>
@@ -45,7 +48,7 @@ export default {
     },
   },
   data() {
-    return { page: 1, isStatusOn: false, keyword: "" };
+    return { panel: [], page: 1, isStatusOn: false, keyword: "" };
   },
   mounted() {
     this.$store.dispatch("Notices/getFAQ");
