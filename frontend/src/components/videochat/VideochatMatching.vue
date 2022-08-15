@@ -29,7 +29,7 @@
               <p>[미리보기 화면]</p>
               <p class="text-center">
                 <v-container class="px-0" fluid>
-                  <div style="position: relative">
+                  <div style="position: relative; border: 10px solid yellow">
                     <user-video :stream-manager="publisher" @click="$emit(updateMainVideoStreamManager(publisher))" />
                     <div
                       v-if="resident && residentMark"

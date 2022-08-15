@@ -277,7 +277,7 @@ export default {
           })
           .catch((err) => {
             Swal.fire({
-              icon: "success",
+              icon: "error",
               title: "이미 있는 닉네임 입니다!",
               showConfirmButton: false,
               timer: 1000,
@@ -286,7 +286,7 @@ export default {
           });
       } else {
         Swal.fire({
-          icon: "success",
+          icon: "error",
           title: "아무것도 입력하지 않으셨습니다.",
           showConfirmButton: false,
           timer: 1000,

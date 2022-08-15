@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign */
 import { createApi } from "@/api";
 
 import { OpenVidu } from "openvidu-browser";
@@ -9,7 +10,9 @@ import router from "@/router";
 
 const api = createApi();
 const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
+// const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8443`;
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+// const OPENVIDU_SERVER_SECRET = "ssafy";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 export const MeetingStore = {
@@ -29,10 +32,15 @@ export const MeetingStore = {
     isChatPanel: false,
     messages: [],
     secretRoom: false,
+    // 룰렛 test
+    test: false,
+    testArr: [],
+    testSubscribers: [],
   },
   getters: {
     messages: (state) => state.messages,
     subscribers: (state) => state.subscribers,
+    testSubscribers: (state) => state.testSubscribers,
   },
   mutations: {
     // Openvidu
@@ -78,6 +86,9 @@ export const MeetingStore = {
       // state.messages.push(data);
       state.messages = messages;
     },
+
+    // test
+    SET_TESTSUBSCRIBERES: (state, testSubscribers) => (state.testSubscribers = testSubscribers),
   },
   actions: {
     setSessionID({ commit }, roomCode) {
@@ -288,6 +299,17 @@ export const MeetingStore = {
               state.messages.push(data);
               // commit("SET_MESSAGES", data);
             });
+
+            // state.session.on("signal:game", (event) => {
+            //   const eventData = JSON.parse(event.data);
+            //   const data = {};
+            //   const time = new Date();
+            //   data.message = eventData.content;
+            //   data.sender = JSON.parse(event.from.data).clientName;
+            //   data.time = moment(time).format("HH:mm");
+            //   state.messages.push(data);
+            //   // commit("SET_MESSAGES", data);
+            // });
           })
           .catch((error) => {
             console.log("There was an error connecting to the session:", error.code, error.message);
@@ -359,6 +381,58 @@ export const MeetingStore = {
         data: JSON.stringify(messageData),
         to: [],
       });
+    },
+    testRoulette({ state, commit }, payload) {
+      let delay = 0;
+      const testName = payload;
+      let zz = [];
+      zz = state.subscribers.map(function (val) {
+        return { subscriber: val, isChosed: false };
+      });
+      commit("SET_TESTSUBSCRIBERES", zz);
+      commit("SET_SUBSCRIBERS", []);
+      console.log(zz);
+      console.log(state.subscribe);
+      console.log(state.testSubscribers);
+
+      let value = 0;
+      for (let i = 0; i < 10; i += 1) {
+        delay += 1000;
+        console.log(value);
+
+        // eslint-disable-next-line no-loop-func
+        setTimeout(async () => {
+          console.log(value);
+          if (testName[value] === "publisher") {
+            console.log(state.testSubscribers.length);
+            state.testSubscribers[state.testSubscribers.length - 1].isChosed = false;
+            commit("SET_TEST", !state.test);
+            value += 1;
+            if (value > state.testSubscribers.length) {
+              value = 0;
+            }
+            console.log(state.testSubscribers[value - 1]);
+          } else if (
+            testName[value] ===
+            JSON.parse(state.testSubscribers[value - 1].subscriber.stream.connection.data).clientName
+          ) {
+            if (value === 1) {
+              commit("SET_TEST", !state.test);
+            } else if (value === 2) {
+              console.log("ㅎㅎ");
+            } else {
+              state.testSubscribers[value - 1].isChosed = false;
+            }
+            state.testSubscribers[value - 1].isChosed = !state.testSubscribers[value - 1].isChosed;
+            console.log(value);
+            console.log(state.testSubscribers[value - 1].isChosed);
+            value += 1;
+            if (value >= state.testSubscribers.length) {
+              value = 0;
+            }
+          }
+        }, delay);
+      }
     },
   },
 };

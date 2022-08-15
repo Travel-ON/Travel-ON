@@ -1,5 +1,5 @@
 const HOST = "http://localhost:3000/";
-// const HOST = "https://7d0c97ac-6236-4b8f-9ba8-f257edcdfe2d.mock.pstmn.io/";
+// const HOST = "https://i7b301.p.ssafy.io:3000/";
 
 const USER = "api/user/";
 // const QNA = "qna/";
