@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import moment from "moment";
 // import { startsWith } from "core-js/core/string";
 import router from "@/router";
+import kakao from "@/api/kakao_api";
 
 const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
 // const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8443`;
@@ -260,7 +261,7 @@ export const MeetingStore = {
             to: [],
             message: `🎉${JSON.parse(stream.connection.data).clientName}님이 입장하였습니다🎉`,
           };
-          dispatch("sendMessage", data);
+          state.messages.push(data);
         }
       });
 
@@ -293,7 +294,7 @@ export const MeetingStore = {
             to: [],
             message: `✋${JSON.parse(stream.connection.data).clientName}님이 퇴장하였습니다✋`,
           };
-          dispatch("sendMessage", data);
+          state.messages.push(data);
         }
       });
 
@@ -343,12 +344,53 @@ export const MeetingStore = {
               const time = new Date();
               data.message = eventData.message;
               data.sender = eventData.from;
+              // 강퇴
+              if (eventData.type === "kickout") {
+                console.log("커런트유저값은 ", rootGetters.currentUser);
+                console.log("이벤트데이타의 투 값은==", eventData.to);
+                if (eventData.to === rootGetters.currentUser) {
+                  dispatch("leaveSession");
+                  Swal.fire("화상채팅방 강퇴", "호스트에 의해 화상채팅방에서 강퇴되었습니다.", "warning");
+                  router.push({
+                    name: "home",
+                  });
+                }
+                data.sender = "SYSTEM";
+                data.message = `✋${eventData.to}님을 강퇴하였습니다✋`;
+              }
               if (eventData.to[0] === undefined) data.receiver = "모두";
               // eslint-disable-next-line prefer-destructuring
               else data.receiver = eventData.to[0];
               // data.sender = JSON.parse(event.from.data).clientName;
               data.time = moment(time).format("HH:mm");
-              if (
+              if (eventData.isHashTag) {
+                axios({
+                  url: kakao.region.imageSearch(),
+                  headers: { Authorization: "KakaoAK a7cedeb35de4c99731ff3ee0bc0ade21" },
+                  method: "GET",
+                  params: {
+                    query: eventData.message,
+                    sort: "accuracy",
+                    size: 4,
+                  },
+                })
+                  .then((res) => {
+                    console.log(res.data);
+                    data.url = res.data.documents[0].image_url;
+                    data.doc_url = `https://search.naver.com/search.naver?where=image&query=${data.message}`;
+                    if (
+                      data.sender === rootGetters.currentUser ||
+                      data.receiver === rootGetters.currentUser ||
+                      data.receiver === "모두"
+                    ) {
+                      console.log("최종url", data.url);
+                      state.messages.push(data);
+                    }
+                  })
+                  .catch((err) => {
+                    console.log("이미지 api에러발생===", err);
+                  });
+              } else if (
                 data.sender === rootGetters.currentUser ||
                 data.receiver === rootGetters.currentUser ||
                 data.receiver === "모두"

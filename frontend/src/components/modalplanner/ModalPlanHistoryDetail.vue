@@ -1,15 +1,9 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
-  <div style="flex: 6">
-    <div class="history-detail-title">
-      <div style="display: flex; align-items: center; margin-left: 20px">
-        <div style="margin-right: 10px"><v-icon>mdi-check</v-icon></div>
-        <div style="font-weight: bold; font-size: 28px">방문장소 확인</div>
-      </div>
-    </div>
-    <div class="history-detail-body">
-      <div class="history-detail-body-shell">
-        <div style="text-align: right; font-size: 12px">
+  <div style="flex: 5">
+    <div class="modal-history-detail-body">
+      <div class="modal-history-detail-body-shell">
+        <div style="text-align: right; font-size: 12px; margin-bottom: 24px">
           {{
             `${new Date(plan.visitDate).getFullYear()}년 ${new Date(plan.visitDate).getMonth() + 1}월 ${new Date(
               plan.visitDate,
@@ -22,7 +16,7 @@
             {{ `${plan.sidoName} ${plan.gugunName}` }}
           </div>
         </div>
-        <div class="plan-visit-place">
+        <div class="modal-plan-visit-place">
           {{ plan.visitedPlace }}
         </div>
         <div style="display: flex; margin: 0 20px; align-items: center">
@@ -44,12 +38,15 @@
           style="
             border: 2px solid #efefef;
             background-color: #efefef;
-            border-radius: 8px;
+            border-radius: 4px;
             padding: 20px;
             text-align: start;
             margin: 12px 20px 20px;
             line-height: 150%;
             word-break: normal;
+            background-image: linear-gradient(to right, white 10px, transparent 10px),
+              linear-gradient(to left, white 10px, transparent 10px),
+              repeating-linear-gradient(white, white 30px, #ccc 30px, #ccc 31px, white 31px);
           "
         >
           <div>{{ plan.review }}</div>
@@ -120,24 +117,22 @@ export default {
 </script>
 
 <style>
-.history-detail-title {
+.modal-history-detail-title {
   height: 90px;
   display: flex;
   align-items: center;
 }
-.history-detail-body {
+.modal-history-detail-body {
   display: flex;
   justify-content: center;
   margin: 0 50px;
 }
-.history-detail-body-shell {
+.modal-history-detail-body-shell {
   width: 560px;
   padding: 20px 20px 0px;
-  background-color: #c5dcff;
-  border-radius: 12px;
   margin-bottom: 30px;
 }
-.plan-visit-place {
+.modal-plan-visit-place {
   margin: 0 20px;
   text-align: left;
   font-size: 32px;
