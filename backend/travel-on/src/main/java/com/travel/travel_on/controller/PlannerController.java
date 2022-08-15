@@ -81,6 +81,31 @@ public class PlannerController {
         }
     }
 
+    @ApiOperation(value = "방문장소 조회: 화상채팅에서 상대방 장소 리스트 조회", response = List.class)
+    @PostMapping("/page/chat")
+    public ResponseEntity<?> modalVisitPlace(@ApiIgnore Authentication authentication, @RequestBody Map<String, String> param){
+        try {
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userId = userDetails.getUsername();
+            UserDto userDto = userService.select(userId);
+
+            if(userDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            String nickName = param.get("nickName");
+            List<VisitPlace> list;
+
+            list = plannerService.selectModalVisitAll(nickName);
+
+            List<VisitPlaceDto> result = list.stream()
+                    .map(r -> new VisitPlaceDto(r))
+                    .collect(Collectors.toList());
+            log.info("VisitPlaceList : {}", result.toString());
+            return new ResponseEntity<List>(result, HttpStatus.OK);
+        }catch (Exception e) {
+            return exceptionHandling(e);
+        }
+    }
+
     @ApiOperation(value = "방문예정장소 조회: 방문예정장소 리스트 조회", response = List.class)
     @GetMapping("/expect/page")
     public ResponseEntity<?> searchVisitExpected(@ApiIgnore Authentication authentication){
@@ -116,6 +141,31 @@ public class PlannerController {
 
             List<VisitExpected> list;
             list = plannerService.selectExpectedFilter(userDto.toEntity(), filter);
+
+            List<VisitExpectedDto> result = list.stream()
+                    .map(r -> new VisitExpectedDto(r))
+                    .collect(Collectors.toList());
+            log.info("VisitExpectedList : {}", result.toString());
+            return new ResponseEntity<List>(result, HttpStatus.OK);
+        }catch (Exception e) {
+            return exceptionHandling(e);
+        }
+    }
+
+    @ApiOperation(value = "방예정문장소 조회: 화상채팅에서 상대방 예정장소 리스트 조회", response = List.class)
+    @PostMapping("expect/page/chat")
+    public ResponseEntity<?> modalExpectedPlace(@ApiIgnore Authentication authentication, @RequestBody Map<String, String> param){
+        try {
+            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
+            String userId = userDetails.getUsername();
+            UserDto userDto = userService.select(userId);
+
+            if(userDto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            String nickName = param.get("nickName");
+            List<VisitExpected> list;
+
+            list = plannerService.selectModalExpectedAll(nickName);
 
             List<VisitExpectedDto> result = list.stream()
                     .map(r -> new VisitExpectedDto(r))
