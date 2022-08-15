@@ -6,8 +6,8 @@
           <v-btn depressed color="yellow" @click="moveToList"> 뒤로가기 </v-btn>
         </v-col>
         <v-col class="d-flex justify-end mb-6">
-          <v-btn depressed color="red" @click="moveToUpdate"> 수정 </v-btn>
-          <v-btn depressed color="blue" @click="QnaDelete"> 삭제 </v-btn>
+          <v-btn v-if="qna.nickname == currentUser" depressed color="red" @click="moveToUpdate"> 수정 </v-btn>
+          <v-btn v-if="qna.nickname == currentUser" depressed color="blue" @click="QnaDelete"> 삭제 </v-btn>
         </v-col>
       </v-row>
       <v-row class="mb-6">
@@ -41,10 +41,12 @@
           <div v-if="!qna.answerFlag && admin">
             <v-btn depressed color="primary" @click="registAnswer"> 답변작성 </v-btn>
           </div>
-          <div v-if="qna.answerFlag">
+          <div v-if="qna.answerFlag && admin">
             <v-btn depressed color="primary" @click="modifyAnswer"> 답변수정 </v-btn>
           </div>
-          <div v-if="qna.answerFlag"><v-btn depressed color="primary" @click="deleteAnswer"> 답변삭제 </v-btn></div>
+          <div v-if="qna.answerFlag && admin">
+            <v-btn depressed color="primary" @click="deleteAnswer"> 답변삭제 </v-btn>
+          </div>
         </v-col></v-row
       >
     </v-container>
@@ -58,6 +60,7 @@ export default {
   name: "QnaDetail",
   computed: {
     ...mapState("QnAs", ["qna"]),
+    ...mapGetters(["currentUser"]),
     ...mapGetters(["QnAs/getQna"]),
   },
   data() {
@@ -68,8 +71,6 @@ export default {
     };
   },
   mounted() {
-    console.log(this.$store.state.qna);
-
     this.admin = this.$store.getters.admin;
   },
   created() {
