@@ -95,7 +95,7 @@
                     >
                       <v-icon color="white">mdi-controller</v-icon> 대화종료</v-btn
                     >
-                    >>>>>>> 2873d5e859e4d5f2289e29ae6885a2847943ba50
+
                     <v-btn v-if="hostName === currentUser" class="btn mr-2" @click="clickCloseRoom">종료</v-btn>
                     <v-btn v-else class="btn mr-2" @click="clickLeaveRoom">나가기</v-btn>
                   </v-row>
