@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container>
-      <div class="d-flex justify-end mb-6">
+      <div class="d-flex justify-end mb-6" v-if="admin">
         <v-btn color="primary" @click="moveToWrite">글작성</v-btn>
       </div>
       <v-row style="background-color: lightgrey">

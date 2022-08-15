@@ -11,7 +11,7 @@
           ><input type="checkbox" id="checkbox" v-model="ansChecked" @click="answerChange" />답변 완료 글만 보기</label
         >
       </div>
-      <div class="d-flex justify-end mb-6">
+      <div class="d-flex justify-end mb-6" v-if="!admin">
         <v-btn color="primary" @click="moveToWrite">문의하기</v-btn>
       </div>
       <!--      <v-row>-->
