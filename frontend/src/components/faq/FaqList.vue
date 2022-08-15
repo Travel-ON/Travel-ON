@@ -23,7 +23,11 @@
       </div>
       <v-container class="">
         <v-form>
-          <v-text-field v-model="keyword" placeholder="검색어를 입력하세요"></v-text-field>
+          <v-text-field
+            v-model="keyword"
+            placeholder="검색어를 입력하세요"
+            @keydown.enter.prevent="searchPage()"
+          ></v-text-field>
         </v-form>
         <v-btn color="indigo" @click="searchPage()">검색</v-btn>
       </v-container>
