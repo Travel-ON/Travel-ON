@@ -163,10 +163,6 @@ export default {
       "isGamePanel",
       "hostName",
 
-      // test
-      "test",
-      "testSubscribers",
-
       // liar
       "startLiarTalkFlag",
       "stopLiarTalkFlag",
@@ -202,9 +198,6 @@ export default {
       audio: this.$route.params.audio,
       roomCode: this.$route.params.roomCode,
       hostName: this.$route.params.hostName,
-
-      // test
-      testName: {},
     };
   },
   created() {
@@ -234,9 +227,6 @@ export default {
       "setVideoFlag",
       "setAudioFlag",
       "toggleChatPanel",
-
-      "testRoulette",
-
       "changeIsNewbie",
       "toggleGamePanel",
       "startLiar",

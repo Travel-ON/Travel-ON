@@ -33,11 +33,6 @@ export const MeetingStore = {
     isChatPanel: false,
     messages: [],
 
-    // 룰렛 test
-    test: false,
-    testArr: [],
-    testSubscribers: [],
-
     // 입장할때 이름이 전부떠서 체크해주기위한 변수
     isNewbie: true,
 
@@ -70,7 +65,6 @@ export const MeetingStore = {
     messages: (state) => state.messages,
     gameCommentarys: (state) => state.gameCommentarys,
     subscribers: (state) => state.subscribers,
-    testSubscribers: (state) => state.testSubscribers,
   },
   mutations: {
     // Openvidu
@@ -115,10 +109,6 @@ export const MeetingStore = {
       // state.messages.push(data);
       state.messages = messages;
     },
-
-    // test
-    SET_TESTSUBSCRIBERES: (state, testSubscribers) => (state.testSubscribers = testSubscribers),
-
     // game
     SET_PLAY_GAME(state, value) {
       state.playGame = value;
@@ -622,7 +612,7 @@ export const MeetingStore = {
                   commit("SET_GAME_PARTICIPANTS", eventData.content.participants);
                   commit("SET_ROULETTE_TARGET_NAME", eventData.content.targetName);
 
-                  dispatch("testRoulette");
+                  dispatch("playRoulette");
                 }
               }
             });
@@ -948,7 +938,7 @@ export const MeetingStore = {
       });
     },
 
-    testRoulette({ state, commit, dispatch }) {
+    playRoulette({ state, commit, dispatch }) {
       let delay = 400;
       const size = state.participants.length;
       for (let i = 0; i < 40; i += 1) {
