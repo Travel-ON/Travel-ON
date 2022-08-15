@@ -330,6 +330,20 @@ export const MeetingStore = {
               const time = new Date();
               data.message = eventData.message;
               data.sender = eventData.from;
+              // 강퇴
+              if (eventData.type === "kickout") {
+                console.log("커런트유저값은 ", rootGetters.currentUser);
+                console.log("이벤트데이타의 투 값은==", eventData.to);
+                if (eventData.to === rootGetters.currentUser) {
+                  dispatch("leaveSession");
+                  Swal.fire("화상채팅방 강퇴", "호스트에 의해 화상채팅방에서 강퇴되었습니다.", "warning");
+                  router.push({
+                    name: "home",
+                  });
+                }
+                data.sender = "SYSTEM";
+                data.message = `✋${eventData.to}님을 강퇴하였습니다✋`;
+              }
               if (eventData.to[0] === undefined) data.receiver = "모두";
               // eslint-disable-next-line prefer-destructuring
               else data.receiver = eventData.to[0];
