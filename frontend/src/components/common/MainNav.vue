@@ -1,22 +1,41 @@
 <template>
   <div style="position: fixed; top: 0; left: 0; right: 0; z-index: 3000">
-    <v-toolbar height="80">
+    <v-toolbar height="80" style="background-color: white">
       <router-link :to="{ name: 'home' }">
         <v-btn style="width: 150px">
           <v-img
-            src="https://user-images.githubusercontent.com/97648026/182758932-c401e00f-c153-4a48-9186-b16491197fa1.png"
+            class="mb-2"
+            src="https://user-images.githubusercontent.com/26339069/184654656-94988972-0726-4801-909e-43a93ef0416f.png"
             alt="logo"
-            width="150px"
+            width="80px"
           />
         </v-btn>
       </router-link>
-      <v-btn @click="TransferPage('VideochatCreate')">방만들기</v-btn>
-      <v-btn @click="TransferPage('VideochatMatching')">방매칭하기</v-btn>
-      <v-btn @click="TransferPage('VideochatShare')">방코드입장</v-btn>
-      <v-btn @click="TransferPage('Planner')">여행플래너</v-btn>
+      <v-btn
+        @click="TransferPage('VideochatCreate')"
+        style="font-weight: bold; font-size: 23px; color: #0057ff; padding-left: 5px; padding-right: 5px"
+        >방만들기</v-btn
+      >
+      <v-btn
+        @click="TransferPage('VideochatMatching')"
+        style="font-weight: bold; font-size: 23px; color: #50a0f0; padding-left: 5px; padding-right: 5px"
+        >방매칭하기</v-btn
+      >
+      <v-btn
+        @click="TransferPage('VideochatShare')"
+        style="font-weight: bold; font-size: 23px; color: #a1abff; padding-left: 5px; padding-right: 5px"
+        >방코드입장</v-btn
+      >
+      <v-btn
+        @click="TransferPage('Planner')"
+        style="font-weight: bold; font-size: 23px; color: #3700b3; padding-left: 5px; padding-right: 5px"
+        >여행플래너</v-btn
+      >
       <v-menu open-on-hover style="z-index: 3500">
         <template v-slot:activator="{ props }">
-          <v-btn v-bind="props"> 커뮤니티 </v-btn>
+          <v-btn v-bind="props" style="font-weight: bold; font-size: 23px; padding-left: 5px; padding-right: 5px">
+            커뮤니티
+          </v-btn>
         </template>
         <v-list>
           <v-list-item v-for="(item, index) in items_community" :key="index" :value="index">
@@ -30,10 +49,10 @@
       <!-- false시 로그인 상태, true시 비로그인 상태 -->
       <div v-if="!isLoggedIn">
         <router-link :to="{ name: 'MemberLogin' }">
-          <v-btn>로그인</v-btn>
+          <v-btn style="font-weight: bold; color: #50a0f0; font-size: 23px">로그인</v-btn>
         </router-link>
         <router-link :to="{ name: 'MemberRegister' }">
-          <v-btn>회원가입</v-btn>
+          <v-btn style="font-weight: bold; color: #50a0f0; font-size: 23px">회원가입</v-btn>
         </router-link>
       </div>
       <div v-else>
@@ -41,10 +60,13 @@
         <v-dialog v-model="dialog" scrollable>
           <template v-slot:activator="{ props }">
             <v-btn icon v-bind="props" @click="getAlarmList()">
-              <v-badge v-if="alarmFlag" color="red" dot>
-                <v-icon>mdi-bell</v-icon>
-              </v-badge>
-              <v-icon v-else>mdi-bell</v-icon>
+              <span style="font-size: x-large">
+                <v-badge v-if="alarmFlag" color="red" dot>
+                  <v-icon color="blue" x-large>mdi-bell</v-icon>
+                </v-badge>
+
+                <v-icon color="blue" x-large v-else>mdi-bell</v-icon>
+              </span>
             </v-btn>
           </template>
           <v-card>
@@ -70,14 +92,15 @@
         <v-menu open-on-hover style="z-index: 3500">
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props">
-              <div style="font-size: x-small">{{ `${title ? title : ""}` }}</div>
-              <div>{{ currentUser }}</div>
+              <div style="font-size: 15px; margin-right: 10px; font-weight: bold">{{ `${title ? title : ""}` }}</div>
+              <div style="font-size: large; font-weight: bold; color: #0057ff">{{ currentUser }}</div>
+              님
               <v-icon>mdi-chevron-down</v-icon>
             </v-btn>
           </template>
           <v-list>
             <v-list-item v-for="(item, index) in items_user" :key="index" :value="index">
-              <v-list-item-title @click="$router.push({ name: `${item.name}` })">
+              <v-list-item-title @click="$router.push({ name: `${item.name}` })" style="font-weight: bold">
                 {{ item.title }}
               </v-list-item-title>
             </v-list-item>
@@ -250,7 +273,7 @@ a {
   padding: 10px;
   width: 100%;
   height: 60px;
-  background-color: #999;
+  background-color: white;
   color: black;
 }
 .nav_left {
