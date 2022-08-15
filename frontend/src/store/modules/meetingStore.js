@@ -247,7 +247,7 @@ export const MeetingStore = {
             to: [],
             message: `🎉${JSON.parse(stream.connection.data).clientName}님이 입장하였습니다🎉`,
           };
-          dispatch("sendMessage", data);
+          state.messages.push(data);
         }
       });
 
@@ -280,7 +280,7 @@ export const MeetingStore = {
             to: [],
             message: `✋${JSON.parse(stream.connection.data).clientName}님이 퇴장하였습니다✋`,
           };
-          dispatch("sendMessage", data);
+          state.messages.push(data);
         }
       });
 
