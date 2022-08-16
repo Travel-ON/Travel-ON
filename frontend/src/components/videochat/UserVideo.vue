@@ -56,7 +56,6 @@ export default {
       { title: "여행 플래너 보기", onlyHost: false, onlyOther: false }, // 플래너 보기
       { title: "신고하기", onlyHost: false, onlyOther: true },
       { title: "강퇴하기", onlyHost: true, onlyOther: true },
-      { title: "채팅", onlyHost: false, onlyOther: true },
     ],
   }),
   components: {
@@ -147,8 +146,6 @@ export default {
               console.log(err);
             });
         }
-      } else if (item.title === "채팅") {
-        this.toggleChatPanel();
       } else if (item.title === "강퇴하기") {
         alert(this.clientName.concat(" 강퇴!"));
         const data = { type: "kickout", from: this.currentUser, to: this.clientName };
