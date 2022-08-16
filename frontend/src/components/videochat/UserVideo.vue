@@ -11,7 +11,7 @@
     <div v-if="isRoom && mouseOn" class="text-center" style="position: absolute; top: 20px; right: 20px">
       <v-menu bottom offset-x>
         <template v-slot:activator="{ props }">
-          <v-btn dark icon v-bind="props">
+          <v-btn dark v-bind="props">
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </template>
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import spring from "@/api/spring_boot";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -93,6 +93,7 @@ export default {
     streamManager: Object,
   },
   computed: {
+    ...mapState("MeetingStore", ["isChatPanel"]),
     ...mapGetters({
       currentUser: "currentUser",
       currentUserId: "currentUserId",
@@ -125,7 +126,7 @@ export default {
   },
 
   methods: {
-    ...mapActions("MeetingStore", ["sendMessage"]),
+    ...mapActions("MeetingStore", ["sendMessage", "toggleChatPanel"]),
     getConnectionData() {
       const { connection } = this.streamManager.stream;
       return JSON.parse(connection.data);
@@ -155,8 +156,7 @@ export default {
               reportContent: text,
             },
           })
-            .then((res) => {
-              console.log(res);
+            .then(() => {
               Swal.fire({
                 icon: "success",
                 title: "신고가 접수되었습니다!",
