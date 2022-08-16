@@ -6,17 +6,7 @@
         <template v-slot:activator="{ props }">
           <v-btn color="primary" v-bind="props"> Open Dialog </v-btn>
         </template>
-        <!-- <v-card>
-          <v-card-title>Select Country</v-card-title>
-          <v-divider></v-divider>
-          <v-card-text style="height: 300px">중간부분</v-card-text>
-          <v-divider></v-divider>
-          <v-card-actions>
-            <v-btn color="blue-darken-1" text @click="dialog = false"> Close </v-btn>
-            <v-btn color="blue-darken-1" text @click="dialog = false"> Save </v-btn>
-          </v-card-actions>
-        </v-card> -->
-        <v-card border="false" color="transparent">
+        <v-card border="false" color="transparent" style="overflow: hidden">
           <v-card-text>
             <div class="plan-modal-body">
               <img
@@ -57,7 +47,16 @@
                 </div>
               </div>
               <div class="plan-modal-main-body">
-                <div></div>
+                <v-card-text :style="`padding: 0; ${viewState === 1 ? 'display: flex; justify-content: center' : ''}`">
+                  <div v-show="viewState === 0" style="display: flex">
+                    <ModalPlanHistoryList :username="username" @switch-detail="switchDetail" />
+                    <ModalPlanHistoryDetail v-if="selectedView === 1" :plan="planDetail" />
+                    <ModalPlanPleaseSelect v-else />
+                  </div>
+                  <div v-show="viewState === 1" style="display: flex; width: 70%; justify-content: center">
+                    <ModalExpectHistoryList :username="username" />
+                  </div>
+                </v-card-text>
               </div>
             </div>
           </v-card-text>
@@ -68,37 +67,44 @@
 </template>
 
 <script>
+import ModalPlanHistoryList from "@/components/modalplanner/ModalPlanHistoryList.vue";
+
+import ModalPlanHistoryDetail from "@/components/modalplanner/ModalPlanHistoryDetail.vue";
+import ModalPlanPleaseSelect from "@/components/modalplanner/ModalPlanPleaseSelect.vue";
+import ModalExpectHistoryList from "@/components/modalplanner/ModalExpectHistoryList.vue";
+
 export default {
   name: "PlanModalTest",
   data() {
     return {
       dialogm1: "",
       dialog: false,
-      username: "박재현",
-      viewState: 0,
+      username: "Test8",
+      viewState: 0, // 0: 방문한 장소, 1: 방문 예정 장소
+      selectedView: 0,
+      planDetail: null,
     };
+  },
+  components: { ModalPlanHistoryList, ModalPlanHistoryDetail, ModalPlanPleaseSelect, ModalExpectHistoryList },
+  methods: {
+    switchDetail(plan) {
+      this.planDetail = plan;
+      this.selectedView = 1;
+    },
   },
 };
 </script>
 
 <style>
-.v-card--variant-elevated,
-.v-dialog .v-overlay__content > .v-card,
-.v-dialog .v-overlay__content > .v-sheet {
-  box-shadow: none !important;
-}
 .plan-modal-body {
   position: relative;
 }
 .plan-modal-body-shell {
   position: absolute;
   top: 84px;
-  width: 794px;
+  width: 792px;
   height: 780px;
-  margin-left: 3px;
-}
-.v-btn--variant-elevated {
-  box-shadow: none !important;
+  margin-left: 4px;
 }
 .view-select-buttons {
   display: flex;
@@ -123,5 +129,6 @@ export default {
 .plan-modal-main-body {
   border-top: 3px solid #50a0f0;
   display: flex;
+  justify-content: center;
 }
 </style>

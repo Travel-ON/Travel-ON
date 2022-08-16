@@ -4,7 +4,7 @@
     <div v-if="isRoom" class="text-center" style="position: absolute; top: 10px; right: 10px">
       <v-menu bottom offset-x>
         <template v-slot:activator="{ props }">
-          <v-btn dark icon v-bind="props">
+          <v-btn dark v-bind="props">
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </template>
@@ -53,7 +53,7 @@ export default {
   name: "UserVideo",
   data: () => ({
     items: [
-      { title: "여행 플래너 보기", onlyHost: false, onlyOther: false },
+      { title: "여행 플래너 보기", onlyHost: false, onlyOther: false }, // 플래너 보기
       { title: "신고하기", onlyHost: false, onlyOther: true },
       { title: "강퇴하기", onlyHost: true, onlyOther: true },
       { title: "채팅", onlyHost: false, onlyOther: true },
