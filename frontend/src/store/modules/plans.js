@@ -71,7 +71,7 @@ export const Plans = {
       console.log("플랜 변환 시작")
       let convertedHistoryListModal = [];
       let tempDate = null;
-      getters.planHistoryList.forEach((element) => {
+      getters.planHistoryListModal.forEach((element) => {
         if (element.visitDate !== tempDate) {
           // 임시 저장 날짜와 엘리먼트 날짜가 다르면
           convertedHistoryListModal.push(element.visitDate); // 날짜 정보 임시 저장
@@ -99,18 +99,20 @@ export const Plans = {
           console.error(err);
         });
     },
-    getPlanListModal({ getters, commit, dispatch }) {
+    getPlanListModal({ getters, commit, dispatch }, username) {
+      console.log(username)
       axios({
-        url: spring.plan.getHistory(),
-        method: "get",
+        url: spring.plan.getUserHistory(),
+        method: "post",
         headers: {
           Authorization: `Bearer ${getters.token}`,
         },
+        data: {nickName: username}
       })
         .then((res) => {
-          console.log("플랜 목록 수집 성공");
+          console.log("상대 플랜 목록 수집 성공");
           console.log(res.data)
-          commit("SET_PLAN_HISTORY_LIST", res.data);
+          commit("SET_PLAN_HISTORY_LIST_MODAL", res.data);
           dispatch("convertPlanListModal");
         })
         .catch((err) => {
@@ -227,6 +229,24 @@ export const Plans = {
         console.log(res.data)
         commit("SET_EXPECT_HISTORY_LIST", res.data);
         dispatch("convertExpectList");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  },
+  getExpectListModal({ getters, commit, dispatch }, username) {
+    axios({
+      url: spring.plan.getUserExpectHistory(),
+      method: "post",
+      headers: {
+        Authorization: `Bearer ${getters.token}`,
+      },
+      data: {nickName: username},
+    })
+      .then((res) => {
+        console.log("플랜 목록 수집 성공");
+        console.log(res.data)
+        commit("SET_EXPECT_HISTORY_LIST_MODAL", res.data);
       })
       .catch((err) => {
         console.error(err);

@@ -40,6 +40,8 @@ export default {
     deleteExpect: (visitExpectedId) => HOST + PLAN + "expect/delete/" + String(visitExpectedId),
     modifyExpect: (visitExpectedId) => HOST + PLAN + "expect/modify/" + String(visitExpectedId),
     filterExpect: () => HOST + PLAN + "expect/page/filter",
+    getUserHistory: () => HOST + PLAN + "page/chat",
+    getUserExpectHistory: () => HOST + PLAN + "expect/page/chat",
   },
   alarm: {
     alarmList: () => HOST + ALARM,
