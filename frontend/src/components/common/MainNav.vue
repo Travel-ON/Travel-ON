@@ -1,15 +1,10 @@
 <template>
   <div style="position: fixed; top: 0; left: 0; right: 0; z-index: 3000">
     <v-toolbar height="80" style="background-color: white">
-      <router-link :to="{ name: 'home' }">
-        <v-btn style="width: 150px">
-          <v-img
-            class="mb-2"
-            src="https://user-images.githubusercontent.com/26339069/184654656-94988972-0726-4801-909e-43a93ef0416f.png"
-            alt="logo"
-            width="80px"
-          />
-        </v-btn>
+      <router-link class="ml-3 mr-6" :to="{ name: 'home' }">
+        <!-- <v-btn style="width: 150px"> -->
+        <v-img src="@/assets/icon.png" alt="logo" width="60px" />
+        <!-- </v-btn> -->
       </router-link>
       <v-btn
         @click="TransferPage('VideochatCreate')"
