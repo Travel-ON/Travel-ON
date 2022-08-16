@@ -57,7 +57,6 @@ export default {
       this.$refs.form.validate();
     },
     updateQna() {
-      console.log(this.qna);
       this.$store.dispatch("QnAs/modifyQnas", this.qna);
       Swal.fire({
         icon: "success",

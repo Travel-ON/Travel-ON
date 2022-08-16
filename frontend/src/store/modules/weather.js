@@ -1,4 +1,3 @@
-// import axios from "axios";
 import weather from "@/api/wheather_api";
 
 import axios from "axios";
@@ -8,17 +7,14 @@ export const Weather = {
   state: () => ({
     currentTemp: 20, // 기온
     currentIcon: "", // 날씨 아이콘
-    // foreWeather: [], // 시각대별 날씨 정보
   }),
   getters: {
     temp: (state) => Math.floor(state.temp),
     icon: (state) => state.icon,
-    // foreWeather: (state) => state.foreWeather,
   },
   mutations: {
     SET_TEMP: (state, temp) => (state.temp = temp),
     SET_ICON: (state, icon) => (state.icon = icon),
-    // SET_FOREWEATHER: (state, foreWeather) => (state.foreWeather = foreWeather),
   },
   actions: {
     getWeather({ commit, getters }) {

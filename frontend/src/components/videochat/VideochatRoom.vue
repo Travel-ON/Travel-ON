@@ -333,8 +333,7 @@ export default {
               method: "delete",
               headers: { Authorization: `Bearer ${this.token}` },
             })
-              .then((res) => {
-                console.log(res);
+              .then(() => {
                 this.leaveSession();
 
                 Swal.fire({
@@ -375,8 +374,7 @@ export default {
               method: "get",
               headers: { Authorization: `Bearer ${this.token}` },
             })
-              .then((res) => {
-                console.log(res);
+              .then(() => {
                 this.leaveSession();
                 Swal.fire({
                   icon: "success",
