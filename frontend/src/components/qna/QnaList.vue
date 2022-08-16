@@ -59,7 +59,6 @@ export default {
   },
   mounted() {
     this.theAdmin = this.$store.getters.admin;
-    console.log(this.theAdmin);
     if (this.theAdmin) {
       this.$store.dispatch("QnAs/getAdminQnas");
     } else {

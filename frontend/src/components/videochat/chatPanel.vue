@@ -56,7 +56,6 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
-// import { onMounted } from "vue";
 
 export default {
   name: "ChatPanel",
@@ -67,26 +66,6 @@ export default {
       isHashTag: false,
     };
   },
-  // 스크롤 자동 내리기 왜안댐?
-  // setup() {
-  //   console.log("1차로 들어오니?");
-  //   onMounted(() => {
-  //     console.log("2차로 들어오니?");
-  //     const { chatArea } = this.$refs;
-  //     chatArea.scrollTop = chatArea.scrollHeight;
-  //   });
-  // },
-  // watch: {
-  //   messages() {
-  //     this.$nextTick(() => {
-  //       const chatDiv = this.$refs.chatArea;
-  //       chatDiv.scrollTo({
-  //         top: chatDiv.scrollHeight - chatDiv.clientHeight,
-  //         behavior: "smooth",
-  //       });
-  //     });
-  //   },
-  // },
   computed: {
     ...mapState("MeetingStore", ["messages"]),
     ...mapGetters(["currentUser"]),

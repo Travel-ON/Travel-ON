@@ -67,8 +67,7 @@ export default {
           headers: { Authorization: `Bearer ${this.token}` },
           data: { password },
         })
-          .then((res) => {
-            console.log(res);
+          .then(() => {
             this.delete();
           })
           .catch((err) => {

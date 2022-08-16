@@ -32,7 +32,6 @@ export const Plans = {
   },
   actions: {
     convertPlanList({ getters, commit }) {
-        console.log("플랜 변환 시작")
         let convertedHistoryList = [];
         let tempDate = null; // 임시 저장 날짜
         let listCount = 0;
@@ -68,7 +67,6 @@ export const Plans = {
         commit("SET_CONVERTED_HISTORY_LIST", convertedHistoryList);
     },
     convertPlanListModal({ getters, commit }) {
-      console.log("플랜 변환 시작")
       let convertedHistoryListModal = [];
       let tempDate = null;
       getters.planHistoryList.forEach((element) => {
@@ -90,8 +88,6 @@ export const Plans = {
         },
       })
         .then((res) => {
-          console.log("플랜 목록 수집 성공");
-          console.log(res.data)
           commit("SET_PLAN_HISTORY_LIST", res.data);
           dispatch("convertPlanList");
         })
@@ -108,8 +104,6 @@ export const Plans = {
         },
       })
         .then((res) => {
-          console.log("플랜 목록 수집 성공");
-          console.log(res.data)
           commit("SET_PLAN_HISTORY_LIST", res.data);
           dispatch("convertPlanListModal");
         })
@@ -118,7 +112,6 @@ export const Plans = {
         });
     },
     createPlan({ getters, dispatch }, formData) {
-      console.log(formData);
       axios({
         url: spring.plan.regist(),
         method: "post",
@@ -128,7 +121,6 @@ export const Plans = {
         },
       })
         .then((res) => {
-          console.log(res);
           alert("플랜 작성에 성공하였습니다.");
           dispatch("getPlanList")
         })
@@ -138,7 +130,6 @@ export const Plans = {
         });
     },
     updatePlan({ getters, dispatch }, formData) {
-      console.log(formData);
       axios({
         url: spring.plan.modify(),
         method: "put",
@@ -147,8 +138,7 @@ export const Plans = {
           Authorization: `Bearer ${getters.token}`,
         },
       })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           alert("플랜 수정에 성공하였습니다.");
           dispatch("getPlanList")
         })
@@ -158,7 +148,6 @@ export const Plans = {
         });
     },
     filterPlan({ getters, commit, dispatch }, formData) {
-      console.log(formData);
       axios({
         url: spring.plan.filter(),
         method: "post",
@@ -168,7 +157,6 @@ export const Plans = {
         },
       })
         .then((res) => {
-          console.log(res);
           alert("필터링 성공하였습니다!");
           commit("SET_PLAN_HISTORY_LIST", res.data);
           dispatch("convertPlanList");
@@ -179,7 +167,6 @@ export const Plans = {
         })
     },
     convertExpectList({ getters, commit }) {
-      console.log("플랜 변환 시작")
       let convertedExpectHistoryList = [];
       let tempDate = null; // 임시 저장 날짜
       let listCount = 0;
@@ -223,8 +210,6 @@ export const Plans = {
       },
     })
       .then((res) => {
-        console.log("플랜 목록 수집 성공");
-        console.log(res.data)
         commit("SET_EXPECT_HISTORY_LIST", res.data);
         dispatch("convertExpectList");
       })
@@ -233,7 +218,6 @@ export const Plans = {
       });
   },
   createExpect({ getters, dispatch }, formData) {
-    console.log(formData);
     axios({
       url: spring.plan.registExpect(),
       method: "post",
@@ -242,8 +226,7 @@ export const Plans = {
         Authorization: `Bearer ${getters.token}`,
       },
     })
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         alert("플랜 작성에 성공하였습니다.");
         dispatch("getExpectList")
       })
@@ -253,7 +236,6 @@ export const Plans = {
       });
   },
   updateExpect({ getters, dispatch }, formData) {
-    console.log(formData);
     axios({
       url: spring.plan.modifyExpect(),
       method: "put",
@@ -262,8 +244,7 @@ export const Plans = {
         Authorization: `Bearer ${getters.token}`,
       },
     })
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         alert("플랜 수정에 성공하였습니다.");
         dispatch("getExpectList")
       })
@@ -273,7 +254,6 @@ export const Plans = {
       });
   },
   filterExpect({ getters, commit, dispatch }, formData) {
-    console.log(formData);
     axios({
       url: spring.plan.filterExpect(),
       method: "post",
@@ -283,7 +263,6 @@ export const Plans = {
       },
     })
       .then((res) => {
-        console.log(res);
         alert("필터링 성공하였습니다!");
         commit("SET_EXPECT_HISTORY_LIST", res.data);
         dispatch("convertExpectList");

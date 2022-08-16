@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import spring from "@/api/spring_boot";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -56,6 +56,7 @@ export default {
       { title: "여행 플래너 보기", onlyHost: false, onlyOther: false },
       { title: "신고하기", onlyHost: false, onlyOther: true },
       { title: "강퇴하기", onlyHost: true, onlyOther: true },
+      { title: "채팅", onlyHost: false, onlyOther: true },
     ],
   }),
   components: {
@@ -65,6 +66,7 @@ export default {
     streamManager: Object,
   },
   computed: {
+    ...mapState("MeetingStore", ["isChatPanel"]),
     ...mapGetters({
       currentUser: "currentUser",
       currentUserId: "currentUserId",
@@ -97,7 +99,7 @@ export default {
   },
 
   methods: {
-    ...mapActions("MeetingStore", ["sendMessage"]),
+    ...mapActions("MeetingStore", ["sendMessage", "toggleChatPanel"]),
     getConnectionData() {
       const { connection } = this.streamManager.stream;
       return JSON.parse(connection.data);
@@ -127,8 +129,7 @@ export default {
               reportContent: text,
             },
           })
-            .then((res) => {
-              console.log(res);
+            .then(() => {
               Swal.fire({
                 icon: "success",
                 title: "신고가 접수되었습니다!",
@@ -146,6 +147,8 @@ export default {
               console.log(err);
             });
         }
+      } else if (item.title === "채팅") {
+        this.toggleChatPanel();
       } else if (item.title === "강퇴하기") {
         alert(this.clientName.concat(" 강퇴!"));
         const data = { type: "kickout", from: this.currentUser, to: this.clientName };
