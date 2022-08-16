@@ -96,11 +96,6 @@ export default {
 </script>
 
 <style>
-.v-card--variant-elevated,
-.v-dialog .v-overlay__content > .v-card,
-.v-dialog .v-overlay__content > .v-sheet {
-  box-shadow: none !important;
-}
 .plan-modal-body {
   position: relative;
 }

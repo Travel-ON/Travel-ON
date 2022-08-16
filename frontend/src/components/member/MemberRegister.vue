@@ -241,15 +241,13 @@ export default {
 
         idChecked True일때만 가입 진행
       */
-      console.log(id);
       if (id !== "") {
         axios({
           url: spring.accounts.idCheck(),
           method: "post",
           params: { id },
         })
-          .then((res) => {
-            console.log(res);
+          .then(() => {
             this.idChecked = id;
             Swal.fire({
               icon: "success",

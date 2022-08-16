@@ -100,11 +100,6 @@ export default {
 </script>
 
 <style>
-.modal-history-detail-title {
-  height: 90px;
-  display: flex;
-  align-items: center;
-}
 .modal-history-detail-body {
   width: 100%;
   display: flex;
