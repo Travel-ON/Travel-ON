@@ -188,8 +188,6 @@ export default {
         method: "get",
       })
         .then((res) => {
-          console.log(val);
-          console.log(res);
           this.gugun = res.data;
         })
         .catch((err) => {

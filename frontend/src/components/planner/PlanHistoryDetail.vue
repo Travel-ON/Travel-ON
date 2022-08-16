@@ -103,9 +103,8 @@ export default {
             Authorization: `Bearer ${this.token()}`,
           },
         })
-          .then((res) => {
+          .then(() => {
             alert("플랜 삭제 성공하였습니다.");
-            console.log(res);
             this.getPlanList();
             this.$emit("deleted");
           })

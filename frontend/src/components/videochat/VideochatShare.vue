@@ -209,8 +209,7 @@ export default {
               method: "get",
               headers: { Authorization: `Bearer ${this.token}` },
             })
-              .then((response) => {
-                console.log(response);
+              .then(() => {
                 this.$router.push({
                   name: "home",
                 });
