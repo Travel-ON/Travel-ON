@@ -31,7 +31,6 @@ export const Members = {
         },
       })
         .then((res) => {
-          console.log(res);
           commit("GET_TITLES", res.data);
         })
         .catch((err) => {
@@ -48,8 +47,7 @@ export const Members = {
         headers: {
           Authorization: `Bearer ${rootGetters.token}`,
         },
-      }).then((res) => {
-        console.log(res);
+      }).then(() => {
         commit("SET_TITLE", payload, { root: true });
 
         router.push("/member/setTitle");

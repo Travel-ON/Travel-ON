@@ -2,8 +2,6 @@ const HOST = "http://localhost:3000/";
 // const HOST = "https://i7b301.p.ssafy.io:3000/";
 
 const USER = "api/user/";
-// const QNA = "qna/";
-// const NOTICE = "notice/";
 const PLAN = "api/plan/";
 const ALARM = "api/alarm/";
 const VIDEOCHAT = "api/videochat/";
@@ -40,6 +38,8 @@ export default {
     deleteExpect: (visitExpectedId) => HOST + PLAN + "expect/delete/" + String(visitExpectedId),
     modifyExpect: (visitExpectedId) => HOST + PLAN + "expect/modify/" + String(visitExpectedId),
     filterExpect: () => HOST + PLAN + "expect/page/filter",
+    getUserHistory: () => HOST + PLAN + "page/chat",
+    getUserExpectHistory: () => HOST + PLAN + "expect/page/chat",
   },
   alarm: {
     alarmList: () => HOST + ALARM,

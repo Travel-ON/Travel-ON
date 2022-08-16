@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
-  <div style="flex: 5">
+  <div style="flex: 1">
     <div class="modal-history-detail-body">
       <div class="modal-history-detail-body-shell">
         <div style="text-align: right; font-size: 12px; margin-bottom: 24px">
@@ -20,7 +20,9 @@
           {{ plan.visitedPlace }}
         </div>
         <div style="display: flex; margin: 0 20px; align-items: center">
-          <div style="margin-right: 5px; color: #f5c343; font-size: 16px">{{ plan.ratePoint.toFixed(1) }}</div>
+          <div style="margin-right: 5px; color: #f5c343; font-size: 16px">
+            {{ plan.ratePoint ? plan.ratePoint.toFixed(1) : "?.?" }}
+          </div>
           <div v-if="plan.ratePoint">
             <v-rating
               v-model="plan.ratePoint"
@@ -34,7 +36,6 @@
           </div>
         </div>
         <div
-          v-if="plan.review !== '' && plan.review"
           style="
             border: 2px solid #efefef;
             background-color: #efefef;
@@ -49,27 +50,9 @@
               repeating-linear-gradient(white, white 30px, #ccc 30px, #ccc 31px, white 31px);
           "
         >
-          <div>{{ plan.review }}</div>
+          <div>{{ plan.review !== "" && plan.review ? plan.review : "작성된 리뷰가 없습니다." }}</div>
         </div>
       </div>
-    </div>
-    <div style="display: flex; justify-content: center">
-      <v-btn
-        color="#50a0f0"
-        size="x-large"
-        style="font-weight: bold; color: #efefef; margin-right: 30px"
-        @click="switchUpdate(plan)"
-        width="180px"
-        >기록수정</v-btn
-      >
-      <v-btn
-        color="#efefef"
-        size="x-large"
-        style="font-weight: bold; color: #50a0f0"
-        @click="deletePlan()"
-        width="180px"
-        >기록삭제</v-btn
-      >
     </div>
   </div>
 </template>
@@ -117,18 +100,13 @@ export default {
 </script>
 
 <style>
-.modal-history-detail-title {
-  height: 90px;
-  display: flex;
-  align-items: center;
-}
 .modal-history-detail-body {
+  width: 100%;
   display: flex;
   justify-content: center;
-  margin: 0 50px;
 }
 .modal-history-detail-body-shell {
-  width: 560px;
+  width: 360px;
   padding: 20px 20px 0px;
   margin-bottom: 30px;
 }
