@@ -86,12 +86,24 @@ export default {
   margin-top: 20px;
   padding: 0 20px 0 0;
 }
+#filter-btn {
+  margin-bottom: 12px;
+  text-align: right;
+}
+#expect-add-btn {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
 .expect-list {
   width: 100%;
   border-bottom: 2px solid #d1e6fb;
 }
 .expects {
   height: 550px;
+}
+#expect-pagination {
+  margin-top: 30px;
 }
 .expect {
   width: 100%;
@@ -128,5 +140,8 @@ export default {
   justify-content: center;
   font-size: 16px;
   font-weight: bold;
+}
+.expect-style {
+  height: 27px;
 }
 </style>

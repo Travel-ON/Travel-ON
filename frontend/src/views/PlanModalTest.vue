@@ -106,6 +106,9 @@ export default {
   height: 780px;
   margin-left: 4px;
 }
+.v-btn--variant-elevated {
+  box-shadow: none !important;
+}
 .view-select-buttons {
   display: flex;
   font-size: 24px;

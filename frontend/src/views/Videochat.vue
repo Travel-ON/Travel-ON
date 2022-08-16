@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    <div>매칭 화면</div>
     <div>
       <!--        <v-row class="row no-gutters theme-background" style="height: 91vh">-->
 
