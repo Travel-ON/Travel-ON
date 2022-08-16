@@ -1,10 +1,20 @@
 <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <template>
-  <div id="plan-history-list">
-    <div id="plan-list">
-      <div id="plans">
+  <div id="modal-plan-history-list">
+    <div id="modal-plan-list">
+      <div id="modal-plans">
         <div class="plan" v-for="(plan, index) in convertedHistoryListModal()" :key="index">
-          <div v-if="typeof plan === 'string'" style="background-color: #d1e6fb; font-size: 18px; height: 27px">
+          <div
+            v-if="typeof plan === 'string'"
+            style="
+              background-color: #d1e6fb;
+              font-size: 18px;
+              height: 40px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            "
+          >
             <span>{{
               `${new Date(plan).getFullYear()}년 ${new Date(plan).getMonth() + 1}월 ${new Date(plan).getDate()}일`
             }}</span>
@@ -12,10 +22,8 @@
           <!-- 각 요소 클릭시, 우측 컴포넌트 전환: 열람 뷰 -->
           <div
             v-else
-            :style="planStyle"
+            style="display: flex; borderbottom: 1px solid #ddd; cursor: pointer; backgroundcolor: #efefef; height: 40px"
             @click="switchDetail(plan)"
-            :mouseover="changebgcolor"
-            :mouseout="originalcolor"
           >
             <div class="plan-address">
               <div>{{ `${plan.sidoName} ${plan.gugunName}` }}</div>
@@ -62,17 +70,20 @@
 import { mapGetters, mapActions } from "vuex";
 
 export default {
+  props: {
+    username: String,
+  },
   data: () => ({
     planStyle: {
       display: "flex",
       borderBottom: "1px solid #ddd",
       cursor: "pointer",
       backgroundColor: "#efefef",
-      height: "27px",
+      height: "40px",
     },
   }),
   methods: {
-    ...mapGetters(["token", "planHistoryList", "convertedHistoryListModal"]),
+    ...mapGetters(["token", "planHistoryListModal", "convertedHistoryListModal"]),
     ...mapActions(["getPlanListModal"]),
     switchDetail(plan) {
       // 상위에 switchDetail 이벤트 전달
@@ -86,8 +97,30 @@ export default {
     },
   },
   mounted() {
-    this.getPlanListModal();
+    this.getPlanListModal(this.username);
   },
 };
 </script>
-<style></style>
+<style>
+#modal-plan-history-list {
+  flex: 1;
+  border-right: 2px solid #adadad;
+}
+#modal-plan-list {
+  width: 100%;
+  height: 628px;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  max-height: 628px;
+  border: 2px dashed #adadad;
+  background-color: #efefef;
+  border-radius: 0px 0px 0px 32px;
+  box-sizing: border-box;
+}
+#modal-plan-list::-webkit-scrollbar {
+  display: none;
+}
+#modal-plans {
+  height: 550px;
+}
+</style>

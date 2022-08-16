@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface VisitExpectedRepository extends JpaRepository<VisitExpected, Integer> {
     List<VisitExpected> findByUser(User user);
-    List<VisitExpected> findByExpectedDateBetween(String start, String end);
+    List<VisitExpected> findByUserAndExpectedDateBetween(User user, String start, String end);
 
 }
