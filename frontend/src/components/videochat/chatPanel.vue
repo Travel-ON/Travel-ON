@@ -8,14 +8,15 @@
       <div
         ref="chatArea"
         id="chat-area"
-        style="
+        :style="`
           height: 100%;
           border-radius: 8px;
           border: 2px solid #50a0f0;
           padding: 12px;
           background-color: #d1e6fb;
           flex: 1;
-        "
+          max-height: ${isGamePanel ? '262.66px' : '731.22px'};
+        `"
       >
         <div class="mt-2 text-left message" v-for="(message, i) of messages" :key="i">
           <div class="message-title">
@@ -134,7 +135,7 @@ export default {
   computed: {
     ...mapState("MeetingStore", ["messages"]),
     ...mapGetters(["currentUser"]),
-    ...mapGetters("MeetingStore", ["subscribers", "chatItems"]),
+    ...mapGetters("MeetingStore", ["subscribers", "chatItems", "isGamePanel"]),
   },
   methods: {
     ...mapActions("MeetingStore", ["toggleChatPanel", "sendMessage"]),

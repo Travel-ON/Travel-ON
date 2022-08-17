@@ -58,7 +58,7 @@ export const Accounts = {
     SET_ADMIN: (state, admin) => (state.admin = admin),
     SET_TITLE: (state, title) => (state.title = title),
     SET_TROPHY: (state, trophy) => (state.trophy = trophy),
-    SET_RESIDENT: (state, resident) => (state.resident = resident),
+    SET_RESIDENT: (state, resident) => (state.resident = (resident === 'true' ? true : false)),
     SET_TROPHYLIST: (state, trophyList) => (state.trophyList = trophyList),
   },
   actions: {
