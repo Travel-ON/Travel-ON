@@ -3,8 +3,8 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import Member from "../views/Member.vue";
 import MemberLogin from "../components/member/MemberLogin.vue";
-import MemberRegisterView from "../views/MemberRegisterView.vue";
-import MemberSecession from "../components/member/MemberSecession.vue";
+import MemberRegister from "../components/member/MemberRegister.vue";
+// import MemberSecession from "../components/member/MemberSecession.vue";
 import MemberLogout from "../components/member/MemberLogout.vue";
 import MemberFindpwd from "../components/member/MemberFindpwd.vue";
 
@@ -40,16 +40,6 @@ import MemberModify from "../components/mypage/MemberModify.vue";
 import MemberModifyPwd from "../components/mypage/MemberModifyPwd.vue";
 
 const routes = [
-  // {
-  //   path: "/meeting",
-  //   children: [
-  //     {
-  //       path: "Create",
-  //       name: "CreateMeeting",
-  //       component: CreateMeeting,
-  //     },
-  //   ],
-  // },
   {
     path: "/",
     name: "home",
@@ -94,13 +84,13 @@ const routes = [
       {
         path: "register",
         name: "MemberRegister",
-        component: MemberRegisterView,
+        component: MemberRegister,
       },
-      {
-        path: "secession",
-        name: "MemberSecession",
-        component: MemberSecession,
-      },
+      // {
+      //   path: "secession",
+      //   name: "MemberSecession",
+      //   component: MemberSecession,
+      // },
       {
         path: "logout",
         name: "MemberLogout",

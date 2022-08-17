@@ -38,6 +38,7 @@ export const MeetingStore = {
 
     // game
     playGame: false,
+    gameName: "",
     isGamePanel: false,
     gameCommentarys: [],
     participants: [],
