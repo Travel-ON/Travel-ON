@@ -3,7 +3,7 @@
   <div
     class="ml-2 mr-2"
     v-if="streamManager"
-    style="position: relative"
+    style="position: relative; max-height: 800px; max-width: 1060px"
     @mouseleave="mouseOn = null"
     @mouseover="mouseOn = true"
   >

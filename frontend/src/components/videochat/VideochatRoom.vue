@@ -1,135 +1,213 @@
 <template>
-  <v-container v-if="publisher" id="main-container" class="container">
-    <v-row id="join">
-      <v-col id="join-dialog" class="jumbotron vertical-center">
-        <h1>채팅방화면</h1>
-        <div>{{ mySessionId }}</div>
-        <v-row style="margin-top: 20px">
-          <v-col>
-            <div class="form-group">
-              <p class="text-center">
-                <v-col>
-                  <v-row id="video-container">
-                    <div :style="roulettePointer === currentUser ? 'border: 10px solid yellow' : ''">
-                      <user-video
-                        :stream-manager="publisher"
-                        :class="{ 'col-12': one, 'col-6': two, 'col-4': three }"
-                        @click="$emit(updateMainVideoStreamManager(publisher))"
-                      />
-                    </div>
-                    <user-video
-                      v-for="sub in subscribers"
-                      :key="sub.stream.connection.connectionId"
-                      :style="
-                        roulettePointer === JSON.parse(sub.stream.connection.data).clientName
-                          ? 'border: 10px solid yellow'
-                          : ''
-                      "
-                      :stream-manager="sub"
-                      :class="{ 'col-12': one, 'col-6': two, 'col-4': three }"
-                    />
-                  </v-row>
-                  <v-row class="mt-8">
-                    <div v-if="publisher.stream.videoActive">
-                      <v-btn id="btn_video" class="btn mr-2" style="background-color: #6499ff" @click="toggleVideo">
-                        <v-icon color="white">mdi-video-outline</v-icon> 비디오 중지</v-btn
-                      >
-                    </div>
-                    <div v-else>
-                      <v-btn id="btn_video" class="btn mr-2" style="background-color: #979797" @click="toggleVideo">
-                        <v-icon color="white">mdi-video-outline</v-icon> 비디오 시작</v-btn
-                      >
-                    </div>
-
-                    <div v-if="publisher.stream.audioActive">
-                      <v-btn id="btn_audio" class="btn mr-2" style="background-color: #6499ff" @click="toggleAudio">
-                        <v-icon color="white">mdi-microphone-outline</v-icon> 음소거 설정</v-btn
-                      >
-                    </div>
-                    <div v-else>
-                      <v-btn id="btn_audio" class="btn mr-2" style="background-color: #979797" @click="toggleAudio">
-                        <v-icon color="white">mdi-microphone-off</v-icon> 음소거 해제</v-btn
-                      >
-                    </div>
-
-                    <v-btn class="btn mr-2" style="background-color: darkblue; color: white" @click="clickSharecode">
-                      <v-icon color="white">mdi-share</v-icon> 방코드 확인</v-btn
-                    >
-
-                    <v-btn
-                      class="btn mr-2"
-                      v-if="!playGame"
-                      style="background-color: darkblue; color: white"
-                      @click="clickPlayGame"
-                    >
-                      <v-icon color="white">mdi-controller</v-icon> 게임하기</v-btn
-                    >
-
-                    <v-btn
-                      class="btn mr-2"
-                      v-if="startLiarTalkFlag"
-                      style="background-color: darkblue; color: white"
-                      @click="startLiarTalk"
-                    >
-                      <v-icon color="white">mdi-controller</v-icon> 대화시작</v-btn
-                    >
-                    <v-btn
-                      class="btn mr-2"
-                      v-if="stopLiarTalkFlag"
-                      style="background-color: darkblue; color: white"
-                      @click="stopLiarTalk"
-                    >
-                      <v-icon color="white">mdi-controller</v-icon> 대화종료</v-btn
-                    >
-
-                    <v-btn v-if="hostName === currentUser" class="btn mr-2" @click="clickCloseRoom">종료</v-btn>
-                    <v-btn v-else class="btn mr-2" @click="clickLeaveRoom">나가기</v-btn>
-                  </v-row>
-                </v-col>
-              </p>
+  <div style="height: 100vh; width: 100vw; background-color: #50a0f0; padding: 12px 32px 12px 12px; overflow: hidden">
+    <div style="height: 100%; width: 100%; background-color: #fff; border-radius: 8px; display: flex">
+      <div v-if="publisher" style="flex: 3; padding: 36px 0 36px 36px">
+        <div style="border-right: 4px solid #d1e6fb; height: 100%">
+          <div style="display: flex; flex-direction: column; height: 100%; justify-content: space-between">
+            <!-- 비디오 그룹 시작 -->
+            <div
+              id="video-container"
+              style="
+                flex: 1;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                flex-direction: column;
+                flex-wrap: wrap;
+                margin-right: 36px;
+              "
+            >
+              <div>
+                <user-video
+                  :stream-manager="publisher"
+                  :class="{ 'col-12': one, 'col-6': two, 'col-4': three }"
+                  @click="$emit(updateMainVideoStreamManager(publisher))"
+                  :style="roulettePointer === currentUser ? 'border: 10px solid yellow' : ''"
+                />
+              </div>
+              <div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
+                <user-video
+                  :style="
+                    roulettePointer === JSON.parse(sub.stream.connection.data).clientName
+                      ? 'border: 10px solid yellow'
+                      : ''
+                  "
+                  :stream-manager="sub"
+                  :class="{ 'col-12': one, 'col-6': two, 'col-4': three }"
+                />
+              </div>
             </div>
-          </v-col>
-        </v-row>
-      </v-col>
-    </v-row>
-    <div>
-      <v-col class="right-panel" v-if="isChatPanel">
-        <ChatPanel class="chat-panel" height="800px" style="max-height: 800px" v-if="isChatPanel"> </ChatPanel>
-      </v-col>
-      <v-col class="right-panel" v-if="isGamePanel">
-        <GamePanel class="game-panel" height="800px" v-if="isGamePanel"> </GamePanel>
-      </v-col>
+            <!-- 버튼 그룹 시작 -->
+            <div
+              style="
+                height: 64px;
+                display: flex;
+                justify-content: space-around;
+                align-items: flex-end;
+                margin-right: 36px;
+              "
+            >
+              <div v-if="publisher.stream.videoActive">
+                <v-btn
+                  id="btn_video"
+                  class="btn mr-2"
+                  style="background-color: #50a0f0; color: #fff; padding: 4px 12px; border: 2px solid #fff"
+                  @click="toggleVideo"
+                  rounded="pill"
+                  size="large"
+                >
+                  <v-icon color="white">mdi-video-outline</v-icon>&nbsp;비디오 중지</v-btn
+                >
+              </div>
+              <div v-else>
+                <v-btn
+                  id="btn_video"
+                  class="btn mr-2"
+                  style="background-color: #adadad; color: #fff; padding: 4px 12px; border: 2px solid #fff"
+                  @click="toggleVideo"
+                  rounded="pill"
+                  size="large"
+                >
+                  <v-icon color="white">mdi-video-outline</v-icon>&nbsp;비디오 시작</v-btn
+                >
+              </div>
+              <div v-if="publisher.stream.audioActive">
+                <v-btn
+                  id="btn_audio"
+                  class="btn mr-2"
+                  style="background-color: #50a0f0; color: #fff; padding: 4px 12px; border: 2px solid #fff"
+                  @click="toggleAudio"
+                  rounded="pill"
+                  size="large"
+                >
+                  <v-icon color="white">mdi-microphone-outline</v-icon>&nbsp;음소거 설정</v-btn
+                >
+              </div>
+              <div v-else>
+                <v-btn
+                  id="btn_audio"
+                  class="btn mr-2"
+                  style="background-color: #adadad; color: #fff; padding: 4px 12px; border: 2px solid #fff"
+                  @click="toggleAudio"
+                  rounded="pill"
+                  size="large"
+                >
+                  <v-icon color="white">mdi-microphone-off</v-icon>&nbsp;음소거 해제</v-btn
+                >
+              </div>
+              <div>
+                <v-btn
+                  class="btn mr-2"
+                  style="background-color: #50a0f0; color: #fff; padding: 4px 12px; border: 2px solid #fff"
+                  @click="clickSharecode"
+                  rounded="pill"
+                  size="large"
+                >
+                  <v-icon color="white">mdi-share</v-icon>&nbsp;방코드 확인</v-btn
+                >
+              </div>
+              <div v-if="!playGame">
+                <v-btn
+                  class="btn mr-2"
+                  style="background-color: #285078; color: #fff; padding: 4px 12px; border: 2px solid #fff"
+                  @click="clickPlayGame"
+                  rounded="pill"
+                  size="large"
+                >
+                  <v-icon color="white">mdi-controller</v-icon>&nbsp;게임하기</v-btn
+                >
+              </div>
+              <div v-if="startLiarTalkFlag">
+                <v-btn
+                  class="btn mr-2"
+                  style="background-color: #285078; color: #fff; padding: 4px 12px; border: 2px solid #fff"
+                  @click="startLiarTalk"
+                  rounded="pill"
+                  size="large"
+                >
+                  <v-icon color="white">mdi-controller</v-icon>&nbsp;대화시작</v-btn
+                >
+              </div>
+              <div v-if="stopLiarTalkFlag">
+                <v-btn
+                  class="btn mr-2"
+                  style="background-color: #285078; color: #fff; padding: 4px 12px; border: 2px solid #fff"
+                  @click="stopLiarTalk"
+                  rounded="pill"
+                  size="large"
+                >
+                  <v-icon color="white">mdi-controller</v-icon>&nbsp;대화종료</v-btn
+                >
+              </div>
+              <div v-if="hostName === currentUser">
+                <v-btn
+                  class="btn mr-2"
+                  style="background-color: #f05a50; color: #fff; padding: 4px 12px; border: 2px solid #fff"
+                  @click="clickCloseRoom"
+                  rounded="pill"
+                  size="large"
+                  ><v-icon color="white">mdi-close-thick</v-icon>&nbsp;종료</v-btn
+                >
+              </div>
+              <div v-else>
+                <v-btn
+                  class="btn mr-2"
+                  style="background-color: #f05a50; color: #fff; padding: 4px 12px; border: 2px solid #fff"
+                  @click="clickLeaveRoom"
+                  rounded="pill"
+                  size="large"
+                  ><v-icon color="white">mdi-close</v-icon>&nbsp;나가기</v-btn
+                >
+              </div>
+            </div>
+            <!-- 버튼 그룹 끝 -->
+          </div>
+        </div>
+      </div>
+      <div style="flex: 1; padding: 0 0 36px">
+        <!-- 우측 그룹 -->
+        <div style="display: flex; justify-content: space-between; flex-direction: column-reverse; height: 100%">
+          <!-- 사이드 버튼 그룹 -->
+          <div style="display: flex; justify-content: space-around">
+            <div>
+              <div>
+                <v-btn
+                  class="btn mr-2"
+                  style="background-color: #50a0f0; color: #fff; padding: 4px 12px; border: 2px solid #fff"
+                  rounded="pill"
+                  size="large"
+                  @click="toggleChatPanel()"
+                >
+                  채팅 화면
+                </v-btn>
+              </div>
+            </div>
+            <div>
+              <div>
+                <v-btn
+                  class="btn mr-2"
+                  style="background-color: #50a0f0; color: #fff; padding: 4px 12px; border: 2px solid #fff"
+                  rounded="pill"
+                  size="large"
+                  @click="toggleGamePanel()"
+                >
+                  게임 진행 화면
+                </v-btn>
+              </div>
+            </div>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column">
+            <div class="right-panel" v-if="isGamePanel" style="flex: 1">
+              <GamePanel class="game-panel" v-if="isGamePanel"> </GamePanel>
+            </div>
+            <div class="right-panel" v-if="isChatPanel" style="flex: 1">
+              <ChatPanel class="chat-panel" v-if="isChatPanel"> </ChatPanel>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </v-container>
-  <v-footer dark padless>
-    <v-card class="flex-grow-1" tile>
-      <v-card-title class="teal">
-        <v-btn v-for="icon in icons" :key="icon" class="mx-4" dark>
-          <v-icon size="24px">
-            {{ icon }}
-          </v-icon>
-        </v-btn>
-      </v-card-title>
-      <v-row>
-        <v-col>
-          <v-card-text class="py-2 white--text text-center">
-            {{ new Date().getFullYear() }} — <strong>Vuetify</strong>
-          </v-card-text>
-        </v-col>
-        <v-col>
-          <!--  채팅버튼   -->
-          <v-card-text>
-            <v-btn class="btn mr-2" @click="toggleChatPanel()"> 채팅온오프 </v-btn>
-          </v-card-text>
-        </v-col>
-        <v-col>
-          <v-card-text>
-            <v-btn class="btn mr-2" @click="toggleGamePanel()"> 게임진행화면 </v-btn>
-          </v-card-text>
-        </v-col>
-      </v-row>
-    </v-card>
-  </v-footer>
+  </div>
 </template>
 
 <script>
@@ -214,6 +292,7 @@ export default {
     setTimeout(() => {
       this.changeIsNewbie();
     }, 3000);
+    document.getElementById("body").style.overflow = "hidden";
   },
   methods: {
     ...mapActions("MeetingStore", [
