@@ -39,8 +39,6 @@ import MemberSetTitle from "../components/mypage/MemberSetTitle.vue";
 import MemberModify from "../components/mypage/MemberModify.vue";
 import MemberModifyPwd from "../components/mypage/MemberModifyPwd.vue";
 
-import HomeTest from "../views/HomeTest.vue";
-
 const routes = [
   // {
   //   path: "/meeting",
@@ -211,11 +209,6 @@ const routes = [
     path: "/test",
     name: "test",
     component: PlanModalTest,
-  },
-  {
-    path: "/hometest",
-    name: "HomeTest",
-    component: HomeTest,
   },
 ];
 
