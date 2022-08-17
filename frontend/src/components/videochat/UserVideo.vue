@@ -1,14 +1,13 @@
 <!-- eslint-disable vuejs-accessibility/mouse-events-have-key-events -->
 <template>
   <div
-    class="ml-2 mr-2"
     v-if="streamManager"
     style="position: relative; max-height: 800px; max-width: 1060px"
     @mouseleave="mouseOn = null"
     @mouseover="mouseOn = true"
   >
     <ov-video :stream-manager="streamManager" />
-    <div v-if="isRoom && mouseOn" class="text-center" style="position: absolute; top: 20px; right: 20px">
+    <div v-if="isThisRoom && mouseOn" class="text-center" style="position: absolute; top: 20px; right: 20px">
       <v-menu bottom offset-x>
         <template v-slot:activator="{ props }">
           <v-btn dark v-bind="props">
@@ -34,8 +33,7 @@
         class="label mb-1"
         v-if="clientTitle && clientTitle !== ' ' && clientTitle !== ''"
         style="
-          background-color: darkblue;
-          text-shadow: -1px 0px white, 0px 1px white, 1px 0px white, 0px -1px white;
+          background-color: #285078;
           color: whitesmoke;
           border-radius: 5px;
           padding: 4px 12px;
@@ -59,7 +57,7 @@
     </div>
     <div style="position: absolute; top: 20px; right: 50%; border-radius: 15px; transform: translate(+50%, 0)">
       <div
-        v-if="isResident === 'true'"
+        v-if="isResident === true"
         class="label"
         style="background-color: #6499ff; color: #fff; border: 2px solid #fff; border-radius: 8px; padding: 1px 10px"
       >
@@ -91,6 +89,7 @@ export default {
   },
   props: {
     streamManager: Object,
+    isThisRoom: Boolean,
   },
   computed: {
     ...mapState("MeetingStore", ["isChatPanel"]),
