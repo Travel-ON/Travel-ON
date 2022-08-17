@@ -1,19 +1,29 @@
 <template>
-  <v-container class="game-panel">
-    <v-row class="game-box p-2 d-flex flex-column h-100">
-      <v-col class="header text-left">
-        <span class="title"> 게임 진행 </span>
-      </v-col>
+  <v-container class="game-panel" style="height: 100%">
+    <div style="display: flex; flex-direction: column; height: 100%">
+      <div style="padding: 8px; color: white; background-color: #50a0f0; border-radius: 8px; margin-bottom: 4px">
+        게임 진행
+      </div>
       <!-- 채팅 내역 -->
-      <v-col id="game-area" :height="gameHeight">
-        <v-row class="mt-2 text-left message" v-for="(gameCommentary, i) of gameCommentarys" :key="i">
+      <div
+        id="game-area"
+        style="
+          height: 100%;
+          border-radius: 8px;
+          border: 2px solid #50a0f0;
+          padding: 12px;
+          background-color: #d1e6fb;
+          flex: 1;
+        "
+      >
+        <div class="mt-2 text-left message" v-for="(gameCommentary, i) of gameCommentarys" :key="i">
           <div>
             {{ gameCommentary.comment }}
           </div>
-        </v-row>
-      </v-col>
+        </div>
+      </div>
       <div class="footer d-flex mt-auto"></div>
-    </v-row>
+    </div>
   </v-container>
 </template>
 
