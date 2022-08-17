@@ -1,11 +1,22 @@
 <template>
-  <v-container class="chat-panel">
-    <v-row class="chat-box p-2 d-flex flex-column h-100">
-      <div style="width: 360px" class="header text-left">
-        <span class="title"> 채팅 </span>
+  <v-container class="chat-panel" style="height: 100%">
+    <div style="display: flex; flex-direction: column; height: 100%">
+      <div style="padding: 8px; color: white; background-color: #50a0f0; border-radius: 8px; margin-bottom: 4px">
+        채팅
       </div>
       <!-- 채팅 내역 -->
-      <div ref="chatArea" id="chat-area" style="height: 500px; border: solid cornflowerblue 1px; width: 360px">
+      <div
+        ref="chatArea"
+        id="chat-area"
+        style="
+          height: 100%;
+          border-radius: 8px;
+          border: 2px solid #50a0f0;
+          padding: 12px;
+          background-color: #d1e6fb;
+          flex: 1;
+        "
+      >
         <div class="mt-2 text-left message" v-for="(message, i) of messages" :key="i">
           <div class="message-title">
             보낸사람:
@@ -31,26 +42,59 @@
           </div>
         </div>
       </div>
-      <!--  귓속말 기능    -->
-      <div>
-        <v-select style="width: 360px" :items="chatItems" v-model="select" label="보낼 곳"> </v-select>
+      <div style="margin-top: 4px; background-color: #d1e6fb; border-radius: 8px; padding: 12px">
+        <!--  귓속말 기능    -->
+        <div style="margin-top: 8px">
+          <v-select
+            :items="chatItems"
+            v-model="select"
+            label="보낼 곳"
+            bg-color="#d1e6fb"
+            style="border-radius: 8px; margin-bottom: 8px"
+            hide-details
+            color="#50a0f0"
+            density="compact"
+            elevation="0"
+          ></v-select>
+        </div>
+        <!-- 채팅 입력 -->
+        <form>
+          <div style="display: flex">
+            <div style="margin-right: 12px">
+              <v-btn
+                @click="SearchTypeToggle"
+                icon="mdi-pound"
+                size="small"
+                color="#50a0f0"
+                bg-color=""
+                style="color: #fff"
+              ></v-btn>
+            </div>
+            <div style="flex: 1">
+              <input
+                style="width: 100%; height: 40px"
+                class="text-box"
+                :class="{ inputColor: isHashTag }"
+                v-model="message"
+                @keydown.enter.prevent="clickSendMessage"
+              />
+            </div>
+            <div>
+              <v-btn
+                @click="clickSendMessage"
+                variant="text"
+                color="#50a0f0"
+                bg-color="#fff"
+                style="background-color: #fff"
+                height="40"
+              >
+                <v-icon>mdi-arrow-left-bottom</v-icon>
+              </v-btn>
+            </div>
+          </div>
+        </form>
       </div>
-      <form class="footer d-flex mt-auto flex flex-row">
-        <div class="col-10 px-1 py-0">
-          <v-btn @click="SearchTypeToggle">#</v-btn>
-          <input
-            style="width: 280px; height: 40px"
-            class="text-box"
-            :class="{ inputColor: isHashTag }"
-            v-model="message"
-            @keydown.enter.prevent="clickSendMessage"
-          />
-        </div>
-        <div class="col-2 p-0">
-          <v-btn style="width: 36px" class="send-btn" @click="clickSendMessage">전송버튼</v-btn>
-        </div>
-      </form>
-    </v-row>
+    </div>
   </v-container>
 </template>
 
@@ -118,10 +162,10 @@ export default {
   position: relative;
 }
 .text-box {
-  background-color: #d1d1d1;
+  background-color: #fff;
   width: 100%;
-  border-radius: 20px;
-  color: black;
+  border-radius: 4px 0 0 4px;
+  color: #020715;
   padding-left: 10px;
 }
 .text-box:focus {
@@ -151,28 +195,30 @@ export default {
   color: white;
 }
 .inputColor {
-  background-color: #6499ff;
+  background-color: #50a0f0;
 }
 #chat-area {
   overflow-y: auto;
 }
 #chat-area::-webkit-scrollbar {
-  width: 20px;
-  height: 30px;
+  width: 12px;
+  height: 12px;
 }
 /* 스크롤 바닥색*/
 #chat-area::-webkit-scrollbar-track {
-  background: #37474f;
+  background: #d1e6fb;
 }
 #chat-area::-webkit-scrollbar-corner {
-  background: #37474f;
+  background: #50a0f0;
 }
 /* 스크롤바 색*/
 #chat-area::-webkit-scrollbar-thumb {
-  background: #6499ff;
+  background: #50a0f0;
+  border-radius: 4px;
 }
 #chat-area::-webkit-scrollbar-button {
-  background-color: #37474f;
-  height: 10px;
+  background-color: #50a0f0;
+  border-radius: 4px;
+  height: 12px;
 }
 </style>
