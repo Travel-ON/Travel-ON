@@ -1,8 +1,5 @@
 <template>
   <v-container style="margin: 0px; padding: 0px">
-    <v-app-bar height="80" ref="nav">
-      <main-nav />
-    </v-app-bar>
     <!-- page 1 -->
     <div class="page main" style="background-color: #e7f0ff; flex-direction: column">
       <div style="flex: 1" />
@@ -25,7 +22,7 @@
         <div style="flex: 6; display: flex; flex-direction: column">
           <div style="flex: 5" />
           <div style="flex: 1">
-            <div class="title">
+            <div class="maintitle">
               <span style="color: #2d40a6">혼행에 만남의 </span>
               <span style="color: #fff493">빛</span>
               <span style="color: #2d40a6">을 켜다!</span>
@@ -49,98 +46,129 @@
       <div style="flex: 2" />
     </div>
     <!-- page 2 -->
-    <div class="page">
-      <div data-aos="fade-right" style="flex: 1; display: flex; flex-direction: column; background-color: #6499ff">
-        <div style="flex: 2" />
-        <div style="flex: 2">
-          <div class="title">
-            <div style="color: #ffffff">여행지에서 새로운 사람들과</div>
-            <div style="color: #ffffff">만나고 대화하세요.</div>
+    <div class="page" style="flex-direction: column">
+      <div style="flex: 4; display: flex">
+        <div style="flex: 1; display: flex; flex-direction: column; background-color: #6499ff">
+          <div style="flex: 1" />
+          <div style="flex: 2">
+            <div data-aos="fade-right" class="title">
+              <div style="color: #ffffff">여행지에서 새로운 사람들과</div>
+              <div style="color: #ffffff">만나고 대화하세요.</div>
+            </div>
           </div>
+          <!-- <div style="flex: 1" /> -->
         </div>
-        <div style="flex: 1" />
-        <div style="flex: 2; display: flex; flex-direction: column">
-          <div style="flex: 2" />
-          <div class="comment" style="flex: 1">지역 내 이미 만들어진 방에 참여할 수 있습니다!</div>
-          <div style="flex: 3">
-            <v-img src="@/assets/button/btn_roomMatching.png" alt="travel on" />
+        <div style="flex: 1; display: flex; flex-direction: column">
+          <div style="flex: 1" />
+          <div style="flex: 3; display: flex">
+            <div style="flex: 1" />
+            <div data-aos="fade-left" style="flex: 4">
+              <v-img src="@/assets/screen/videochat.png" alt="travel on" />
+            </div>
+            <div style="flex: 1" />
           </div>
-          <div style="flex: 2" />
+          <!-- <div style="flex: 1" /> -->
         </div>
-        <div style="flex: 1" />
       </div>
-      <div data-aos="fade-left" style="flex: 1; display: flex; flex-direction: column">
-        <div style="flex: 2" />
-        <div style="flex: 2">
-          <v-img src="@/assets/screen/videochat.png" alt="travel on" />
-        </div>
-        <div style="flex: 1" />
-        <div style="flex: 2; display: flex; flex-direction: column">
-          <div style="flex: 2" />
-          <div class="comment" style="flex: 1">같은 지역 범위 내 사용자들과의 방을 생성해보세요!</div>
-          <div style="flex: 3">
-            <v-img src="@/assets/button/btn_roomCreate.png" alt="travel on" />
+      <div style="flex: 2; display: flex">
+        <div style="flex: 1; display: flex; flex-direction: column; background-color: #6499ff">
+          <div style="flex: 1" />
+          <div class="comment" style="flex: 1">지역 내 이미 만들어진 방에 참여할 수 있습니다!</div>
+          <div style="flex: 2; display: flex">
+            <div style="flex: 1" />
+            <div style="flex: 5">
+              <router-link :to="{ name: 'VideochatMatching' }">
+                <v-img src="@/assets/button/btn_roomMatching.png" alt="travel on" />
+              </router-link>
+            </div>
+            <div style="flex: 1" />
           </div>
-          <div style="flex: 2" />
+          <div style="flex: 1" />
         </div>
-        <div style="flex: 1" />
+        <div style="flex: 1">
+          <div style="flex: 1" />
+          <div class="comment" style="flex: 1">같은 지역 범위 내 사용자들과의 방을 생성해보세요!</div>
+
+          <div style="flex: 2; display: flex">
+            <div style="flex: 1" />
+            <div style="flex: 5">
+              <router-link :to="{ name: 'VideochatCreate' }">
+                <v-img src="@/assets/button/btn_roomCreate.png" alt="travel on" />
+              </router-link>
+            </div>
+            <div style="flex: 1" />
+          </div>
+          <div style="flex: 1" />
+        </div>
       </div>
     </div>
     <!-- page 3 -->
-    <div class="page" style="background-color: #e7ecff; flex-direction: column">
-      <div style="flex: 3" />
+    <div class="page" style="background-color: #e7ecff">
       <div style="flex: 1" />
-      <div style="flex: 6; display: flex">
-        <div style="flex: 4">
-          <v-img src="@/assets/screen/videochat.png" alt="travel on" />
+      <div style="flex: 6; display: flex; flex-direction: column">
+        <div style="flex: 1" />
+        <div style="flex: 2">
+          <v-img data-aos="fade-up" src="@/assets/screen/videochat.png" alt="travel on" />
         </div>
         <div style="flex: 1" />
-        <div style="flex: 4; display: flex; flex-direction: column">
-          <div style="flex: 3">
-            <div class="title">
-              <div style="text-align: left; color: #4d5ef4">여행플래너</div>
-            </div>
-            <div class="comment" style="text-align: left">
-              같은 장소를 방문했다면 더 많은 이야기를 나눌 수 있을거에요.<br />
-              서로 여행장소에 대해 이야기해보면서 정보를 공유해보세요!
-            </div>
-          </div>
-          <div style="flex: 1" />
-          <div style="flex: 3">
-            <v-img src="@/assets/button/btn_planner.png" alt="travel on" />
-          </div>
-        </div>
       </div>
       <div style="flex: 1" />
-      <div style="flex: 3" />
+      <div style="flex: 5; display: flex; flex-direction: column">
+        <div style="flex: 3" />
+        <div style="flex: 4">
+          <div class="title">
+            <div style="text-align: left; color: #4d5ef4">여행플래너</div>
+          </div>
+          <div class="comment" style="text-align: left">
+            같은 장소를 방문했다면 더 많은 이야기를 나눌 수 있을거에요.<br />
+            서로 여행장소에 대해 이야기해보면서 정보를 공유해보세요!
+          </div>
+        </div>
+        <div style="flex: 1" />
+        <div style="flex: 5; display: flex">
+          <div style="flex: 1" />
+          <div style="flex: 8">
+            <router-link :to="{ name: 'Planner' }">
+              <v-img src="@/assets/button/btn_planner.png" alt="travel on" />
+            </router-link>
+          </div>
+          <div style="flex: 1" />
+        </div>
+        <div style="flex: 2" />
+      </div>
+      <div style="flex: 1" />
     </div>
     <!-- page 4 -->
-    <div class="page" style="background-color: #8b97ff; flex-direction: column">
-      <div style="flex: 3" />
+    <div class="page" style="background-color: #8b97ff">
       <div style="flex: 1" />
-      <div style="flex: 6; display: flex">
+      <div style="flex: 5; display: flex; flex-direction: column">
+        <div style="flex: 3" />
         <div style="flex: 4">
-          <v-img src="@/assets/screen/videochat.png" alt="travel on" />
+          <div class="title">
+            <div style="text-align: left; color: #ffffff">업적을 달성하고 <br />나의 칭호를 자랑해봐요!</div>
+          </div>
         </div>
         <div style="flex: 1" />
-        <div style="flex: 4; display: flex; flex-direction: column">
-          <div style="flex: 3">
-            <div class="title">
-              <div style="text-align: left; color: #4d5ef4">여행플래너</div>
-            </div>
-            <div class="comment" style="text-align: left">
-              같은 장소를 방문했다면 더 많은 이야기를 나눌 수 있을거에요.<br />
-              서로 여행장소에 대해 이야기해보면서 정보를 공유해보세요!
-            </div>
+        <div style="flex: 5; display: flex">
+          <div style="flex: 1" />
+          <div style="flex: 8">
+            <v-img src="@/assets/button/btn_setAchivement.png" alt="travel on" />
           </div>
           <div style="flex: 1" />
-          <div style="flex: 3">
-            <v-img src="@/assets/button/btn_planner.png" alt="travel on" />
-          </div>
         </div>
+        <div style="flex: 2" />
       </div>
       <div style="flex: 1" />
-      <div style="flex: 3" />
+      <div style="flex: 6; display: flex; flex-direction: column">
+        <div style="flex: 1" />
+        <div style="flex: 2">
+          <router-link :to="{ name: 'MemberSetTitle' }">
+            <v-img data-aos="fade-up" src="@/assets/achievementsMap.png" alt="travel on" />
+          </router-link>
+        </div>
+        <div style="flex: 1" />
+      </div>
+      <div style="flex: 1" />
     </div>
     <!-- page 5 -->
     <div class="page" style="background-color: #97cce7; flex-direction: column">
@@ -152,7 +180,10 @@
       <div style="flex: 5; display: flex">
         <div style="flex: 4" />
         <div style="flex: 3; display: flex; flex-direction: column">
-          <div style="flex: 3; background-color: #ffffff; border-radius: 15px; display: flex; flex-direction: column">
+          <div
+            data-aos="flip-left"
+            style="flex: 3; background-color: #ffffff; border-radius: 15px; display: flex; flex-direction: column"
+          >
             <div style="flex: 1" />
             <div style="flex: 7">
               <v-img src="@/assets/icon_roulette.png" alt="travel on" />
@@ -172,7 +203,10 @@
         </div>
         <div style="flex: 1" />
         <div style="flex: 3; display: flex; flex-direction: column">
-          <div style="flex: 3; background-color: #ffffff; border-radius: 15px; display: flex; flex-direction: column">
+          <div
+            data-aos="flip-right"
+            style="flex: 3; background-color: #ffffff; border-radius: 15px; display: flex; flex-direction: column"
+          >
             <div style="flex: 1" />
             <div style="flex: 7">
               <v-img src="@/assets/icon_liar.jpeg" alt="travel on" />
@@ -184,25 +218,6 @@
           <div style="flex: 2" />
         </div>
         <div style="flex: 4" />
-        <!-- <div style="flex: 4">
-          <v-img src="@/assets/screen/videochat.png" alt="travel on" />
-        </div>
-        <div style="flex: 1" />
-        <div style="flex: 4; display: flex; flex-direction: column">
-          <div style="flex: 3">
-            <div class="title">
-              <div style="text-align: left; color: #4d5ef4">여행플래너</div>
-            </div>
-            <div class="comment" style="text-align: left">
-              같은 장소를 방문했다면 더 많은 이야기를 나눌 수 있을거에요.<br />
-              서로 여행장소에 대해 이야기해보면서 정보를 공유해보세요!
-            </div>
-          </div>
-          <div style="flex: 1" />
-          <div style="flex: 3">
-            <v-img src="@/assets/button/btn_planner.png" alt="travel on" />
-          </div>
-        </div> -->
       </div>
       <div style="flex: 1" />
     </div>
@@ -213,7 +228,6 @@
 import { defineComponent, onMounted } from "vue";
 import { mapActions } from "vuex";
 import AOS from "aos";
-import MainNav from "../components/common/MainNav.vue";
 
 onMounted(() => {
   AOS.init();
@@ -221,7 +235,7 @@ onMounted(() => {
 
 export default defineComponent({
   name: "HomeTest",
-  components: { MainNav },
+  components: {},
   data() {
     return {
       window: {
@@ -250,85 +264,14 @@ export default defineComponent({
       this.window.width = window.innerWidth;
       this.window.height = window.innerHeight;
     },
-    scrollEvents() {
-      // const headerState = this.headerState;
-      this.headerScrollEvent();
-      // 특정페이지에는 이 부분의 주석을 해제해 준다.
-      // this.navScrollEvent();
-      // this.test();
-    },
-    headerScrollEvent() {
-      // 현재 스크롤 탑
-      // const beforeScrollTop = this.currentScrollValue;
-      // 스크롤 후의 탑
-      // const afterScrollValue = document.documentElement.scrollTop;
-      // page의 헤더
-      // const pageHeader = document.querySelector(".row1");
-
-      // 추후에 nav가 생기더라도 수정해줄 필요가 없다.
-      // if (this.headerState) {
-      //   if (afterScrollValue > beforeScrollTop) {
-      //     this.headerState = false;
-      //   }
-      //   this.currentScrollValue = beforeScrollTop;
-      // } else if (afterScrollValue > beforeScrollTop) {
-      //   this.headerState = true;
-      // }
-      // this.currentScrollValue = afterScrollValue;
-
-      if (this.checkVisible() && !this.headerState) {
-        alert("엘리먼트 보임 !!");
-        this.headerState = true;
-      }
-    },
-    checkVisible() {
-      // return true;
-      // console.log("viewportHeight");
-      // console.log(this.window.height);
-      // console.log("scrolltop");
-      // console.log(window.scrollY);
-      // console.log("y");
-      // console.log(this.$refs.second.scrollTop);
-      // console.log("elementHeight");
-      // console.log(this.$refs.second.offsetHeight);
-      // return true;
-      // viewportHeight = $(window).height(), // Viewport Height
-      //   scrolltop = $(window).scrollTop(), // Scroll Top
-      //   y = $(elm).offset().top,
-      //   elementHeight = $(elm).height();
-      // eval = eval || "object visible";
-      // var viewportHeight = $(window).height(), // Viewport Height
-      //   scrolltop = $(window).scrollTop(), // Scroll Top
-      //   y = $(elm).offset().top,
-      //   elementHeight = $(elm).height();
-      // if (eval == "object visible") return y < viewportHeight + scrolltop && y > scrolltop - elementHeight;
-      // if (eval == "above") return y < viewportHeight + scrolltop;
-    },
-    navScrollEvent() {
-      // 현재 스크롤 탑
-      const beforeScrollTop = this.currentScrollValue;
-      // 스크롤 후의 탑
-      const afterScrollValue = document.documentElement.scrollTop;
-      // page의 nav
-      const pageNav = document.querySelector(".wrap_company_nav_container");
-
-      if (afterScrollValue > beforeScrollTop) {
-        pageNav.classList.add("nav_none");
-        this.currentScrollValue = afterScrollValue;
-      } else {
-        pageNav.classList.remove("nav_none");
-        this.currentScrollValue = afterScrollValue;
-      }
-    },
   },
   mounted() {
+    if (!this.isLocation && this.isLoggedIn) {
+      this.getLocation(false);
+    }
     this.fetchCurrentUser();
     document.addEventListener("scroll", this.scrollEvents);
-    // window.scroll({ top: this.$refs.second.offsetTop, behavior: "smooth" });
     window.scroll({ top: 0, behavior: "smooth" });
-    // window.scrollTo(this.$refs.second.offsetTop, 0);
-    // this.page1Height = this.window.height - this.$refs.nav.offsetHeight;
-    // this.$refs.second.height = this.page1Height;
     setTimeout(async () => {
       this.isIconStatus = true;
     }, 1500);
@@ -353,8 +296,13 @@ export default defineComponent({
   position: absolute;
   left: 30px;
 }
+.maintitle {
+  font-size: 54px;
+  font-weight: bold;
+  text-shadow: 2px 2px 2px gray;
+}
 .title {
-  font-size: 55px;
+  font-size: 48px;
   font-weight: bold;
   text-shadow: 2px 2px 2px gray;
 }

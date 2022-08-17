@@ -1,10 +1,10 @@
 <template>
   <div style="display: flex; justify-content: space-between">
-    <div class="left-space"></div>
-    <div class="main-space">
+    <div style="flex: 1" />
+    <div style="flex: 3" class="main-space">
       <router-view />
     </div>
-    <div class="right-space"></div>
+    <div style="flex: 1" />
   </div>
 </template>
 
@@ -13,5 +13,3 @@ export default {
   name: "MemberView",
 };
 </script>
-
-<style></style>
