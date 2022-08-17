@@ -18,6 +18,7 @@
               :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
               v-model="credentials.password"
               @click:append="showPassword = !showPassword"
+              style="font-family: Georgia; font-weight: bold"
             ></v-text-field>
           </v-col>
         </v-row>
