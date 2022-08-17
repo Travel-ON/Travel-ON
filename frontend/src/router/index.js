@@ -56,6 +56,11 @@ const routes = [
     component: HomeView,
   },
   {
+    path: "/videochat/room",
+    name: "VideochatRoom",
+    component: VideochatRoom,
+  },
+  {
     path: "/videochat",
     name: "Videochat",
     component: Videochat,
@@ -69,11 +74,6 @@ const routes = [
         path: "create",
         name: "VideochatCreate",
         component: VideochatCreate,
-      },
-      {
-        path: "room",
-        name: "VideochatRoom",
-        component: VideochatRoom,
       },
       {
         path: "share",

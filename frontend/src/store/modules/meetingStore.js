@@ -63,6 +63,25 @@ export const MeetingStore = {
       return ["모두", ...items];
     },
     subscribers: (state) => state.subscribers,
+    subscribersCount: (state) => state.subscribers.length,
+    hostFlex(state) {
+      let result;
+      if (state.subscribers.length <= 2) {
+        result = 60;
+      } else {
+        result = Math.floor(100 / Math.floor((state.subscribers.length + 1) / 2));
+      }
+      return result;
+    },
+    subFlex(state) {
+      let result;
+      if (state.subscribers.length < 2) {
+        result = 40;
+      } else {
+        result = Math.floor(100 / (Math.floor(state.subscribers.length / 2) + 1));
+      }
+      return result;
+    },
   },
   mutations: {
     // Openvidu
