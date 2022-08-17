@@ -11,6 +11,7 @@ import MemberFindpwd from "../components/member/MemberFindpwd.vue";
 import HomeView from "../views/HomeView.vue";
 
 import PlannerView from "../views/PlannerView.vue";
+import PlanModalTest from "../views/PlanModalTest.vue";
 
 import Notice from "../views/Notice.vue";
 import NoticeList from "../components/notice/NoticeList.vue";
@@ -203,6 +204,11 @@ const routes = [
     path: "/planner",
     name: "Planner",
     component: PlannerView,
+  },
+  {
+    path: "/test",
+    name: "test",
+    component: PlanModalTest,
   },
 ];
 

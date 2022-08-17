@@ -6,8 +6,6 @@ import Swal from "sweetalert2";
 /* eslint-disable no-return-assign */
 export const Accounts = {
   /* eslint-disable */
-  // namespaced: true,
-  // state는 직접 접근하지 않는다.
   state: () => ({
     token: localStorage.getItem("token") || "", // 토큰
     currentUser: "", // 현재 유저 닉네임
@@ -104,16 +102,12 @@ export const Accounts = {
         실패하면
           에러 메시지 표시
       */
-      console.log("login 메서드 실행");
-      console.log(spring.accounts.login());
-      console.log(credentials);
       axios({
         url: spring.accounts.login(),
         method: "post",
         data: credentials, // credentials.id, cresentials.password
       })
         .then(({ data }) => {
-          console.log(data);
           const token = data.accessToken;
           const nickName = data.nickname;
           const userTitle = data.userTitle;
@@ -126,7 +120,6 @@ export const Accounts = {
           commit("SET_TITLE", userTitle);
           dispatch("getLocation", true);
           dispatch("getTrophy");
-          console.log(data);
           Swal.fire({
             icon: "success",
             title: "로그인 완료!",
@@ -185,38 +178,6 @@ export const Accounts = {
       });
       router.push({ name: "home" });
     },
-    // 중복되서 하나는 주석처리
-    // modify({ commit, dispatch }, credentials) {
-    //   console.log("modify 메서드 실행");
-    //   console.log(spring.accounts.modify());
-    //   console.log(credentials);
-    //   axios({
-    //     url: spring.accounts.modify(),
-    //     method: "post",
-    //     data: credentials, // credentials.username, cresentials.password
-    //   }).then(({ data }) => {
-    //     console.log(data);
-    //     const token = data.accessToken;
-    //     const nickName = data.nickname;
-    //     const userTitle = data.userTitle;
-    //     const adminFlag = data.adminFlag;
-    //
-    //     dispatch("saveToken", token);
-    //     commit("SET_CURRENT_USER", nickName);
-    //     commit("SET_ADMIN", adminFlag);
-    //     commit("SET_TITLE", userTitle);
-    //     dispatch("getLocation", true);
-    //     dispatch("getTrophy");
-    //     console.log(data);
-    //     Swal.fire({
-    //       icon: "success",
-    //       title: "회원정보 수정완료!",
-    //       showConfirmButton: false,
-    //       timer: 1000,
-    //     });
-    //     router.push({ name: "home" });
-    //   });
-    // },
     regist({ commit, dispatch }, formData) {
       /*
         POST: 사용자 입력정보를 signup URL로 보내기
@@ -227,9 +188,6 @@ export const Accounts = {
           실패하면
             에러 메시지 표시
         */
-      console.log("regist 메서드 실행");
-      console.log(formData);
-      console.log(spring.accounts.regist());
       axios({
         url: spring.accounts.regist(),
         method: "post",
@@ -272,8 +230,7 @@ export const Accounts = {
         },
         data: formData,
       })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           alert("정보수정 완료!");
           router.push({ name: "MemberLogout" });
         })
@@ -284,7 +241,6 @@ export const Accounts = {
     },
     detail({ getters }) {
       const token = getters.token;
-      console.log(token);
       axios({
         url: spring.accounts.detail(),
         method: "get",
@@ -308,8 +264,7 @@ export const Accounts = {
           Authorization: `Bearer ${token}`,
         },
       })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           alert("탈퇴 완료!");
           router.push({ name: "MemberLogout" });
         })
@@ -412,10 +367,8 @@ export const Accounts = {
         data: { dongCode: getters.dongCode },
       })
         .then((res) => {
-          console.log("지역 카운트값 증가!");
           if (res.status === 200) {
             dispatch("saveResident", true);
-            console.log("현지인 확인 완료!");
           }
         })
         .catch((err) => {
@@ -423,9 +376,6 @@ export const Accounts = {
         });
     },
     userPassInit({ commit, dispatch }, credentials) {
-      console.log("userPassInit 메서드 실행");
-      console.log(spring.accounts.userPassInit());
-      console.log(credentials);
       axios({
         url: spring.accounts.userPassInit(),
         method: "post",

@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <div class="text-h3 font-weight-bold" style="margin: 28px auto; color: #50a0f0">로그인</div>
-    <v-card id="loginCard" color="#AACCFF">
+    <v-card id="loginCard" color="#e1effd">
       <v-form ref="form" lazy-validation @submit.prevent="login(credentials)">
         <v-row id="inputId" style="display: flex" class="ml-16">
           <v-col style="width: 70%; margin-right: 20px; max-width: 500px">

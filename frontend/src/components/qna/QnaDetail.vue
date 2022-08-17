@@ -28,8 +28,7 @@
       </v-row>
       <v-row>
         <v-col v-if="qna.answerFlag"
-          ><v-card height="200px">
-            <v-textarea :disabled="!admin" v-model="answer" :placeholder="`${qna.answer}`" /></v-card
+          ><v-card height="200px"> <v-textarea :disabled="!admin" v-model="qna.answer" /></v-card
         ></v-col>
         <v-col v-else
           ><v-card height="200px">
@@ -134,7 +133,7 @@ export default {
     modifyAnswer() {
       const params = {
         qnaId: this.qna.qnaid,
-        answer: this.answer,
+        answer: this.qna.answer,
       };
       this.$store.dispatch("QnAs/modifyQnaAnswer", params);
       Swal.fire({

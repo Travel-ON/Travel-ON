@@ -1,4 +1,3 @@
-// import router from "@/router";
 import { createApi } from "@/api";
 
 const api = createApi();
@@ -44,7 +43,6 @@ export const QnAs = {
         },
       })
         .then((res) => {
-          console.log(res);
           commit("GET_QNAS", res.data);
         })
         .catch((err) => {
@@ -66,7 +64,6 @@ export const QnAs = {
         },
       })
         .then((res) => {
-          console.log(res);
           commit("GET_QNAS", res.data);
         })
         .catch((err) => {
@@ -81,7 +78,6 @@ export const QnAs = {
           Authorization: `Bearer ${rootGetters.token}`,
         },
       }).then((res) => {
-        console.log(res.data);
         commit("GET_QNA", res.data);
       });
     },
@@ -117,10 +113,8 @@ export const QnAs = {
         commit("MODIFY_QNA", payload);
       });
     },
-    deleteQna({ commit, rootGetters }, payload) {
+    deleteQna({ rootGetters }, payload) {
       // eslint-disable-next-line no-unused-expressions
-      commit;
-      console.log(payload);
       api({
         url: `/qna/delete/${payload}`,
         method: "DELETE",
@@ -172,7 +166,6 @@ export const QnAs = {
           Authorization: `Bearer ${rootGetters.token}`,
         },
       }).then((res) => {
-        console.log(res);
         commit("GET_QNAS", res.data);
       });
     },
@@ -184,7 +177,6 @@ export const QnAs = {
           Authorization: `Bearer ${rootGetters.token}`,
         },
       }).then((res) => {
-        console.log(res);
         commit("GET_QNAS", res.data);
       });
     },

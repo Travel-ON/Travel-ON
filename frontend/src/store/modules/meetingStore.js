@@ -4,8 +4,8 @@ import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import Swal from "sweetalert2";
 import moment from "moment";
-// import { startsWith } from "core-js/core/string";
 import router from "@/router";
+import kakao from "@/api/kakao_api";
 
 const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
 // const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8443`;
@@ -62,8 +62,6 @@ export const MeetingStore = {
       });
       return ["모두", ...items];
     },
-    messages: (state) => state.messages,
-    gameCommentarys: (state) => state.gameCommentarys,
     subscribers: (state) => state.subscribers,
   },
   mutations: {
@@ -242,15 +240,11 @@ export const MeetingStore = {
     joinSession({ state, commit, dispatch, rootGetters }) {
       // 오픈비두 세션 초기화
       // --- Get an OpenVidu object ---
-      // const OV = new OpenVidu();
       commit("SET_OV", new OpenVidu());
       // --- Init a session ---
-      // const session = state.OV.initSession();
       // --- Specify the actions when events take place in the session ---
       commit("SET_SESSION", state.OV.initSession());
       // On every new Stream received...
-      // const subscribers = [];
-      // commit("SET_SUBSCRIBERS", subscribers);
       state.session.on("streamCreated", ({ stream }) => {
         const subscriber = state.session.subscribe(stream);
         state.subscribers.push(subscriber);
@@ -260,13 +254,12 @@ export const MeetingStore = {
             to: [],
             message: `🎉${JSON.parse(stream.connection.data).clientName}님이 입장하였습니다🎉`,
           };
-          dispatch("sendMessage", data);
+          state.messages.push(data);
         }
       });
 
       // On every Stream destroyed...
       state.session.on("streamDestroyed", ({ stream }) => {
-        console.log(stream);
         const index = state.subscribers.indexOf(stream.streamManager, 0);
 
         let check = false;
@@ -293,7 +286,7 @@ export const MeetingStore = {
             to: [],
             message: `✋${JSON.parse(stream.connection.data).clientName}님이 퇴장하였습니다✋`,
           };
-          dispatch("sendMessage", data);
+          state.messages.push(data);
         }
       });
 
@@ -326,29 +319,58 @@ export const MeetingStore = {
               insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
               mirror: false, // Whether to mirror your local video or not
             });
-            // commit("SET_OV", OV);
             commit("SET_MAINSTREAMMANAGER", publisher);
             commit("SET_PUBLISHER", publisher);
-            // commit("SET_SESSION", session);
-            // commit("SET_SUBSCRIBERS", subscribers);
-            // commit("SET_OVTOKEN", token);
 
-            // this.mainStreamManager = publisher;
-            // this.publisher = publisher;
             state.session.publish(state.publisher);
-
             state.session.on("signal:chat", (event) => {
               const eventData = JSON.parse(event.data);
               const data = {};
               const time = new Date();
               data.message = eventData.message;
               data.sender = eventData.from;
+              // 강퇴
+              if (eventData.type === "kickout") {
+                if (eventData.to === rootGetters.currentUser) {
+                  dispatch("leaveSession");
+                  Swal.fire("화상채팅방 강퇴", "호스트에 의해 화상채팅방에서 강퇴되었습니다.", "warning");
+                  router.push({
+                    name: "home",
+                  });
+                }
+                data.sender = "SYSTEM";
+                data.message = `✋${eventData.to}님을 강퇴하였습니다✋`;
+              }
               if (eventData.to[0] === undefined) data.receiver = "모두";
               // eslint-disable-next-line prefer-destructuring
               else data.receiver = eventData.to[0];
-              // data.sender = JSON.parse(event.from.data).clientName;
               data.time = moment(time).format("HH:mm");
-              if (
+              if (eventData.isHashTag) {
+                axios({
+                  url: kakao.region.imageSearch(),
+                  headers: { Authorization: "KakaoAK a7cedeb35de4c99731ff3ee0bc0ade21" },
+                  method: "GET",
+                  params: {
+                    query: eventData.message,
+                    sort: "accuracy",
+                    size: 4,
+                  },
+                })
+                  .then((res) => {
+                    data.url = res.data.documents[0].image_url;
+                    data.doc_url = `https://search.naver.com/search.naver?where=image&query=${data.message}`;
+                    if (
+                      data.sender === rootGetters.currentUser ||
+                      data.receiver === rootGetters.currentUser ||
+                      data.receiver === "모두"
+                    ) {
+                      state.messages.push(data);
+                    }
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              } else if (
                 data.sender === rootGetters.currentUser ||
                 data.receiver === rootGetters.currentUser ||
                 data.receiver === "모두"
@@ -364,11 +386,6 @@ export const MeetingStore = {
                 position: "top-end",
                 showConfirmButton: false,
                 timer: 3000,
-                // timerProgressBar: true,
-                // didOpen: (toast) => {
-                //   toast.addEventListener("mouseenter", Swal.stopTimer);
-                //   toast.addEventListener("mouseleave", Swal.resumeTimer);
-                // },
               });
 
               if (eventData.gameId === "liar") {
@@ -377,8 +394,6 @@ export const MeetingStore = {
                   dispatch("startGame");
                   state.gameCommentarys.push({ comment: "📣 라이어게임을 시작합니다!!!" });
                   state.gameCommentarys.push({ comment: "📣 방장이 주제를 선택중입니다.." });
-                  console.log(state.hostName);
-                  console.log(rootGetters.currentUser);
                   if (state.hostName === rootGetters.currentUser) {
                     axios({
                       url: spring.videochat.liarTopic(),
@@ -399,7 +414,6 @@ export const MeetingStore = {
                       });
                   }
                 } else if (eventData.step === 2) {
-                  console.log(eventData.content);
                   commit("SET_GAME_PARTICIPANTS", eventData.content.participants);
                   commit("SET_LIAR_TOPIC", eventData.content.topic);
                   commit("SET_LIAR_KEYWORD", eventData.content.keyword);
@@ -472,10 +486,6 @@ export const MeetingStore = {
                         return b[1] - a[1];
                       });
 
-                      // console.log("state.votes");
-                      // console.log(state.votes);
-                      // console.log(sortable);
-                      // console.log(sortable[0]);
                       if (sortable[0][1] === sortable[1][1]) {
                         commit("SET_VOTE_COUNT", 0);
                         commit("SET_VOTES", []);
@@ -589,10 +599,6 @@ export const MeetingStore = {
                     state.subscribers.forEach(function (subscriber) {
                       participants.push(JSON.parse(subscriber.stream.connection.data).clientName);
                     });
-
-                    console.log("참여자 출력");
-                    console.log(participants);
-
                     const gameData = {
                       gameId: "roulette",
                       step: 2,
@@ -696,9 +702,7 @@ export const MeetingStore = {
         gameId: "liar",
         step: 1,
         content: {},
-        // secretName: state.secretName,
       };
-      console.log(`세션 출력 ${state.session}`);
       state.session.signal({
         type: "game",
         data: JSON.stringify(gameData),
@@ -733,7 +737,6 @@ export const MeetingStore = {
           return "";
         },
       });
-      console.log(topic);
       if (topic) {
         axios({
           url: spring.videochat.liarKeyword(topics[topic]),
@@ -746,9 +749,6 @@ export const MeetingStore = {
             state.subscribers.forEach(function (subscriber) {
               participants.push(JSON.parse(subscriber.stream.connection.data).clientName);
             });
-
-            console.log("참여자 출력");
-            console.log(participants);
             const gameData = {
               gameId: "liar",
               step: 2,
@@ -994,7 +994,6 @@ export const MeetingStore = {
         } else {
           setTimeout(async () => {
             commit("SET_ROULETTE_POINTER", state.participants[i % size]);
-            console.log(state.roulettePointer);
           }, delay);
         }
       }

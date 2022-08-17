@@ -1,11 +1,11 @@
 <template>
   <v-container class="chat-panel">
     <v-row class="chat-box p-2 d-flex flex-column h-100">
-      <v-col class="header text-left">
+      <div style="width: 360px" class="header text-left">
         <span class="title"> 채팅 </span>
-      </v-col>
+      </div>
       <!-- 채팅 내역 -->
-      <div ref="chatArea" id="chat-area" style="height: 500px; border: solid cornflowerblue 1px; max-height: 500px">
+      <div ref="chatArea" id="chat-area" style="height: 500px; border: solid cornflowerblue 1px; width: 360px">
         <div class="mt-2 text-left message" v-for="(message, i) of messages" :key="i">
           <div class="message-title">
             보낸사람:
@@ -16,24 +16,40 @@
             시간: <span class="message-header">{{ message.time }}</span>
           </div>
           <div>
-            {{ message.message }}
+            <div v-if="message.url">
+              <v-card class="mx-auto" max-width="200px" height="260px">
+                <v-card-title> #{{ message.message }} </v-card-title>
+                <v-btn :href="messages[i].doc_url" target="_blank">
+                  <v-img :src="messages[i].url" alt="사진" width="200px" />
+                </v-btn>
+              </v-card>
+            </div>
+
+            <div v-else>
+              {{ message.message }}
+            </div>
           </div>
         </div>
       </div>
       <!--  귓속말 기능    -->
       <div>
-        <v-select :items="chatItems" v-model="select" label="보낼 곳"> </v-select>
+        <v-select style="width: 360px" :items="chatItems" v-model="select" label="보낼 곳"> </v-select>
       </div>
-      <div class="footer d-flex mt-auto">
+      <form class="footer d-flex mt-auto flex flex-row">
         <div class="col-10 px-1 py-0">
-          <input class="text-box" v-model="message" @keyup.enter="clickSendMessage" />
+          <v-btn @click="SearchTypeToggle">#</v-btn>
+          <input
+            style="width: 280px; height: 40px"
+            class="text-box"
+            :class="{ inputColor: isHashTag }"
+            v-model="message"
+            @keydown.enter.prevent="clickSendMessage"
+          />
         </div>
         <div class="col-2 p-0">
-          <v-btn class="send-btn" @click="clickSendMessage" value="전송버튼">
-            <i class="fas fa-paper-plane"></i>
-          </v-btn>
+          <v-btn style="width: 36px" class="send-btn" @click="clickSendMessage">전송버튼</v-btn>
         </div>
-      </div>
+      </form>
     </v-row>
   </v-container>
 </template>
@@ -46,8 +62,8 @@ export default {
   data() {
     return {
       message: "",
-      chatHeight: "30vh",
       select: "모두",
+      isHashTag: false,
     };
   },
   computed: {
@@ -57,13 +73,16 @@ export default {
   },
   methods: {
     ...mapActions("MeetingStore", ["toggleChatPanel", "sendMessage"]),
-
+    SearchTypeToggle() {
+      this.isHashTag = !this.isHashTag;
+    },
     clickSendMessage() {
-      const data = { to: [this.select], from: this.currentUser, message: this.message };
+      const data = { to: [this.select], from: this.currentUser, message: this.message, isHashTag: this.isHashTag };
       if (data.to[0] === "모두") data.to = [];
       if (this.message.trim()) {
         this.sendMessage(data);
         this.message = "";
+        this.isHashTag = false;
       }
     },
   },
@@ -109,6 +128,9 @@ export default {
 }
 .send-btn {
   color: white;
+}
+.inputColor {
+  background-color: #6499ff;
 }
 #chat-area {
   overflow-y: auto;
