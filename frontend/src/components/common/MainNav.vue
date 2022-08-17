@@ -213,8 +213,7 @@ export default {
               method: "delete",
               headers: { Authorization: `Bearer ${this.token}` },
             })
-              .then((res) => {
-                console.log(res);
+              .then(() => {
                 Swal.fire({
                   icon: "success",
                   title: "알림 내역을 삭제했습니다!",

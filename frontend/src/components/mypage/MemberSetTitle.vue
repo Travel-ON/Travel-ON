@@ -1,54 +1,154 @@
+<!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <template>
-  <div>
-    <div><strong>칭호설정</strong></div>
-    <v-card class="mx-auto rounded-xl" elevation="5" max-width="1300" tile>
-      <v-card-text style="display: table">
-        <div style="display: table-row">
-          <div style="display: table-cell">
-            업적지도 구역
+  <div style="display: flex; justify-content: center; align-items: center; width: 75%">
+    <div>
+      <div style="font-weight: bold; font-size: 40px; margin: 12px 0; width: 1080px; color: #50a0f0">칭호설정</div>
+      <div style="width: 1080px; border-top: 3px solid #020715; background-color: #aaccff; border-radius: 0 0 8px 8px">
+        <v-card-text>
+          <div style="display: flex; justify-content: center">
+            <div style="margin-right: 48px">
+              <div>
+                <AchievementsMap />
+              </div>
+            </div>
             <div>
-              <KoreaMap />
+              <div style="height: 550px; width: 100%; background-color: #6499ff; border-radius: 18px">
+                <div
+                  style="
+                    height: 60px;
+                    width: 100%;
+                    font-size: 24px;
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <div>획득한 칭호 리스트</div>
+                </div>
+                <div
+                  style="
+                    height: 490px;
+                    width: 100%;
+                    border: 4px solid #6499ff;
+                    border-radius: 0 0 18px 18px;
+                    padding: 12px 36px;
+                    background-color: #fff;
+                  "
+                >
+                  <!-- 리스트 구역 -->
+                  <div style="width: 260px">
+                    <v-select
+                      label="시(도)"
+                      :items="sidoList"
+                      item-title="name"
+                      item-value="codeSet"
+                      v-model="selectedSido"
+                      bg-color="#bfd9ff"
+                      density="comfortable"
+                      required
+                    ></v-select>
+                  </div>
+                  <div
+                    v-for="temptitle in titles"
+                    :key="temptitle.userAchievementId"
+                    :style="`
+                      height: 42px;
+                      margin-bottom: 8px;
+                      width: 260px;
+                      border: 3px solid #bfd9ff;
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      background-color: ${
+                        (combiTitle ? combiTitle : title) === `${temptitle.sidoName} ${temptitle.title}`
+                          ? '#bfd9ff'
+                          : '#fff'
+                      };
+                      color: ${
+                        (combiTitle ? combiTitle : title) === `${temptitle.sidoName} ${temptitle.title}`
+                          ? '#020715'
+                          : '#000'
+                      };
+                      cursor: pointer;
+                    `"
+                    @click="setTitle(temptitle.sidoName, temptitle.title)"
+                  >
+                    {{ temptitle.sidoName }} {{ temptitle.title }}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div style="display: table-cell">
-            칭호리스트 구역
-            <table v-for="title in titles" :key="title.userAchievmentId">
-              <v-row @click="setTitle(title.sidoName, title.title)">{{ title.sidoName }} {{ title.title }}</v-row>
-              <v-row>--------------------------------------</v-row>
-              <v-row>.</v-row>
-              <v-row>.</v-row>
-              <v-row>.</v-row>
-            </table>
+          <div
+            style="
+              margin-top: 36px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              font-size: 36px;
+              color: #285078;
+            "
+          >
+            <!-- <div v-if="title == null && changeTitle == null">나의 칭호 ▶ 칭호를 선택해주세요</div>
+            <div v-else-if="title != null && changeTitle == null">나의 칭호 > {{ title }}</div>
+            <div v-else-if="changeTitle != null">나의 칭호 > {{ sido }} {{ changeTitle }}</div> -->
+            <div style="display: flex; justify-content: center; align-items: center">
+              <div style="margin-right: 20px; font-weight: bold">나의 칭호 ▶</div>
+              <div
+                style="
+                  height: 64px;
+                  width: 360px;
+                  font-size: 24px;
+                  background-color: #fff;
+                  border: 2px dashed #020715;
+                  border-radius: 4px;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  position: relative;
+                "
+              >
+                <div>
+                  {{
+                    changeTitle !== null
+                      ? changeTitle !== ""
+                        ? `${sido} ${changeTitle}`
+                        : "칭호를 선택해주세요"
+                      : title !== " "
+                      ? `${title}`
+                      : "칭호를 선택해주세요"
+                  }}
+                </div>
+                <div style="position: absolute; top: 0; right: 0">
+                  <v-btn
+                    color="transparent"
+                    icon="mdi-close"
+                    size="x-large"
+                    style="font-size: 32px"
+                    @click="
+                      changeTitle = '';
+                      sido = '';
+                    "
+                  ></v-btn>
+                </div>
+              </div>
+            </div>
           </div>
-          <div>
-            <v-select
-              label="시(도)"
-              :items="sidoList"
-              item-title="name"
-              item-value="codeSet"
-              v-model="selectedSido"
-              style="margin-right: 30px"
-              bg-color="#efefef"
-              density="comfortable"
-              required
-            ></v-select>
-          </div>
-        </div>
-
-        <div>
-          <div v-if="title == null && changeTitle == null">나의 칭호 > 칭호를 선택해주세요</div>
-          <div v-else-if="title != null && changeTitle == null">나의 칭호 > {{ title }}</div>
-          <div v-else-if="changeTitle != null">나의 칭호 > {{ sido }} {{ changeTitle }}</div>
-        </div>
-        <div><v-btn @click="modifyTitle()">설정</v-btn></div>
-      </v-card-text>
-    </v-card>
+        </v-card-text>
+      </div>
+      <div style="margin-top: 36px">
+        <v-btn @click="modifyTitle()" color="#50a0f0" size="x-large" width="180" height="64">
+          <span style="color: #fff; font-size: 32px">설정</span>
+        </v-btn>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import KoreaMap from "../main/KoreaMap.vue";
+import AchievementsMap from "../main/AchievementsMap.vue";
 
 export default {
   computed: {
@@ -59,8 +159,8 @@ export default {
   data() {
     return {
       nowTitle: null,
-      sido: null,
-      changeTitle: null,
+      sido: null, // 변경 값
+      changeTitle: null, // 변경 값
       combiTitle: null,
       selectedSido: null,
       sidoName: null,
@@ -97,13 +197,14 @@ export default {
     setTitle(sidoName, setTitle) {
       this.sido = sidoName;
       this.changeTitle = setTitle;
+      this.combiTitle = `${sidoName} ${setTitle}`;
     },
     modifyTitle() {
       this.combiTitle = `${this.sido} ${this.changeTitle}`;
       this.$store.dispatch("Members/modifyTitle", this.combiTitle);
     },
   },
-  components: { KoreaMap },
+  components: { AchievementsMap },
 };
 </script>
 
