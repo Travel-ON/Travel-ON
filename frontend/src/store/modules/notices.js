@@ -1,4 +1,3 @@
-// import router from "@/router";
 import { createApi } from "@/api";
 import router from "@/router";
 
@@ -63,7 +62,6 @@ export const Notices = {
         });
     },
     writeNotice({ commit, getters }, newNotice) {
-      console.log("오지?");
       api({
         url: `/notice/regist`,
         method: "POST",
@@ -91,10 +89,7 @@ export const Notices = {
         commit("MODIFY_NOTICE", payload);
       });
     },
-    deleteNotice({ commit, getters }, payload) {
-      // eslint-disable-next-line no-unused-expressions
-      commit;
-      console.log(payload);
+    deleteNotice({ getters }, payload) {
       api({
         url: `/notice/delete/${payload}`,
         method: "DELETE",
@@ -114,7 +109,6 @@ export const Notices = {
         params: { page: params },
       })
         .then((res) => {
-          console.log(res.data.pf.content);
           commit("GET_FAQ", res.data.pf.content);
           commit("TOTAL_PAGE", res.data.pf.totalPages);
         })
@@ -129,7 +123,6 @@ export const Notices = {
         params: { key: payload },
       })
         .then((res) => {
-          console.log(res.data.pf.content);
           commit("GET_FAQ", res.data.pf.content);
           commit("TOTAL_PAGE", res.data.pf.totalPages);
         })

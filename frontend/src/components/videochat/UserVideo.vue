@@ -1,10 +1,17 @@
+<!-- eslint-disable vuejs-accessibility/mouse-events-have-key-events -->
 <template>
-  <div class="ml-2 mr-2" v-if="streamManager" style="position: relative">
+  <div
+    class="ml-2 mr-2"
+    v-if="streamManager"
+    style="position: relative"
+    @mouseleave="mouseOn = null"
+    @mouseover="mouseOn = true"
+  >
     <ov-video :stream-manager="streamManager" />
-    <div v-if="isRoom" class="text-center" style="position: absolute; top: 10px; right: 10px">
+    <div v-if="isRoom && mouseOn" class="text-center" style="position: absolute; top: 20px; right: 20px">
       <v-menu bottom offset-x>
         <template v-slot:activator="{ props }">
-          <v-btn dark icon v-bind="props">
+          <v-btn dark v-bind="props">
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </template>
@@ -22,20 +29,40 @@
       </v-menu>
     </div>
 
-    <div style="position: absolute; bottom: 10px; right: 50%">
+    <div style="position: absolute; bottom: 22px; right: 50%; transform: translate(+50%, 0)">
       <div
         class="label mb-1"
-        v-if="clientTitle"
-        style="background-color: darkblue; color: whitesmoke; border-radius: 5px"
+        v-if="clientTitle && clientTitle !== ' ' && clientTitle !== ''"
+        style="
+          background-color: darkblue;
+          text-shadow: -1px 0px white, 0px 1px white, 1px 0px white, 0px -1px white;
+          color: whitesmoke;
+          border-radius: 5px;
+          padding: 4px 12px;
+          border: 2px solid #fff;
+        "
       >
         {{ clientTitle }}
       </div>
-      <div class="label" style="background-color: paleturquoise; border-radius: 5px">
+      <div
+        class="label"
+        style="
+          background-color: #d1e6fb;
+          text-shadow: -1px 0px white, 0px 1px white, 1px 0px white, 0px -1px white;
+          border-radius: 5px;
+          padding: 4px 24px;
+          border: 2px solid #fff;
+        "
+      >
         {{ clientName }}
       </div>
     </div>
-    <div style="position: absolute; top: 10px; right: 50%; border-radius: 15px">
-      <div v-if="isResident === 'true'" class="label" style="background-color: #6499ff; color: whitesmoke">
+    <div style="position: absolute; top: 20px; right: 50%; border-radius: 15px; transform: translate(+50%, 0)">
+      <div
+        v-if="isResident === 'true'"
+        class="label"
+        style="background-color: #6499ff; color: #fff; border: 2px solid #fff; border-radius: 8px; padding: 1px 10px"
+      >
         <v-icon>mdi-clover</v-icon> 현지인 <v-icon>mdi-clover</v-icon>
       </div>
     </div>
@@ -43,7 +70,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import spring from "@/api/spring_boot";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -53,10 +80,11 @@ export default {
   name: "UserVideo",
   data: () => ({
     items: [
-      { title: "여행 플래너 보기", onlyHost: false, onlyOther: false },
+      { title: "여행 플래너 보기", onlyHost: false, onlyOther: false }, // 플래너 보기
       { title: "신고하기", onlyHost: false, onlyOther: true },
       { title: "강퇴하기", onlyHost: true, onlyOther: true },
     ],
+    mouseOn: null, // 마우스 올라갔는지?
   }),
   components: {
     OvVideo,
@@ -65,6 +93,7 @@ export default {
     streamManager: Object,
   },
   computed: {
+    ...mapState("MeetingStore", ["isChatPanel"]),
     ...mapGetters({
       currentUser: "currentUser",
       currentUserId: "currentUserId",
@@ -97,6 +126,7 @@ export default {
   },
 
   methods: {
+    ...mapActions("MeetingStore", ["sendMessage", "toggleChatPanel"]),
     getConnectionData() {
       const { connection } = this.streamManager.stream;
       return JSON.parse(connection.data);
@@ -126,8 +156,7 @@ export default {
               reportContent: text,
             },
           })
-            .then((res) => {
-              console.log(res);
+            .then(() => {
               Swal.fire({
                 icon: "success",
                 title: "신고가 접수되었습니다!",
@@ -147,6 +176,8 @@ export default {
         }
       } else if (item.title === "강퇴하기") {
         alert(this.clientName.concat(" 강퇴!"));
+        const data = { type: "kickout", from: this.currentUser, to: this.clientName };
+        this.sendMessage(data);
       }
     },
   },
@@ -154,9 +185,6 @@ export default {
 </script>
 <style scoped>
 .label {
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  padding: 1px 10px;
 }
 </style>

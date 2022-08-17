@@ -4,8 +4,8 @@ import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import Swal from "sweetalert2";
 import moment from "moment";
-// import { startsWith } from "core-js/core/string";
 import router from "@/router";
+import kakao from "@/api/kakao_api";
 
 const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
 // const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8443`;
@@ -33,11 +33,6 @@ export const MeetingStore = {
     isChatPanel: false,
     messages: [],
 
-    // 룰렛 test
-    test: false,
-    testArr: [],
-    testSubscribers: [],
-
     // 입장할때 이름이 전부떠서 체크해주기위한 변수
     isNewbie: true,
 
@@ -53,9 +48,12 @@ export const MeetingStore = {
     liar: "",
     startLiarTalkFlag: false,
     stopLiarTalkFlag: false,
-
     votes: [],
     voteCount: 0,
+
+    // roulette
+    rouletteTargetName: "",
+    roulettePointer: "",
   },
   getters: {
     chatItems(state) {
@@ -64,10 +62,7 @@ export const MeetingStore = {
       });
       return ["모두", ...items];
     },
-    messages: (state) => state.messages,
-    gameCommentarys: (state) => state.gameCommentarys,
     subscribers: (state) => state.subscribers,
-    testSubscribers: (state) => state.testSubscribers,
   },
   mutations: {
     // Openvidu
@@ -112,10 +107,6 @@ export const MeetingStore = {
       // state.messages.push(data);
       state.messages = messages;
     },
-
-    // test
-    SET_TESTSUBSCRIBERES: (state, testSubscribers) => (state.testSubscribers = testSubscribers),
-
     // game
     SET_PLAY_GAME(state, value) {
       state.playGame = value;
@@ -145,6 +136,14 @@ export const MeetingStore = {
     },
     SET_VOTE_COUNT(state, voteCount) {
       state.voteCount = voteCount;
+    },
+
+    // roulette
+    SET_ROULETTE_TARGET_NAME(state, rouletteTargetName) {
+      state.rouletteTargetName = rouletteTargetName;
+    },
+    SET_ROULETTE_POINTER(state, roulettePointer) {
+      state.roulettePointer = roulettePointer;
     },
   },
   actions: {
@@ -241,15 +240,11 @@ export const MeetingStore = {
     joinSession({ state, commit, dispatch, rootGetters }) {
       // 오픈비두 세션 초기화
       // --- Get an OpenVidu object ---
-      // const OV = new OpenVidu();
       commit("SET_OV", new OpenVidu());
       // --- Init a session ---
-      // const session = state.OV.initSession();
       // --- Specify the actions when events take place in the session ---
       commit("SET_SESSION", state.OV.initSession());
       // On every new Stream received...
-      // const subscribers = [];
-      // commit("SET_SUBSCRIBERS", subscribers);
       state.session.on("streamCreated", ({ stream }) => {
         const subscriber = state.session.subscribe(stream);
         state.subscribers.push(subscriber);
@@ -259,13 +254,12 @@ export const MeetingStore = {
             to: [],
             message: `🎉${JSON.parse(stream.connection.data).clientName}님이 입장하였습니다🎉`,
           };
-          dispatch("sendMessage", data);
+          state.messages.push(data);
         }
       });
 
       // On every Stream destroyed...
       state.session.on("streamDestroyed", ({ stream }) => {
-        console.log(stream);
         const index = state.subscribers.indexOf(stream.streamManager, 0);
 
         let check = false;
@@ -292,7 +286,7 @@ export const MeetingStore = {
             to: [],
             message: `✋${JSON.parse(stream.connection.data).clientName}님이 퇴장하였습니다✋`,
           };
-          dispatch("sendMessage", data);
+          state.messages.push(data);
         }
       });
 
@@ -325,29 +319,58 @@ export const MeetingStore = {
               insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
               mirror: false, // Whether to mirror your local video or not
             });
-            // commit("SET_OV", OV);
             commit("SET_MAINSTREAMMANAGER", publisher);
             commit("SET_PUBLISHER", publisher);
-            // commit("SET_SESSION", session);
-            // commit("SET_SUBSCRIBERS", subscribers);
-            // commit("SET_OVTOKEN", token);
 
-            // this.mainStreamManager = publisher;
-            // this.publisher = publisher;
             state.session.publish(state.publisher);
-
             state.session.on("signal:chat", (event) => {
               const eventData = JSON.parse(event.data);
               const data = {};
               const time = new Date();
               data.message = eventData.message;
               data.sender = eventData.from;
+              // 강퇴
+              if (eventData.type === "kickout") {
+                if (eventData.to === rootGetters.currentUser) {
+                  dispatch("leaveSession");
+                  Swal.fire("화상채팅방 강퇴", "호스트에 의해 화상채팅방에서 강퇴되었습니다.", "warning");
+                  router.push({
+                    name: "home",
+                  });
+                }
+                data.sender = "SYSTEM";
+                data.message = `✋${eventData.to}님을 강퇴하였습니다✋`;
+              }
               if (eventData.to[0] === undefined) data.receiver = "모두";
               // eslint-disable-next-line prefer-destructuring
               else data.receiver = eventData.to[0];
-              // data.sender = JSON.parse(event.from.data).clientName;
               data.time = moment(time).format("HH:mm");
-              if (
+              if (eventData.isHashTag) {
+                axios({
+                  url: kakao.region.imageSearch(),
+                  headers: { Authorization: "KakaoAK a7cedeb35de4c99731ff3ee0bc0ade21" },
+                  method: "GET",
+                  params: {
+                    query: eventData.message,
+                    sort: "accuracy",
+                    size: 4,
+                  },
+                })
+                  .then((res) => {
+                    data.url = res.data.documents[0].image_url;
+                    data.doc_url = `https://search.naver.com/search.naver?where=image&query=${data.message}`;
+                    if (
+                      data.sender === rootGetters.currentUser ||
+                      data.receiver === rootGetters.currentUser ||
+                      data.receiver === "모두"
+                    ) {
+                      state.messages.push(data);
+                    }
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              } else if (
                 data.sender === rootGetters.currentUser ||
                 data.receiver === rootGetters.currentUser ||
                 data.receiver === "모두"
@@ -356,38 +379,21 @@ export const MeetingStore = {
               }
             });
 
-            state.session.on("signal:liar", (event) => {
+            state.session.on("signal:game", (event) => {
               const eventData = JSON.parse(event.data);
-              // const content = eventData.content;
-              // const time = new Date();
-              // console.log(content);
-              //   data.message = eventData.content;
-              // data.sender = JSON.parse(event.from.data).clientName;
-              // data.time = moment(time).format("HH:mm");
-              // state.messages.push(data);
-              // commit("SET_MESSAGES", data);
+              const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+              });
+
               if (eventData.gameId === "liar") {
                 if (eventData.step === 1) {
                   // 라이어 게임 시작
-                  if (state.hostName === rootGetters.currentUser) {
-                    axios({
-                      url: spring.videochat.game(state.mySessionId),
-                      method: "put",
-                      headers: { Authorization: `Bearer ${rootGetters.token}` },
-                    })
-                      .then((res) => {
-                        console.log(res);
-                      })
-                      .catch((err) => {
-                        console.log(err);
-                      });
-                  }
-                  commit("SET_PLAY_GAME", true);
-                  commit("SET_IS_GAMEPANEL", true);
+                  dispatch("startGame");
                   state.gameCommentarys.push({ comment: "📣 라이어게임을 시작합니다!!!" });
                   state.gameCommentarys.push({ comment: "📣 방장이 주제를 선택중입니다.." });
-                  console.log(state.hostName);
-                  console.log(rootGetters.currentUser);
                   if (state.hostName === rootGetters.currentUser) {
                     axios({
                       url: spring.videochat.liarTopic(),
@@ -408,7 +414,6 @@ export const MeetingStore = {
                       });
                   }
                 } else if (eventData.step === 2) {
-                  console.log(eventData.content);
                   commit("SET_GAME_PARTICIPANTS", eventData.content.participants);
                   commit("SET_LIAR_TOPIC", eventData.content.topic);
                   commit("SET_LIAR_KEYWORD", eventData.content.keyword);
@@ -416,8 +421,6 @@ export const MeetingStore = {
                   // 방장이 주제 선택 및 세팅
                   // 키워드 및 라이어 알림
                   state.gameCommentarys.push({ comment: `📣 주제는 ${state.topic}입니다.` });
-                  console.log(state.liar);
-                  console.log(rootGetters.currentUser);
                   if (state.liar === rootGetters.currentUser) {
                     // 라이어 - 라이어 알림
                     Swal.fire({
@@ -446,9 +449,12 @@ export const MeetingStore = {
                 } else if (eventData.step === 3) {
                   // 이야기 시간 3분 시작 시그널
                   state.gameCommentarys.push({
-                    comment: `📣 대화가 시작됐습니다. 3분동안 돌아가며 키워드에 대해 이야기해보세요! 과연 라이어는 누구일까요?`,
+                    comment: `📣 대화가 시작됐습니다. 돌아가며 키워드에 대해 이야기해보세요! 과연 라이어는 누구일까요?`,
                   });
-
+                  Toast.fire({
+                    icon: "success",
+                    title: `📣 대화가 시작됐습니다.`,
+                  });
                   // 3분 후 또는 이야기종료 버튼으로 투표 시그널 전달
                 } else if (eventData.step === 4) {
                   // 3분 후 또는 이야기종료 버튼으로 투표 시그널 전달
@@ -480,12 +486,7 @@ export const MeetingStore = {
                         return b[1] - a[1];
                       });
 
-                      // console.log("state.votes");
-                      // console.log(state.votes);
-                      // console.log(sortable);
-                      // console.log(sortable[0]);
                       if (sortable[0][1] === sortable[1][1]) {
-                        console.log("같음");
                         commit("SET_VOTE_COUNT", 0);
                         commit("SET_VOTES", []);
                         state.participants.forEach(function (participant) {
@@ -497,12 +498,11 @@ export const MeetingStore = {
                           content: { again: true },
                         };
                         state.session.signal({
-                          type: "liar",
+                          type: "game",
                           data: JSON.stringify(gameData),
                           to: [],
                         });
                       } else {
-                        console.log("다름");
                         const gameData = {
                           gameId: "liar",
                           step: 6,
@@ -514,7 +514,7 @@ export const MeetingStore = {
                           },
                         };
                         state.session.signal({
-                          type: "liar",
+                          type: "game",
                           data: JSON.stringify(gameData),
                           to: [],
                         });
@@ -588,19 +588,40 @@ export const MeetingStore = {
                   }
                   dispatch("endLiar");
                 }
+              } else if (eventData.gameId === "roulette") {
+                if (eventData.step === 1) {
+                  // 룰렛 게임 시작
+                  dispatch("startGame");
+                  state.gameCommentarys.push({ comment: "📣 룰렛게임을 시작합니다!!!" });
+                  if (state.hostName === rootGetters.currentUser) {
+                    const participants = [];
+                    participants.push(state.hostName);
+                    state.subscribers.forEach(function (subscriber) {
+                      participants.push(JSON.parse(subscriber.stream.connection.data).clientName);
+                    });
+                    const gameData = {
+                      gameId: "roulette",
+                      step: 2,
+                      content: {
+                        participants,
+                        targetName: participants[Math.floor(Math.random() * participants.length)],
+                      },
+                    };
+                    state.session.signal({
+                      type: "game",
+                      data: JSON.stringify(gameData),
+                      to: [],
+                    });
+                  }
+                } else if (eventData.step === 2) {
+                  // 룰렛 셋팅
+                  commit("SET_GAME_PARTICIPANTS", eventData.content.participants);
+                  commit("SET_ROULETTE_TARGET_NAME", eventData.content.targetName);
+
+                  dispatch("playRoulette");
+                }
               }
             });
-
-            // state.session.on("signal:game", (event) => {
-            //   const eventData = JSON.parse(event.data);
-            //   const data = {};
-            //   const time = new Date();
-            //   data.message = eventData.content;
-            //   data.sender = JSON.parse(event.from.data).clientName;
-            //   data.time = moment(time).format("HH:mm");
-            //   state.messages.push(data);
-            //   // commit("SET_MESSAGES", data);
-            // });
           })
           .catch((error) => {
             console.log("There was an error connecting to the session:", error.code, error.message);
@@ -664,59 +685,6 @@ export const MeetingStore = {
         data: JSON.stringify(data),
       });
     },
-    testRoulette({ state, commit }, payload) {
-      let delay = 0;
-      const testName = payload;
-      let zz = [];
-      zz = state.subscribers.map(function (val) {
-        return { subscriber: val, isChosed: false };
-      });
-      commit("SET_TESTSUBSCRIBERES", zz);
-      commit("SET_SUBSCRIBERS", []);
-      console.log(zz);
-      console.log(state.subscribe);
-      console.log(state.testSubscribers);
-
-      let value = 0;
-      for (let i = 0; i < 10; i += 1) {
-        delay += 1000;
-        console.log(value);
-
-        // eslint-disable-next-line no-loop-func
-        setTimeout(async () => {
-          console.log(value);
-          if (testName[value] === "publisher") {
-            console.log(state.testSubscribers.length);
-            state.testSubscribers[state.testSubscribers.length - 1].isChosed = false;
-            commit("SET_TEST", !state.test);
-            value += 1;
-            if (value > state.testSubscribers.length) {
-              value = 0;
-            }
-            console.log(state.testSubscribers[value - 1]);
-          } else if (
-            testName[value] ===
-            JSON.parse(state.testSubscribers[value - 1].subscriber.stream.connection.data).clientName
-          ) {
-            if (value === 1) {
-              commit("SET_TEST", !state.test);
-            } else if (value === 2) {
-              console.log("ㅎㅎ");
-            } else {
-              state.testSubscribers[value - 1].isChosed = false;
-            }
-            state.testSubscribers[value - 1].isChosed = !state.testSubscribers[value - 1].isChosed;
-            console.log(value);
-            console.log(state.testSubscribers[value - 1].isChosed);
-            value += 1;
-            if (value >= state.testSubscribers.length) {
-              value = 0;
-            }
-          }
-        }, delay);
-      }
-    },
-
     /* ... 게임중 사람들이 들어오거나 나가는 경우 생각! 라이어 게임은 3인 이상 가능
       -- 방장이 진행자 겸 참여자 (라이어는 모르지만 게임 진행은 함) --
       step 1. [시작누른사람 -> 전체 - 수동] 게임시작하기
@@ -734,16 +702,13 @@ export const MeetingStore = {
         gameId: "liar",
         step: 1,
         content: {},
-        // secretName: state.secretName,
       };
-      console.log(`세션 출력 ${state.session}`);
       state.session.signal({
-        type: "liar",
+        type: "game",
         data: JSON.stringify(gameData),
         to: [],
       });
     },
-
     toggleGamePanel({ state, commit }) {
       commit("SET_IS_GAMEPANEL", !state.isGamePanel);
       if (state.isGamePanel === true) {
@@ -772,7 +737,6 @@ export const MeetingStore = {
           return "";
         },
       });
-      console.log(topic);
       if (topic) {
         axios({
           url: spring.videochat.liarKeyword(topics[topic]),
@@ -785,9 +749,6 @@ export const MeetingStore = {
             state.subscribers.forEach(function (subscriber) {
               participants.push(JSON.parse(subscriber.stream.connection.data).clientName);
             });
-
-            console.log("참여자 출력");
-            console.log(participants);
             const gameData = {
               gameId: "liar",
               step: 2,
@@ -799,7 +760,7 @@ export const MeetingStore = {
               },
             };
             state.session.signal({
-              type: "liar",
+              type: "game",
               data: JSON.stringify(gameData),
               to: [],
             });
@@ -825,7 +786,7 @@ export const MeetingStore = {
         content: {},
       };
       state.session.signal({
-        type: "liar",
+        type: "game",
         data: JSON.stringify(gameData),
         to: [],
       });
@@ -838,7 +799,7 @@ export const MeetingStore = {
         content: {},
       };
       state.session.signal({
-        type: "liar",
+        type: "game",
         data: JSON.stringify(gameData),
         to: [],
       });
@@ -868,7 +829,7 @@ export const MeetingStore = {
         content: { selector: liar },
       };
       state.session.signal({
-        type: "liar",
+        type: "game",
         data: JSON.stringify(gameData),
         to: [],
       });
@@ -885,14 +846,13 @@ export const MeetingStore = {
         allowOutsideClick: false,
         inputPlaceholder: "키워드 입력",
       });
-
       const gameData = {
         gameId: "liar",
         step: 7,
         content: { answer: keyword },
       };
       state.session.signal({
-        type: "liar",
+        type: "game",
         data: JSON.stringify(gameData),
         to: [],
       });
@@ -902,21 +862,47 @@ export const MeetingStore = {
         Swal.fire({
           icon: "success",
           title: "라이어 게임 결과",
-          html: `<h2>🥳 승리 🥳</h2>키워드는 ${state.keyword}이었습니다.`,
+          html: `<h2>🥳 승리 🥳</h2>키워드: ${state.keyword}`,
         });
       } else {
         Swal.fire({
           icon: "error",
           title: "라이어 게임 결과",
-          html: `<h2>😭 패배 😭</h2>키워드는 ${state.keyword}이었습니다.`,
+          html: `<h2>😭 패배 😭</h2>키워드: ${state.keyword}`,
         });
       }
     },
-    endLiar({ state, commit, rootGetters }) {
+    endLiar({ state, dispatch, commit }) {
       // 초기화
       state.gameCommentarys.push({
         comment: `📣 라이어게임이 종료되었습니다 `,
       });
+      commit("SET_LIAR_TOPIC", "");
+      commit("SET_LIAR_KEYWORD", "");
+      commit("SET_LIAR", "");
+      commit("SET_VOTES", []);
+      commit("SET_VOTE_COUNT", 0);
+
+      dispatch("endGame");
+    },
+    startGame({ state, commit, rootGetters }) {
+      if (state.hostName === rootGetters.currentUser) {
+        axios({
+          url: spring.videochat.game(state.mySessionId),
+          method: "put",
+          headers: { Authorization: `Bearer ${rootGetters.token}` },
+        })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      commit("SET_PLAY_GAME", true);
+      commit("SET_IS_GAMEPANEL", true);
+    },
+    endGame({ state, commit, rootGetters }) {
       state.gameCommentarys.push({
         comment: `===========================`,
       });
@@ -924,11 +910,6 @@ export const MeetingStore = {
       commit("SET_PLAY_GAME", false);
       commit("SET_IS_GAMEPANEL", false);
       commit("SET_GAME_PARTICIPANTS", []);
-      commit("SET_LIAR_TOPIC", "");
-      commit("SET_LIAR_KEYWORD", "");
-      commit("SET_LIAR", "");
-      commit("SET_VOTES", []);
-      commit("SET_VOTE_COUNT", 0);
 
       if (state.hostName === rootGetters.currentUser) {
         axios({
@@ -942,6 +923,79 @@ export const MeetingStore = {
           .catch((err) => {
             console.log(err);
           });
+      }
+    },
+    startRoulette({ state }) {
+      const gameData = {
+        gameId: "roulette",
+        step: 1,
+        content: {},
+      };
+      state.session.signal({
+        type: "game",
+        data: JSON.stringify(gameData),
+        to: [],
+      });
+    },
+
+    playRoulette({ state, commit, dispatch }) {
+      let delay = 400;
+      const size = state.participants.length;
+      for (let i = 0; i < 40; i += 1) {
+        delay += i * i;
+        // eslint-disable-next-line no-loop-func
+        if (i > 30 && state.participants[i % size] === state.rouletteTargetName) {
+          i = 1000;
+          setTimeout(async () => {
+            state.gameCommentarys.push({
+              comment: `📣 룰렛게임 결과 ${state.rouletteTargetName}님이 당첨되셨습니다!!! `,
+            });
+            commit("SET_ROULETTE_POINTER", state.rouletteTargetName);
+            setTimeout(async () => {
+              commit("SET_ROULETTE_POINTER", "");
+              setTimeout(async () => {
+                commit("SET_ROULETTE_POINTER", state.rouletteTargetName);
+                setTimeout(async () => {
+                  commit("SET_ROULETTE_POINTER", "");
+                  setTimeout(async () => {
+                    commit("SET_ROULETTE_POINTER", state.rouletteTargetName);
+                    setTimeout(async () => {
+                      commit("SET_ROULETTE_POINTER", "");
+                      setTimeout(async () => {
+                        commit("SET_ROULETTE_POINTER", state.rouletteTargetName);
+                        setTimeout(async () => {
+                          commit("SET_ROULETTE_POINTER", "");
+                          setTimeout(async () => {
+                            commit("SET_ROULETTE_POINTER", state.rouletteTargetName);
+                            setTimeout(async () => {
+                              Swal.fire({
+                                title: "룰렛 게임 결과",
+                                html: `<h2>🥳 ${state.rouletteTargetName}님 당첨 🥳</h2>`,
+                              });
+                              commit("SET_ROULETTE_POINTER", "");
+                              state.gameCommentarys.push({
+                                comment: `📣 룰렛게임이 종료되었습니다 `,
+                              });
+                              setTimeout(async () => {
+                                commit("SET_ROULETTE_TARGET_NAME", "");
+                                commit("SET_ROULETTE_POINTER", "");
+                                dispatch("endGame");
+                              }, 1000);
+                            }, 3000);
+                          }, 100);
+                        }, 100);
+                      }, 100);
+                    }, 100);
+                  }, 100);
+                }, 100);
+              }, 100);
+            }, 100);
+          }, delay);
+        } else {
+          setTimeout(async () => {
+            commit("SET_ROULETTE_POINTER", state.participants[i % size]);
+          }, delay);
+        }
       }
     },
   },
