@@ -1,7 +1,7 @@
 <template>
   <div style="height: 100vh; width: 100vw; background-color: #50a0f0; padding: 12px 32px 12px 12px; overflow: hidden">
     <div style="height: 100%; width: 100%; background-color: #fff; border-radius: 8px; display: flex">
-      <div v-if="publisher" style="flex: 3; padding: 36px 0 36px 36px">
+      <div v-if="publisher" style="flex: 3; padding: 36px 0 36px 36px; position: relative">
         <div style="border-right: 4px solid #d1e6fb; height: 100%">
           <div style="display: flex; flex-direction: column; height: 100%; justify-content: space-between">
             <!-- 비디오 그룹 시작 -->
@@ -12,28 +12,36 @@
                 display: flex;
                 justify-content: space-around;
                 align-items: center;
-                flex-direction: column;
                 flex-wrap: wrap;
                 margin-right: 36px;
               "
             >
-              <div>
+              <div :style="`flex: 1 1 ${hostFlex}%`">
                 <user-video
                   :stream-manager="publisher"
-                  :class="{ 'col-12': one, 'col-6': two, 'col-4': three }"
                   @click="$emit(updateMainVideoStreamManager(publisher))"
-                  :style="roulettePointer === currentUser ? 'border: 10px solid yellow' : ''"
+                  :style="
+                    roulettePointer === currentUser
+                      ? 'border: 10px solid #f5c343; border-radius: 20px; height: 100%; padding: 10px 10px 0'
+                      : 'border: 10px solid #d1e6fb; border-radius: 20px; height: 100%; padding: 10px 10px 0'
+                  "
+                  :isThisRoom="true"
                 />
               </div>
-              <div v-for="sub in subscribers" :key="sub.stream.connection.connectionId">
+              <div
+                v-for="sub in subscribers"
+                :key="sub.stream.connection.connectionId"
+                :style="`flex: 1 1 ${subFlex}%`"
+              >
                 <user-video
                   :style="
                     roulettePointer === JSON.parse(sub.stream.connection.data).clientName
-                      ? 'border: 10px solid yellow'
-                      : ''
+                      ? 'border: 10px solid #f5c343; border-radius: 20px; height: 100%; padding: 10px 10px 0'
+                      : 'border: 10px solid #d1e6fb; border-radius: 20px; height: 100%; padding: 10px 10px 0'
                   "
                   :stream-manager="sub"
                   :class="{ 'col-12': one, 'col-6': two, 'col-4': three }"
+                  :isThisRoom="true"
                 />
               </div>
             </div>
@@ -163,6 +171,50 @@
             <!-- 버튼 그룹 끝 -->
           </div>
         </div>
+        <!-- absolute 그룹 -->
+        <!-- 게임중 표시 -->
+        <div v-if="playGame" style="position: absolute; top: 12px; left: 12px">
+          <div style="font-size: 24px; color: #285078">
+            <v-icon>mdi-controller</v-icon>&nbsp;{{ gameName }}게임 플레이하는 중...
+          </div>
+        </div>
+        <!-- 라이어 게임 정보 패널 -->
+        <div v-if="playGame && gameName === '라이어'" style="position: absolute; top: 12px; right: 12px">
+          <v-dialog v-model="liarInfo" class="shadow-none">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                height="66"
+                bg-color="#d1e6fb"
+                style="font-size: 24px; background-color: #d1e6fb; color: #285078; padding: 12px; border-radius: 12px"
+                v-bind="props"
+              >
+                게임 설명서&nbsp;<v-icon>mdi-comment-question-outline</v-icon>
+              </v-btn>
+            </template>
+            <v-card border="false" color="transparent" style="overflow: hidden">
+              <v-card-text>
+                <div style="position: relative">
+                  <img
+                    src="https://user-images.githubusercontent.com/97648026/185201153-d5a8b29f-8adc-4089-be2f-3731b080434d.png"
+                    alt="liarInfo"
+                    width="800"
+                    height="800"
+                    rounded="xl"
+                  />
+                </div>
+                <div style="position: absolute; bottom: 112px; right: 37.5%; transform: translate(+50%, 0)">
+                  <v-btn
+                    color="#ffebd9"
+                    style="font-size: 20px; padding: 0 12px"
+                    class="btn-confirm"
+                    @click="liarInfo = false"
+                    >확인</v-btn
+                  >
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-dialog>
+        </div>
       </div>
       <div style="flex: 1; padding: 0 0 36px">
         <!-- 우측 그룹 -->
@@ -240,6 +292,7 @@ export default {
       "isChatPanel",
       "isGamePanel",
       "hostName",
+      "gameName",
 
       // liar
       "startLiarTalkFlag",
@@ -258,6 +311,8 @@ export default {
       "token",
       "title",
       "isLoggedIn",
+      "hostFlex",
+      "subFlex",
     ]),
   },
   watch: {
@@ -267,6 +322,7 @@ export default {
   },
   data() {
     return {
+      liarInfo: false,
       one: true,
       two: false,
       three: false,
@@ -553,4 +609,9 @@ export default {
   },
 };
 </script>
-<style></style>
+<style>
+@import url(//fonts.googleapis.com/earlyaccess/jejugothic.css);
+.btn-confirm {
+  font-family: "Jeju Gothic", Helvetica, Arial, sans-serif;
+}
+</style>
