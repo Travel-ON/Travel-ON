@@ -59,7 +59,7 @@
       </v-form>
     </v-card>
     <v-btn
-      :disabled="!valid"
+      :disabled="!valid || !nickChecked || nickDisable"
       @click="clickModify()"
       size="x-large"
       color="#c9deff"
@@ -208,9 +208,6 @@ export default {
       }
     },
     clickModify() {
-      // if (this.credentials.nickname === this.info.nickname) {
-      //   this.credentials.nickname = null;
-      // }
       if (this.credentials.email === this.info.email) {
         this.credentials.email = null;
       }

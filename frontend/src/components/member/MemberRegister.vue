@@ -5,7 +5,7 @@
     <div style="flex: 3">
       <div class="mt-10" style="background-color: #ffffff; border-radius: 15px; box-shadow: 5px 5px 5px 5px gray">
         <div class="mb-5" style="font-size: x-large; padding-top: 20px">Travel-ON 회원가입</div>
-        <v-form ref="form" lazy-validation>
+        <v-form ref="form" lazy-validation v-model="valid">
           <div style="display: flex">
             <div style="display: flex; flex-direction: column; flex: 1">
               <div style="display: flex">
@@ -239,7 +239,7 @@
           <div style="flex: 8">
             <v-btn
               block
-              :disabled="!valid && !agreeCheck"
+              :disabled="!valid || !agreeCheck || !idChecked || idDisable || !nickChecked || nickDisable"
               @click="regist(credentials)"
               size="large"
               style="margin-bottom: 30px; background-color: #c9deff"
@@ -292,7 +292,7 @@ export default {
         { code: "4400000000", name: "충남" },
         { code: "4300000000", name: "충북" },
       ],
-      valid: true,
+      valid: false,
       passwordShow: false,
       passwordConfirmShow: false,
       idDisable: true,
