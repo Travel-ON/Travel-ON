@@ -53,7 +53,7 @@
           <div style="flex: 2">
             <div data-aos="fade-right" class="title">
               <div style="color: #ffffff">여행지에서 새로운 사람들과</div>
-              <div style="color: #ffffff">만나고 대화하세요.</div>
+              <div style="color: #ffffff">만나고 대화하세요</div>
             </div>
           </div>
           <!-- <div style="flex: 1" /> -->
