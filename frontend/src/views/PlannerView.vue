@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/no-parsing-error -->
 <!-- eslint-disable vuejs-accessibility/click-events-have-key-events -->
 <template>
-  <div style="display: flex; justify-content: space-between">
+  <div style="display: flex; justify-content: space-between; margin-top: 36px">
     <div class="plan-left-space"></div>
     <div class="plan-main-space">
       <div
