@@ -1,5 +1,6 @@
 import axios from "axios";
 import spring from "@/api/spring_boot";
+import Swal from "sweetalert2";
 
 export const Plans = {
   /* eslint-disable */
@@ -125,9 +126,11 @@ export const Plans = {
         },
       })
         .then((res) => {
-          Toast.fire({
+          Swal.fire({
             icon: "success",
             title: "플랜 작성에 성공하였습니다.",
+            showConfirmButton: false,
+            timer: 1000,
           });
           dispatch("getPlanList");
         })
@@ -145,9 +148,11 @@ export const Plans = {
         },
       })
         .then(() => {
-          Toast.fire({
+          Swal.fire({
             icon: "success",
             title: "플랜 수정에 성공하였습니다.",
+            showConfirmButton: false,
+            timer: 1000,
           });
           dispatch("getPlanList");
         })
@@ -249,9 +254,11 @@ export const Plans = {
         },
       })
         .then(() => {
-          Toast.fire({
+          Swal.fire({
             icon: "success",
             title: "플랜 작성에 성공하였습니다.",
+            showConfirmButton: false,
+            timer: 1000,
           });
           dispatch("getExpectList");
         })
@@ -269,9 +276,11 @@ export const Plans = {
         },
       })
         .then(() => {
-          Toast.fire({
+          Swal.fire({
             icon: "success",
             title: "플랜 수정에 성공하였습니다.",
+            showConfirmButton: false,
+            timer: 1000,
           });
           dispatch("getExpectList");
         })

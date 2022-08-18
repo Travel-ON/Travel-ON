@@ -231,17 +231,21 @@ export const Accounts = {
         data: formData,
       })
         .then(() => {
-          Toast.fire({
+          Swal.fire({
             icon: "success",
             title: "정보수정 완료!",
+            showConfirmButton: false,
+            timer: 1000,
           });
           router.push({ name: "MemberLogout" });
         })
         .catch((err) => {
           console.error(err);
-          Toast.fire({
+          Swal.fire({
             icon: "error",
             title: "정보수정 실패!",
+            showConfirmButton: false,
+            timer: 1000,
           });
         });
     },

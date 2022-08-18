@@ -60,6 +60,7 @@
 <script>
 import axios from "axios";
 import spring from "@/api/spring_boot";
+import Swal from "sweetalert2";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -84,9 +85,11 @@ export default {
           },
         })
           .then((res) => {
-            Toast.fire({
+            Swal.fire({
               icon: "success",
               title: "플랜 삭제에 성공하였습니다.",
+              showConfirmButton: false,
+              timer: 1000,
             });
             console.log(res);
             this.getPlanList();
