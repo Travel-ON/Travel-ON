@@ -39,7 +39,6 @@ export const MeetingStore = {
     // game
     playGame: false,
     isGamePanel: false,
-    gameName: "",
     gameCommentarys: [],
     participants: [],
 
@@ -82,6 +81,20 @@ export const MeetingStore = {
         result = 40;
       } else {
         result = Math.floor(100 / (Math.floor(state.subscribers.length / 2) + 1));
+      }
+      return result;
+    },
+    videoScale(state) {
+      let result;
+      result = 1;
+      if (state.subscribers.length >= 6) {
+        result = 0.45;
+      } else if (state.subscribers.length >= 4) {
+        result = 0.55;
+      } else if (state.subscribers.length >= 2) {
+        result = 0.6;
+      } else if (state.subscribers.length >= 1) {
+        result = 0.9;
       }
       return result;
     },
@@ -278,8 +291,9 @@ export const MeetingStore = {
         state.subscribers.push(subscriber);
         if (!state.isNewbie) {
           const data = {
-            from: "SYSTEM",
-            to: [],
+            sender: "SYSTEM",
+            receiver: "모두",
+            time: moment(new Date()).format("HH:mm"),
             message: `🎉${JSON.parse(stream.connection.data).clientName}님이 입장하였습니다🎉`,
           };
           state.messages.push(data);
@@ -310,8 +324,9 @@ export const MeetingStore = {
           });
         } else {
           const data = {
-            from: "SYSTEM",
-            to: [],
+            sender: "SYSTEM",
+            time: moment(new Date()).format("HH:mm"),
+            receiver: "모두",
             message: `✋${JSON.parse(stream.connection.data).clientName}님이 퇴장하였습니다✋`,
           };
           state.messages.push(data);
