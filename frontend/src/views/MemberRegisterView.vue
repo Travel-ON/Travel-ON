@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-h2 font-weight-bold" style="margin: 28px auto">회원가입</div>
+    <div class="text-h3 font-weight-bold" style="margin: 28px auto; color: #50a0f0">회원가입</div>
     <div style="display: flex; justify-content: space-between">
       <div class="left-space"></div>
       <div class="main-space">
