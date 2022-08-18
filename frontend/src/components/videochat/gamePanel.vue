@@ -14,7 +14,7 @@
           padding: 12px;
           background-color: #d1e6fb;
           flex: 1;
-          max-height: ${isChatPanel ? '386.62px' : '855.17px'};
+          max-height: ${isChatPanel ? '294.62px' : '700.17px'};
         `"
       >
         <div
@@ -111,6 +111,9 @@ export default {
 }
 .send-btn {
   color: white;
+}
+#game-area {
+  overflow-y: auto;
 }
 #game-area::-webkit-scrollbar {
   width: 15px;

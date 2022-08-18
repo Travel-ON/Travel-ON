@@ -3,18 +3,24 @@
   <video
     class="video"
     autoplay
-    style="box-sizing: border-box; max-height: 800px; max-width: 1060px; border: 0; padding: 0"
+    :style="`box-sizing: border-box; max-height: ${480 * videoScale}px; max-width: ${
+      640 * videoScale
+    }px; border: 0; padding: 0`"
   />
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "OvVideo",
 
   props: {
     streamManager: Object,
   },
-
+  computed: {
+    ...mapGetters("MeetingStore", ["videoScale"]),
+  },
   mounted() {
     this.streamManager.addVideoElement(this.$el);
   },
