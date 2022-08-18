@@ -8,14 +8,15 @@
       <div
         ref="chatArea"
         id="chat-area"
-        style="
+        :style="`
           height: 100%;
           border-radius: 8px;
           border: 2px solid #50a0f0;
           padding: 12px;
           background-color: #d1e6fb;
           flex: 1;
-        "
+          max-height: ${isGamePanel ? '262.66px' : '731.22px'};
+        `"
       >
         <div class="mt-2 text-left message" v-for="(message, i) of messages" :key="i">
           <div class="message-title">
@@ -28,11 +29,12 @@
           </div>
           <div>
             <div v-if="message.url">
-              <v-card class="mx-auto" max-width="200px" height="260px">
+              <v-card class="mx-auto" max-width="200px" height="280px">
                 <v-card-title> #{{ message.message }} </v-card-title>
-                <v-btn :href="messages[i].doc_url" target="_blank">
-                  <v-img :src="messages[i].url" alt="사진" width="200px" />
-                </v-btn>
+                <v-img :src="messages[i].url" alt="사진" width="200px" />
+                <div class="text-md-center">
+                  <v-btn :href="messages[i].doc_url" target="_blank"> 더보기 </v-btn>
+                </div>
               </v-card>
             </div>
 
@@ -113,7 +115,7 @@ export default {
   computed: {
     ...mapState("MeetingStore", ["messages"]),
     ...mapGetters(["currentUser"]),
-    ...mapGetters("MeetingStore", ["subscribers", "chatItems"]),
+    ...mapGetters("MeetingStore", ["subscribers", "chatItems", "isGamePanel"]),
   },
   methods: {
     ...mapActions("MeetingStore", ["toggleChatPanel", "sendMessage"]),
