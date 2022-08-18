@@ -378,16 +378,27 @@ export const MeetingStore = {
               // 강퇴
               if (eventData.type === "kickout") {
                 if (eventData.to === rootGetters.currentUser) {
-                  dispatch("leaveSession");
-                  Swal.fire("화상채팅방 강퇴", "호스트에 의해 화상채팅방에서 강퇴되었습니다.", "warning", {
-                    button: "확인",
-                  });
-                  router.push({
-                    name: "home",
-                  });
+                  axios({
+                    url: spring.videochat.leave(state.mySessionId),
+                    method: "get",
+                    headers: { Authorization: `Bearer ${rootGetters.token}` },
+                  })
+                    .then(() => {
+                      dispatch("leaveSession");
+                      Swal.fire("화상채팅방 강퇴", "호스트에 의해 화상채팅방에서 강퇴되었습니다.", "warning", {
+                        button: "확인",
+                      });
+                      router.push({
+                        name: "home",
+                      });
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                } else {
+                  data.sender = "SYSTEM";
+                  data.message = `✋${eventData.to}님을 강퇴하였습니다✋`;
                 }
-                data.sender = "SYSTEM";
-                data.message = `✋${eventData.to}님을 강퇴하였습니다✋`;
               }
               if (eventData.to[0] === undefined) data.receiver = "모두";
               // eslint-disable-next-line prefer-destructuring
