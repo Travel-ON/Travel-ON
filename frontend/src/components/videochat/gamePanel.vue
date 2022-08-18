@@ -7,16 +7,22 @@
       <!-- 채팅 내역 -->
       <div
         id="game-area"
-        style="
+        :style="`
           height: 100%;
           border-radius: 8px;
           border: 2px solid #50a0f0;
           padding: 12px;
           background-color: #d1e6fb;
           flex: 1;
-        "
+          max-height: ${isChatPanel ? '386.62px' : '855.17px'};
+        `"
       >
-        <div class="mt-2 text-left message" v-for="(gameCommentary, i) of gameCommentarys" :key="i">
+        <div
+          class="mt-2 text-left message"
+          v-for="(gameCommentary, i) of gameCommentarys"
+          :key="i"
+          style="margin-bottom: 8px"
+        >
           <div>
             {{ gameCommentary.comment }}
           </div>
@@ -28,7 +34,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 
 export default {
   name: "GamePanel",
@@ -52,6 +58,7 @@ export default {
   },
   computed: {
     ...mapState("MeetingStore", ["gameCommentarys"]),
+    ...mapGetters("MeetingStore", ["isChatPanel", "isGamePanel"]),
   },
   methods: {
     ...mapActions("MeetingStore", ["toggleGamePanel"]),
