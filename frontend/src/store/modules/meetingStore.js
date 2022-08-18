@@ -7,11 +7,9 @@ import moment from "moment";
 import router from "@/router";
 import kakao from "@/api/kakao_api";
 
-const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:4443`;
-// const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8443`;
+const OPENVIDU_SERVER_URL = `https://${window.location.hostname}:8443`;
 
-const OPENVIDU_SERVER_SECRET = "MY_SECRET";
-// const OPENVIDU_SERVER_SECRET = "ssafy";
+const OPENVIDU_SERVER_SECRET = "ssafy";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 export const MeetingStore = {
