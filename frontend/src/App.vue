@@ -34,16 +34,16 @@ export default {
   },
   components: { MainNav, FooterView },
   mounted() {
-    if (this.$route.name !== "home") {
-      this.fetchCurrentUser();
-    }
+    // if (this.$route.name !== "home") {
+    //   this.fetchCurrentUser();
+    // }
   },
   watch: {
-    $route(to, form) {
-      if (to.path !== form.path) {
-        this.fetchCurrentUser();
-      }
-    },
+    // $route(to, form) {
+    //   if (to.path !== form.path) {
+    //     this.fetchCurrentUser();
+    //   }
+    // },
   },
 };
 </script>

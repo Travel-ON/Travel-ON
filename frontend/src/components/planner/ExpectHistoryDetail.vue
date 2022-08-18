@@ -15,8 +15,24 @@
       />
       <div class="expect-history-detail-body-shell">
         <div style="text-align: right; font-size: 24px; font-weight: bold">
-          <div :style="`color: ${convertDday(expect.expectedDate) > 0 ? '#7a64ff' : '#ff5151'}; z-index: 2`">
-            {{ `D-${convertDday(expect.expectedDate) > 0 ? convertDday(expect.expectedDate) : "DAY"}` }}
+          <div
+            :style="`color: ${
+              convertDday(expect.expectedDate) > 0
+                ? '#7a64ff'
+                : convertDday(expect.expectedDate) < 0
+                ? '#000'
+                : '#ff5151'
+            }; z-index: 2`"
+          >
+            {{
+              `${
+                convertDday(expect.expectedDate) > 0
+                  ? `D-${convertDday(expect.expectedDate)}`
+                  : convertDday(expect.expectedDate) < 0
+                  ? `D+${convertDday(expect.expectedDate) * -1}`
+                  : "D-DAY"
+              }`
+            }}
           </div>
         </div>
         <div style="display: flex; align-items: center; margin-bottom: 10px">
