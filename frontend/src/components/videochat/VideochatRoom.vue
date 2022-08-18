@@ -25,6 +25,7 @@
                       ? 'border: 10px solid #f5c343; border-radius: 20px; height: 100%; padding: 10px 10px 0'
                       : 'border: 10px solid #d1e6fb; border-radius: 20px; height: 100%; padding: 10px 10px 0'
                   "
+                  :isThisRoom="true"
                 />
               </div>
               <div
@@ -40,6 +41,7 @@
                   "
                   :stream-manager="sub"
                   :class="{ 'col-12': one, 'col-6': two, 'col-4': three }"
+                  :isThisRoom="true"
                 />
               </div>
             </div>

@@ -7,7 +7,11 @@
     @mouseover="mouseOn = true"
   >
     <ov-video :stream-manager="streamManager" />
-    <div v-if="isThisRoom && mouseOn" class="text-center" style="position: absolute; top: 20px; right: 20px">
+    <div
+      v-if="isThisRoom && mouseOn"
+      class="text-center"
+      style="position: absolute; display: inline-block; top: 20px; right: 20px"
+    >
       <v-menu bottom offset-x>
         <template v-slot:activator="{ props }">
           <v-btn dark v-bind="props">
