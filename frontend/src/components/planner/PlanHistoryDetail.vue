@@ -26,7 +26,9 @@
           {{ plan.visitedPlace }}
         </div>
         <div style="display: flex; margin: 0 20px; align-items: center">
-          <div style="margin-right: 5px; color: #f5c343; font-size: 16px">{{ plan.ratePoint.toFixed(1) }}</div>
+          <div style="margin-right: 5px; color: #f5c343; font-size: 16px">
+            {{ plan.ratePoint ? plan.ratePoint.toFixed(1) : "?.?" }}
+          </div>
           <div v-if="plan.ratePoint">
             <v-rating
               v-model="plan.ratePoint"
@@ -40,7 +42,6 @@
           </div>
         </div>
         <div
-          v-if="plan.review !== '' && plan.review"
           style="
             border: 2px solid #efefef;
             background-color: #efefef;
@@ -52,7 +53,7 @@
             word-break: normal;
           "
         >
-          <div>{{ plan.review }}</div>
+          <div>{{ plan.review !== "" && plan.review ? plan.review : "작성된 리뷰가 없습니다." }}</div>
         </div>
       </div>
     </div>
