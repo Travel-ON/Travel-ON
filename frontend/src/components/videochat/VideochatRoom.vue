@@ -10,36 +10,38 @@
               style="
                 flex: 1;
                 display: flex;
+                flex-direction: row-reverse;
                 justify-content: space-around;
                 align-items: center;
                 flex-wrap: wrap;
                 margin-right: 36px;
               "
             >
-              <div :style="`flex: 1 1 ${hostFlex}%`">
+              <div
+                v-for="sub in subscribers"
+                :key="sub.stream.connection.connectionId"
+                :style="`flex: 1 1 ${subFlex}%; display: flex; justify-content: center`"
+              >
+                <user-video
+                  :style="
+                    roulettePointer === JSON.parse(sub.stream.connection.data).clientName
+                      ? 'border: 10px solid #f5c343; border-radius: 20px; height: 100%; padding: 10px 10px 0; margin: 5px'
+                      : 'border: 10px solid #d1e6fb; border-radius: 20px; height: 100%; padding: 10px 10px 0; margin: 5px'
+                  "
+                  :stream-manager="sub"
+                  :isThisRoom="true"
+                />
+              </div>
+              <div :style="`flex: 1 1 ${subFlex}%; display: flex; justify-content: center`">
                 <user-video
                   :stream-manager="publisher"
                   @click="$emit(updateMainVideoStreamManager(publisher))"
                   :style="
                     roulettePointer === currentUser
-                      ? 'border: 10px solid #f5c343; border-radius: 20px; height: 100%; padding: 10px 10px 0'
-                      : 'border: 10px solid #d1e6fb; border-radius: 20px; height: 100%; padding: 10px 10px 0'
+                      ? 'border: 10px solid #f5c343; border-radius: 20px; height: 100%; padding: 10px 10px 0; margin: 5px'
+                      : 'border: 10px solid #d1e6fb; border-radius: 20px; height: 100%; padding: 10px 10px 0; margin: 5px'
                   "
-                />
-              </div>
-              <div
-                v-for="sub in subscribers"
-                :key="sub.stream.connection.connectionId"
-                :style="`flex: 1 1 ${subFlex}%`"
-              >
-                <user-video
-                  :style="
-                    roulettePointer === JSON.parse(sub.stream.connection.data).clientName
-                      ? 'border: 10px solid #f5c343; border-radius: 20px; height: 100%; padding: 10px 10px 0'
-                      : 'border: 10px solid #d1e6fb; border-radius: 20px; height: 100%; padding: 10px 10px 0'
-                  "
-                  :stream-manager="sub"
-                  :class="{ 'col-12': one, 'col-6': two, 'col-4': three }"
+                  :isThisRoom="true"
                 />
               </div>
             </div>
@@ -309,9 +311,8 @@ export default {
       "token",
       "title",
       "isLoggedIn",
-      "hostFlex",
-      "subFlex",
     ]),
+    ...mapGetters("MeetingStore", ["hostFlex", "subFlex", "videoScale"]),
   },
   watch: {
     // subscribers() {
