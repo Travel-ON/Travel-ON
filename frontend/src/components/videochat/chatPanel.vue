@@ -15,7 +15,7 @@
           padding: 12px;
           background-color: #d1e6fb;
           flex: 1;
-          max-height: ${isGamePanel ? '262.66px' : '731.22px'};
+          max-height: ${isGamePanel ? '262.66px' : '633.22px'};
         `"
       >
         <div class="mt-2 text-left message" v-for="(message, i) of messages" :key="i">
