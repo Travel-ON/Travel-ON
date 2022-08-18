@@ -23,9 +23,9 @@
           <div style="flex: 5" />
           <div style="flex: 1">
             <div class="maintitle">
-              <span style="color: #2d40a6">혼행에 만남의 </span>
+              <span style="color: #5076d0">혼행에 만남의 </span>
               <span style="color: #fff493">빛</span>
-              <span style="color: #2d40a6">을 켜다!</span>
+              <span style="color: #5076d0">을 켜다!</span>
             </div>
             <div class="comment">
               프라이빗한 시공간에서 새로운 사람을 만나는<br />여행지 위치인증기반 여행객 화상채팅 매칭 서비스
@@ -152,7 +152,9 @@
         <div style="flex: 5; display: flex">
           <div style="flex: 1" />
           <div style="flex: 8">
-            <v-img src="@/assets/button/btn_setAchivement.png" alt="travel on" />
+            <router-link :to="{ name: 'MemberSetTitle' }">
+              <v-img src="@/assets/button/btn_setAchivement.png" alt="travel on" />
+            </router-link>
           </div>
           <div style="flex: 1" />
         </div>
@@ -297,16 +299,19 @@ export default defineComponent({
   left: 30px;
 }
 .maintitle {
+  font-family: "GangwonEdu_OTFBoldA";
   font-size: 54px;
   font-weight: bold;
   text-shadow: 2px 2px 2px gray;
 }
 .title {
+  font-family: "GangwonEdu_OTFBoldA";
   font-size: 48px;
   font-weight: bold;
   text-shadow: 2px 2px 2px gray;
 }
 .comment {
+  font-family: "Pretendard-Regular";
   font-size: 20px;
   margin-top: 5px;
 }

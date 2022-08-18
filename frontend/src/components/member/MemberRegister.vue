@@ -3,7 +3,7 @@
   <div class="bg mb-5" style="display: flex">
     <div style="flex: 1" />
     <div style="flex: 3">
-      <div class="mt-10" style="background-color: #ffffff; border-radius: 15px">
+      <div class="mt-10" style="background-color: #ffffff; border-radius: 15px; box-shadow: 5px 5px 5px 5px gray">
         <div class="mb-5" style="font-size: x-large; padding-top: 20px">Travel-ON 회원가입</div>
         <v-form ref="form" lazy-validation @submit.prevent="login(credentials)">
           <div style="display: flex">
@@ -438,13 +438,6 @@ export default {
 <style scoped>
 .bg {
   width: 100vw;
-  height: 85vh;
-  background: #b2fefa; /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #c2e9ff, #e7f0ff); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #c2e9ff,
-    #e7f0ff
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  height: 100%;
 }
 </style>

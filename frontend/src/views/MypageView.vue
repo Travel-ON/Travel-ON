@@ -45,6 +45,9 @@ export default {
         name: "home",
       });
     }
+    this.$router.push({
+      name: "MemberSetTitle",
+    });
   },
   methods: {
     ...mapActions(["delete"]),
@@ -54,33 +57,38 @@ export default {
           title: "🥺 탈퇴하실건가요? 🥺",
           input: "password",
           inputLabel: "Password",
+          showCancelButton: true,
+          cancelButtonText: "취소",
           html: "탈퇴 시 Travel-ON의 다양한 서비스를 이용하실 수 없습니다.<br>탈퇴하려면 비밀번호를 입력해주세요.",
           inputAttributes: {
             maxlength: 17,
             autocapitalize: "off",
             autocorrect: "off",
           },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            axios({
+              url: spring.accounts.pwdCheck(),
+              method: "post",
+              headers: { Authorization: `Bearer ${this.token}` },
+              data: { password },
+            })
+              .then(() => {
+                this.delete();
+              })
+              .catch((err) => {
+                console.error(err);
+                Swal.fire({
+                  title: "인증실패",
+                  icon: "error",
+                  confirmButtonText: "확인",
+                });
+                this.$router.push({
+                  name: "home",
+                });
+              });
+          }
         });
-        axios({
-          url: spring.accounts.pwdCheck(),
-          method: "post",
-          headers: { Authorization: `Bearer ${this.token}` },
-          data: { password },
-        })
-          .then(() => {
-            this.delete();
-          })
-          .catch((err) => {
-            console.error(err);
-            Swal.fire({
-              title: "인증실패",
-              icon: "error",
-              confirmButtonText: "확인",
-            });
-            this.$router.push({
-              name: "home",
-            });
-          });
       } else {
         this.$router.push({ name: item.name });
       }

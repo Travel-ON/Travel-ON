@@ -91,32 +91,41 @@ export default {
         input: "password",
         inputLabel: "Password",
         inputPlaceholder: "비밀번호를 입력하세요",
+        showCancelButton: true,
+        cancelButtonText: "취소",
         inputAttributes: {
           maxlength: 17,
           autocapitalize: "off",
           autocorrect: "off",
         },
-      });
-      axios({
-        url: spring.accounts.pwdCheck(),
-        method: "post",
-        headers: { Authorization: `Bearer ${this.token}` },
-        data: { password },
-      })
-        .then(() => {
-          this.credentials.id = this.currentUserId;
-        })
-        .catch((err) => {
-          console.error(err);
-          Swal.fire({
-            title: "인증실패",
-            icon: "error",
-            confirmButtonText: "확인",
-          });
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios({
+            url: spring.accounts.pwdCheck(),
+            method: "post",
+            headers: { Authorization: `Bearer ${this.token}` },
+            data: { password },
+          })
+            .then(() => {
+              this.credentials.id = this.currentUserId;
+            })
+            .catch((err) => {
+              console.error(err);
+              Swal.fire({
+                title: "인증실패",
+                icon: "error",
+                confirmButtonText: "확인",
+              });
+              this.$router.push({
+                name: "home",
+              });
+            });
+        } else {
           this.$router.push({
-            name: "home",
+            name: "MemberSetTitle",
           });
-        });
+        }
+      });
     },
   },
 };
