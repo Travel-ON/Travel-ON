@@ -111,7 +111,6 @@ export default {
 <style scoped>
 .bg {
   width: 100vw;
-  /* height: 80vh; */
   height: 100%;
 }
 #findPW:hover {
