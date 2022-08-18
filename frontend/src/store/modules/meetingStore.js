@@ -39,7 +39,6 @@ export const MeetingStore = {
     // game
     playGame: false,
     isGamePanel: false,
-    gameName: "",
     gameCommentarys: [],
     participants: [],
 
@@ -82,6 +81,20 @@ export const MeetingStore = {
         result = 40;
       } else {
         result = Math.floor(100 / (Math.floor(state.subscribers.length / 2) + 1));
+      }
+      return result;
+    },
+    videoScale(state) {
+      let result;
+      result = 1;
+      if (state.subscribers.length >= 6) {
+        result = 0.45;
+      } else if (state.subscribers.length >= 4) {
+        result = 0.55;
+      } else if (state.subscribers.length >= 2) {
+        result = 0.6;
+      } else if (state.subscribers.length >= 1) {
+        result = 0.9;
       }
       return result;
     },
