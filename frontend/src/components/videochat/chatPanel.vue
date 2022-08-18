@@ -29,11 +29,12 @@
           </div>
           <div>
             <div v-if="message.url">
-              <v-card class="mx-auto" max-width="200px" height="260px">
+              <v-card class="mx-auto" max-width="200px" height="280px">
                 <v-card-title> #{{ message.message }} </v-card-title>
-                <v-btn :href="messages[i].doc_url" target="_blank">
-                  <v-img :src="messages[i].url" alt="사진" width="200px" />
-                </v-btn>
+                <v-img :src="messages[i].url" alt="사진" width="200px" />
+                <div class="text-md-center">
+                  <v-btn :href="messages[i].doc_url" target="_blank"> 더보기 </v-btn>
+                </div>
               </v-card>
             </div>
 
