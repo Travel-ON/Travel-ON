@@ -117,7 +117,7 @@
     </div>
     <div style="position: absolute; top: 20px; right: 50%; border-radius: 15px; transform: translate(+50%, 0)">
       <div
-        v-if="isResident === true"
+        v-if="isResident === 'true'"
         class="label"
         style="background-color: #6499ff; color: #fff; border: 2px solid #fff; border-radius: 8px; padding: 1px 10px"
       >
