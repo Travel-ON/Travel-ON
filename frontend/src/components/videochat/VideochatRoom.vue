@@ -191,7 +191,7 @@
                 게임 설명서&nbsp;<v-icon>mdi-comment-question-outline</v-icon>
               </v-btn>
             </template>
-            <v-card border="false" color="transparent" style="overflow: hidden">
+            <v-card border="false" color="transparent" style="overflow: hidden; box-shadow: none">
               <v-card-text>
                 <div style="position: relative">
                   <img
