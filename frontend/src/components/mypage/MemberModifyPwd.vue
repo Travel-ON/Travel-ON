@@ -9,6 +9,7 @@
             v-model="credentials.password"
             :rules="passwordRules"
             @click:append="passwordShow = !passwordShow"
+            style="font-family: Georgia; font-weight: bold"
             type="password"
             bg-color="#c9deff"
           ></v-text-field>
@@ -19,6 +20,7 @@
             v-model="credentials.passwordConfirm"
             :rules="passwordConfirmRules"
             @click:append="passwordConfirmShow = !passwordConfirmShow"
+            style="font-family: Georgia; font-weight: bold"
             type="password"
             bg-color="#c9deff"
           ></v-text-field>
