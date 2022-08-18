@@ -231,12 +231,22 @@ export const Accounts = {
         data: formData,
       })
         .then(() => {
-          alert("정보수정 완료!");
+          Swal.fire({
+            icon: "success",
+            title: "정보수정 완료!",
+            showConfirmButton: false,
+            timer: 1000,
+          });
           router.push({ name: "MemberLogout" });
         })
         .catch((err) => {
           console.error(err);
-          alert("정보수정 실패");
+          Swal.fire({
+            icon: "error",
+            title: "정보수정 실패!",
+            showConfirmButton: false,
+            timer: 1000,
+          });
         });
     },
     detail({ getters }) {
@@ -265,12 +275,10 @@ export const Accounts = {
         },
       })
         .then(() => {
-          alert("탈퇴 완료!");
           router.push({ name: "MemberLogout" });
         })
         .catch((err) => {
           console.log(err);
-          alert("탈퇴 실패!");
         });
     },
     fetchCurrentUser({ commit, getters, dispatch }, isLogin = false) {
@@ -391,14 +399,14 @@ export const Accounts = {
         data: credentials, // credentials.id, cresentials.email
       })
         .then((res) => {
-          Swal.fire("Good job!", "이메일로 임시 비밀번호를 전송했습니다", "success", {
+          Swal.fire("이메일로 임시 비밀번호를 전송했습니다", "success", {
             button: "확인",
           });
           router.push({ name: "home" });
         })
         .catch((err) => {
           console.error(err);
-          Swal.fire("Error", "아이디가 없거나 이메일이 일치하지 않습니다!", "error", {
+          Swal.fire("아이디가 없거나 이메일이 일치하지 않습니다!", "error", {
             button: "확인",
           });
           router.push({ name: "MemberLogin" });
