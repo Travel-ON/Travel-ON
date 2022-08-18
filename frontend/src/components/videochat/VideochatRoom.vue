@@ -191,7 +191,7 @@
                 게임 설명서&nbsp;<v-icon>mdi-comment-question-outline</v-icon>
               </v-btn>
             </template>
-            <v-card border="false" color="transparent" style="overflow: hidden">
+            <v-card border="false" color="transparent" style="overflow: hidden; box-shadow: none">
               <v-card-text>
                 <div style="position: relative">
                   <img
@@ -341,6 +341,7 @@ export default {
       this.setVideoFlag(this.video);
       this.setAudioFlag(this.audio);
       this.joinSession();
+      this.toggleChatPanel();
     }
   },
   mounted() {
@@ -368,98 +369,24 @@ export default {
       "stopLiarTalk",
       "startRoulette",
     ]),
-    // addClass() {
-    //   const count = this.subscribers.length + 1;
-    //   if (count === 1) {
-    //     this.one = true;
-    //     this.two = false;
-    //     this.three = false;
-    //     this.eight = false;
-    //     this.$nextTick(() => {
-    //       const videos = this.$refs.querySelectorAll("video");
-    //       for (let i = 0, len = videos.length; i < len; i += 1) {
-    //         videos[i].classList.add("height70");
-    //         videos[i].classList.remove("height30");
-    //         videos[i].classList.remove("height15");
-    //       }
-    //     });
-    //   } else if (count === 2 || count === 4) {
-    //     this.one = false;
-    //     this.two = true;
-    //     this.three = false;
-    //     this.eight = false;
-    //     if (count === 2) {
-    //       this.$nextTick(() => {
-    //         const videos = this.$refs.querySelectorAll("video");
-    //         for (let i = 0, len = videos.length; i < len; i += 1) {
-    //           videos[i].classList.add("height70");
-    //           videos[i].classList.remove("height30");
-    //           videos[i].classList.remove("height15");
-    //         }
-    //       });
-    //     } else {
-    //       this.$nextTick(() => {
-    //         const videos = this.$refs.querySelectorAll("video");
-    //         for (let i = 0, len = videos.length; i < len; i += 1) {
-    //           videos[i].classList.add("height30");
-    //           videos[i].classList.remove("height70");
-    //           videos[i].classList.remove("height15");
-    //         }
-    //       });
-    //     }
-    //   } else if (count === 3 || count === 5 || count === 6) {
-    //     this.one = false;
-    //     this.two = false;
-    //     this.three = true;
-    //     this.eight = false;
-    //     if (count === 3) {
-    //       this.$nextTick(() => {
-    //         const videos = this.$refs.querySelectorAll("video");
-    //         for (let i = 0, len = videos.length; i < len; i += 1) {
-    //           videos[i].classList.add("height70");
-    //           videos[i].classList.remove("height30");
-    //           videos[i].classList.remove("height15");
-    //         }
-    //       });
-    //     } else {
-    //       this.one = false;
-    //       this.two = false;
-    //       this.three = false;
-    //       this.eight = true;
-    //       this.$nextTick(() => {
-    //         const videos = this.$refs.querySelectorAll("video");
-    //         for (let i = 0, len = videos.length; i < len; i += 1) {
-    //           videos[i].classList.add("height30");
-    //           videos[i].classList.remove("height70");
-    //           videos[i].classList.remove("height15");
-    //         }
-    //       });
-    //     }
-    //   } else {
-    //     this.$nextTick(() => {
-    //       const videos = this.$refs.querySelectorAll("video");
-    //       for (let i = 0, len = videos.length; i < len; i += 1) {
-    //         videos[i].classList.add("height15");
-    //         videos[i].classList.remove("height70");
-    //         videos[i].classList.remove("height30");
-    //       }
-    //     });
-    //   }
-    // },
     clickCloseRoom() {
       if (this.playGame) {
         Swal.fire({
           title: "게임중에는 종료할 수 없습니다!",
           icon: "error",
+          showConfirmButton: false,
+          timer: 1000,
         });
       } else {
         Swal.fire({
           title: "화상채팅방을 종료하실건가요?",
-          text: "종료하려면 OK를 눌러주세요!",
+          text: "종료하려면 확인을 눌러주세요!",
           icon: "warning",
           showCancelButton: true,
           buttons: true,
           dangerMode: true,
+          confirmButtonText: "확인",
+          cancelButtonText: "취소",
         }).then((result) => {
           if (result.isConfirmed) {
             axios({
@@ -492,15 +419,19 @@ export default {
         Swal.fire({
           title: "게임중에는 나갈 수 없습니다!",
           icon: "error",
+          showConfirmButton: false,
+          timer: 1000,
         });
       } else {
         Swal.fire({
           title: "화상채팅방을 나가실건가요?",
-          text: "나가려면 OK를 눌러주세요!",
+          text: "나가려면 확인을 눌러주세요!",
           icon: "warning",
           showCancelButton: true,
           buttons: true,
           dangerMode: true,
+          confirmButtonText: "확인",
+          cancelButtonText: "취소",
         }).then((result) => {
           if (result.isConfirmed) {
             axios({
@@ -521,7 +452,6 @@ export default {
                 });
               })
               .catch((err) => {
-                // alert("이미 있는 아이디 입니다!");
                 console.log(err);
               });
           }
@@ -573,7 +503,7 @@ export default {
           text: "사람들에게 동의를 구하고 게임을 시작해보세요!",
           icon: "question",
           showCancelButton: true,
-          confirmButtonText: "게임신청",
+          confirmButtonText: "게임시작",
           cancelButtonText: "취소",
         }).then((result) => {
           if (result.isConfirmed) {
@@ -589,6 +519,8 @@ export default {
         input: "radio",
         inputOptions: { liar: "라이어게임", roulette: "룰렛게임" },
         showCancelButton: true,
+        confirmButtonText: "확인",
+        cancelButtonText: "취소",
         inputValidator: (value) => {
           if (!value) {
             return "게임을 선택하세요!";

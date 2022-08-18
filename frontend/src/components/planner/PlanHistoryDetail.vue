@@ -42,7 +42,6 @@
           </div>
         </div>
         <div
-          v-if="plan.review !== '' && plan.review"
           style="
             border: 2px solid #efefef;
             background-color: #efefef;
@@ -54,7 +53,7 @@
             word-break: normal;
           "
         >
-          <div>{{ plan.review }}</div>
+          <div>{{ plan.review !== "" && plan.review ? plan.review : "작성된 리뷰가 없습니다." }}</div>
         </div>
       </div>
     </div>
@@ -82,6 +81,7 @@
 <script>
 import axios from "axios";
 import spring from "@/api/spring_boot";
+import Swal from "sweetalert2";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -106,12 +106,17 @@ export default {
           },
         })
           .then(() => {
-            alert("플랜 삭제 성공하였습니다.");
+            Swal.fire({
+              icon: "success",
+              title: "플랜 삭제에 성공하였습니다.",
+              showConfirmButton: false,
+              timer: 1000,
+            });
+
             this.getPlanList();
             this.$emit("deleted");
           })
           .catch((err) => {
-            alert("플랜 삭제 실패하였습니다.");
             console.log(err);
           });
       }
