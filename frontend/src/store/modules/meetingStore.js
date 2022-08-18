@@ -39,6 +39,7 @@ export const MeetingStore = {
     // game
     playGame: false,
     isGamePanel: false,
+    gameName: "",
     gameCommentarys: [],
     participants: [],
 
@@ -64,6 +65,8 @@ export const MeetingStore = {
     },
     subscribers: (state) => state.subscribers,
     subscribersCount: (state) => state.subscribers.length,
+    isChatPanel: (state) => state.isChatPanel,
+    isGamePanel: (state) => state.isGamePanel,
     hostFlex(state) {
       let result;
       if (state.subscribers.length <= 2) {
@@ -139,6 +142,9 @@ export const MeetingStore = {
     SET_GAME_PARTICIPANTS(state, participants) {
       state.participants = participants;
     },
+    SET_GAME_NAME(state, value) {
+      state.gameName = value;
+    },
 
     // liar
     SET_LIAR_TOPIC(state, topic) {
@@ -166,6 +172,9 @@ export const MeetingStore = {
     },
   },
   actions: {
+    setGameName({ commit }, gameName) {
+      commit("SET_GAME_NAME", gameName);
+    },
     setPlayGame({ commit }, status) {
       commit("SET_PLAY_GAME", status);
     },
@@ -411,6 +420,7 @@ export const MeetingStore = {
                 if (eventData.step === 1) {
                   // 라이어 게임 시작
                   dispatch("startGame");
+                  dispatch("setGameName", "라이어");
                   state.gameCommentarys.push({ comment: "📣 라이어게임을 시작합니다!!!" });
                   state.gameCommentarys.push({ comment: "📣 방장이 주제를 선택중입니다.." });
                   if (state.hostName === rootGetters.currentUser) {
@@ -611,6 +621,7 @@ export const MeetingStore = {
                 if (eventData.step === 1) {
                   // 룰렛 게임 시작
                   dispatch("startGame");
+                  dispatch("setGameName", "룰렛");
                   state.gameCommentarys.push({ comment: "📣 룰렛게임을 시작합니다!!!" });
                   if (state.hostName === rootGetters.currentUser) {
                     const participants = [];
@@ -921,7 +932,8 @@ export const MeetingStore = {
       commit("SET_PLAY_GAME", true);
       commit("SET_IS_GAMEPANEL", true);
     },
-    endGame({ state, commit, rootGetters }) {
+    endGame({ state, commit, rootGetters, dispatch }) {
+      dispatch("setGameName", "");
       state.gameCommentarys.push({
         comment: `===========================`,
       });
