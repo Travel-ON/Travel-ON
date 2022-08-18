@@ -6,4 +6,4 @@ export default {
     locInform: () => HOST + "v2/local/geo/coord2regioncode.json",
     imageSearch: () => HOST + "/v2/search/image",
   },
-}
+};

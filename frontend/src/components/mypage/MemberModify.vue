@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div style="font-weight: bold; font-size: 40px; text-align: center; margin: 20px 0; width: 1080px; color: #50a0f0">
+      회원정보 수정
+    </div>
     <v-card style="padding: 80px 15%; margin-bottom: 40px" color="#e1effd">
       <v-form ref="form" v-model="valid" lazy-validation>
         <div style="display: flex">
