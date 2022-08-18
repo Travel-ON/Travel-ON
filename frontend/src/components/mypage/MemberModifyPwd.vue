@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div style="font-weight: bold; font-size: 40px; margin: 12px 0; width: 1080px; color: #50a0f0">비밀번호 재설정</div>
     <v-card style="padding: 80px 15%; margin-bottom: 40px" color="#e1effd">
       <v-form ref="form" v-model="valid" lazy-validation>
         <div>

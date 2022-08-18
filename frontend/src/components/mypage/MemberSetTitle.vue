@@ -2,7 +2,7 @@
 <template>
   <div style="display: flex; justify-content: center; align-items: center; width: 75%">
     <div>
-      <div style="font-weight: bold; font-size: 40px; margin: 12px 0; width: 1080px">칭호설정</div>
+      <div style="font-weight: bold; font-size: 40px; margin: 12px 0; width: 1080px; color: #50a0f0">칭호설정</div>
       <div style="width: 1080px; border-top: 3px solid #020715; background-color: #aaccff; border-radius: 0 0 8px 8px">
         <v-card-text>
           <div style="display: flex; justify-content: center">

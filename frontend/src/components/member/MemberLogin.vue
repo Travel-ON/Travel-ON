@@ -1,48 +1,70 @@
 <template>
-  <v-container>
-    <div class="text-h3 font-weight-bold" style="margin: 28px auto; color: #50a0f0">로그인</div>
-    <v-card id="loginCard" color="#AACCFF">
-      <v-form ref="form" lazy-validation @submit.prevent="login(credentials)">
-        <v-row id="inputId" style="display: flex" class="ml-16">
-          <v-col style="width: 70%; margin-right: 20px; max-width: 500px">
-            <v-text-field label="아이디" v-model="credentials.id" required bg-color="#c9deff"></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row id="inputPassword" style="display: flex" class="ml-16">
-          <v-col style="width: 50%; margin-right: 20px; max-width: 540px">
-            <v-text-field
-              bg-color="#c9deff"
-              label="비밀번호"
-              :type="showPassword ? 'text' : 'password'"
-              hint="비밀번호는 8 ~ 16자 영문, 숫자, 특수문자를 최소 한가지씩 조합하셔야 합니다."
-              :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-              v-model="credentials.password"
-              @click:append="showPassword = !showPassword"
-              style="font-family: Georgia; font-weight: bold"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row class="d-flex justify-space-between">
-          <v-col>
-            <v-row class="justify-start">
-              <v-col id="findPW">
+  <div class="bg" style="display: flex">
+    <div style="flex: 1" />
+    <div style="flex: 3">
+      <div class="mt-10" style="background-color: #ffffff; display: flex; border-radius: 15px">
+        <div style="display: flex; flex: 1">
+          <v-img
+            src="https://user-images.githubusercontent.com/26339069/185124395-e7f5f8ad-3572-4c71-8ee0-b429049f4de1.jpeg"
+            alt="여행사진"
+            style=" height=100%; width=100%;border-radius: 15px 0px 0px 15px"
+          />
+        </div>
+        <div style="flex: 1">
+          <v-form ref="form" lazy-validation @submit.prevent="login(credentials)">
+            <div class="mt-15" style="font-size: x-large">Travel-ON 로그인</div>
+            <div style="display: flex">
+              <div style="flex: 1" />
+              <div id="inputId" style="flex: 8">
+                <v-text-field
+                  bg-color="#F0EDED"
+                  label="아이디"
+                  variant="solo"
+                  v-model="credentials.id"
+                  required
+                ></v-text-field>
+              </div>
+              <div style="flex: 1" />
+            </div>
+            <div style="display: flex">
+              <div style="flex: 1" />
+              <div id="inputPassword" style="flex: 8">
+                <v-text-field
+                  label="비밀번호"
+                  bg-color="#F0EDED"
+                  variant="solo"
+                  :type="showPassword ? 'text' : 'password'"
+                  :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                  v-model="credentials.password"
+                  @click:append="showPassword = !showPassword"
+                  style="font-family: Georgia; font-weight: bold"
+                ></v-text-field>
+              </div>
+              <div style="flex: 1" />
+            </div>
+            <div style="display: flex">
+              <div style="flex: 1" />
+              <div style="flex: 8">
+                <v-btn style="background-color: #c9deff" block type="submit" size="large">로그인</v-btn>
+              </div>
+              <div style="flex: 1" />
+            </div>
+
+            <div>
+              <span id="findPW" style="font-size: small">
                 <router-link :to="{ name: 'MemberFindpwd' }">비밀번호를 잊으셨나요? </router-link>
-              </v-col>
-            </v-row>
-            <v-row class="justify-start">
-              <v-col id="findPW">
+              </span>
+              <span style="font-size: small; margin-right: 3px; margin-left: 3px"> | </span>
+              <span id="findPW" style="font-size: small">
                 <router-link :to="{ name: 'MemberRegister' }">계정이 없으신가요? </router-link>
-              </v-col>
-            </v-row>
-          </v-col>
-          <v-col>
-            <v-btn type="submit">로그인</v-btn>
-            <p>{{ logMessage }}</p>
-          </v-col>
-        </v-row>
-      </v-form>
-    </v-card>
-  </v-container>
+              </span>
+            </div>
+          </v-form>
+        </div>
+      </div>
+    </div>
+    <div style="flex: 1" />
+  </div>
 </template>
 
 <script>
@@ -84,6 +106,17 @@ export default {
 };
 </script>
 <style scoped>
+.bg {
+  width: 100vw;
+  height: 85vh;
+  background: #b2fefa; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #e7f0ff, #c2e9ff); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #e7f0ff,
+    #c2e9ff
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
 #findPW:hover {
   text-decoration-line: underline;
 }
