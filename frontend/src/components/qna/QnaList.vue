@@ -2,14 +2,26 @@
   <div>
     <v-container>
       <div v-if="admin">
-        <label for="checkbox" style="float: left"
-          ><input type="checkbox" id="checkbox" v-model="checked" @click="change" />답변 대기 글만 보기</label
-        >
+        <span>
+          <label for="checkbox" style="float: left"
+            ><input type="checkbox" id="checkbox" v-model="checked" @click="change" />답변 대기 글만 보기</label
+          >
+          <label for="checkbox" style="float: left"
+            ><input
+              style="margin-left: 16px"
+              type="checkbox"
+              id="checkbox"
+              v-model="ansChecked"
+              @click="answerChange"
+            />답변 완료 글만 보기</label
+          >
+        </span>
       </div>
-      <div v-else>
-        <label for="checkbox" style="float: left"
-          ><input type="checkbox" id="checkbox" v-model="ansChecked" @click="answerChange" />답변 완료 글만 보기</label
-        >
+      <div
+        style="margin: auto; font-weight: bold; font-size: 40px; width: 1080px; color: #50a0f0"
+        class="mx-auto; justify-center"
+      >
+        QnA
       </div>
       <div class="d-flex justify-end mb-6" v-if="!admin">
         <v-btn color="primary" @click="moveToWrite">문의하기</v-btn>
@@ -17,7 +29,7 @@
       <!--      <v-row>-->
       <!--        <v-col>문의 리스트(회원)</v-col>-->
       <!--      </v-row>-->
-      <v-row style="background-color: lightgrey">
+      <v-row style="background-color: #c9deff">
         <v-col>작성자 </v-col>
         <v-col>제목</v-col>
         <v-col>작성날짜</v-col>
