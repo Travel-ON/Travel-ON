@@ -1,18 +1,16 @@
 <template>
   <v-container>
-    <div>
-      <!--        <v-row class="row no-gutters theme-background" style="height: 91vh">-->
+    <!--        <v-row class="row no-gutters theme-background" style="height: 91vh">-->
 
-      <!--          <v-col id="capture" :class="{ 'col-8': isChatPanel, 'col-12': !isChatPanel }">-->
-      <!--            <LeftPanel class="h-100"></LeftPanel>-->
-      <!--          </v-col>-->
+    <!--          <v-col id="capture" :class="{ 'col-8': isChatPanel, 'col-12': !isChatPanel }">-->
+    <!--            <LeftPanel class="h-100"></LeftPanel>-->
+    <!--          </v-col>-->
 
-      <!--          <v-col class="right-panel" :class="{ 'col-4': isChatPanel, 'col-0': !isChatPanel }" v-if="isChatPanel">-->
-      <!--            <ChatPanel class="chat-panel" height="100px" v-if="isChatPanel"> </ChatPanel>-->
-      <!--          </v-col>-->
-      <!--        </v-row>-->
-      <!--      </div>-->
-    </div>
+    <!--          <v-col class="right-panel" :class="{ 'col-4': isChatPanel, 'col-0': !isChatPanel }" v-if="isChatPanel">-->
+    <!--            <ChatPanel class="chat-panel" height="100px" v-if="isChatPanel"> </ChatPanel>-->
+    <!--          </v-col>-->
+    <!--        </v-row>-->
+    <!--      </div>-->
     <router-view></router-view>
     <!--    <v-footer dark padless>-->
     <!--      <v-card class="flex-grow-1" tile>-->
