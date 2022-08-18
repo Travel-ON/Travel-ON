@@ -59,7 +59,7 @@
       </v-form>
     </v-card>
     <v-btn
-      :disabled="!valid"
+      :disabled="!valid || !nickChecked || nickDisable"
       @click="clickModify()"
       size="x-large"
       color="#c9deff"
@@ -177,7 +177,6 @@ export default {
           });
         });
     } else {
-      alert("잘못된 접근");
       this.$router.push({
         name: "home",
       });
@@ -197,20 +196,32 @@ export default {
           .then((res) => {
             console.log(res);
             this.nickChecked = nickname;
-            alert("닉네임 중복 검사 완료!");
+            Swal.fire({
+              icon: "success",
+              title: "닉네임 중복 검사 완료!",
+              showConfirmButton: false,
+              timer: 1000,
+            });
           })
           .catch((err) => {
-            alert("이미 있는 닉네임 입니다!");
+            Swal.fire({
+              icon: "error",
+              title: "이미 있는 닉네임 입니다!",
+              showConfirmButton: false,
+              timer: 1000,
+            });
             console.log(err);
           });
       } else {
-        alert("아무것도 입력하지 않으셨습니다.");
+        Swal.fire({
+          icon: "error",
+          title: "아무것도 입력하지 않으셨습니다.",
+          showConfirmButton: false,
+          timer: 1000,
+        });
       }
     },
     clickModify() {
-      // if (this.credentials.nickname === this.info.nickname) {
-      //   this.credentials.nickname = null;
-      // }
       if (this.credentials.email === this.info.email) {
         this.credentials.email = null;
       }

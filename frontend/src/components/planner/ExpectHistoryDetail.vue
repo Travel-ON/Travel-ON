@@ -69,6 +69,7 @@
 <script>
 import axios from "axios";
 import spring from "@/api/spring_boot";
+import Swal from "sweetalert2";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -92,12 +93,22 @@ export default {
           },
         })
           .then((res) => {
-            alert("방문 기록으로 옮기기 성공하였습니다.");
+            Swal.fire({
+              icon: "success",
+              title: "방문 기록으로 옮기기 성공하였습니다.",
+              showConfirmButton: false,
+              timer: 1000,
+            });
             console.log(res);
             this.getExpectList();
           })
           .catch((err) => {
-            alert("밤눙 기록으로 옮기기 실패하였습니다.");
+            Swal.fire({
+              icon: "error",
+              title: "방문 기록으로 옮기기 실패하였습니다.",
+              showConfirmButton: false,
+              timer: 1000,
+            });
             console.log(err);
           });
       }
@@ -112,13 +123,17 @@ export default {
           },
         })
           .then((res) => {
-            alert("플랜 삭제 성공하였습니다.");
+            Swal.fire({
+              icon: "success",
+              title: "플랜 삭제에 성공하였습니다.",
+              showConfirmButton: false,
+              timer: 1000,
+            });
             console.log(res);
             this.getExpectList();
             this.$emit("deleted");
           })
           .catch((err) => {
-            alert("플랜 삭제 실패하였습니다.");
             console.log(err);
           });
       }

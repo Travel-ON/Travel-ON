@@ -78,7 +78,6 @@ export default {
     if (this.isLoggedIn) {
       this.pwdCheck();
     } else {
-      alert("잘못된 접근");
       this.$router.push({
         name: "home",
       });
@@ -94,6 +93,7 @@ export default {
         inputLabel: "Password",
         inputPlaceholder: "비밀번호를 입력하세요",
         showCancelButton: true,
+        confirmButtonText: "확인",
         cancelButtonText: "취소",
         inputAttributes: {
           maxlength: 17,

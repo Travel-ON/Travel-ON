@@ -140,14 +140,6 @@ import OvVideo from "./OvVideo.vue";
 
 export default {
   name: "UserVideo",
-  // data: () => ({
-  //   // items: [
-  //   //   { title: "여행 플래너 보기", onlyHost: false, onlyOther: false }, // 플래너 보기
-  //   //   { title: "신고하기", onlyHost: false, onlyOther: true },
-  //   //   { title: "강퇴하기", onlyHost: true, onlyOther: true },
-  //   // ],
-
-  // }),
   data() {
     return {
       dialogm1: "",
@@ -169,7 +161,7 @@ export default {
     isThisRoom: Boolean,
   },
   computed: {
-    ...mapState("MeetingStore", ["isChatPanel"]),
+    ...mapState("MeetingStore", ["isChatPanel", "playGame"]),
     ...mapGetters({
       currentUser: "currentUser",
       currentUserId: "currentUserId",
@@ -211,15 +203,6 @@ export default {
       const { connection } = this.streamManager.stream;
       return JSON.parse(connection.data);
     },
-    // async check(item) {
-    //   if (item.title === "여행 플래너 보기") {
-    //     alert(this.clientName.concat(" 플래너 보기!"));
-    //   } else if (item.title === "신고하기") {
-    //     alert(this.clientName.concat(" [", this.clientUserId, "] ", this.clientTitle));
-    //   } else if (item.title === "강퇴하기") {
-    //     alert(this.clientName.concat(" 강퇴!"));
-    //   }
-    // },
     async report() {
       const { value: text } = await Swal.fire({
         input: "textarea",
@@ -227,10 +210,11 @@ export default {
         inputLabel: `${this.clientName}님을 신고하실건가요?`,
         inputPlaceholder: "신고 내용을 입력해주세요",
         showCancelButton: true,
+        confirmButtonText: "신고",
+        cancelButtonText: "취소",
       });
 
       if (text) {
-        Swal.fire(text);
         axios({
           url: spring.videochat.report(),
           method: "post",
@@ -260,8 +244,17 @@ export default {
       }
     },
     kickout() {
-      const data = { type: "kickout", from: this.currentUser, to: this.clientName };
-      this.sendMessage(data);
+      if (this.playGame) {
+        Swal.fire({
+          title: "게임중에는 강퇴시킬 수 없습니다!",
+          icon: "error",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      } else {
+        const data = { type: "kickout", from: this.currentUser, to: this.clientName };
+        this.sendMessage(data);
+      }
     },
   },
 };
