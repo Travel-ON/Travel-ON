@@ -1,6 +1,5 @@
 package com.travel.travel_on.model.repo;
 
-import com.travel.travel_on.entity.Achievement;
 import com.travel.travel_on.entity.Liar;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

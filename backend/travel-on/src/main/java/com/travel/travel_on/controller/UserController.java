@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.transaction.Transactional;
-import java.awt.geom.Area;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -334,23 +333,6 @@ public class UserController {
             return exceptionHandling(e);
         }
     }
-
-//    @ApiOperation(value = "신규알림 여부 조회: 신규알림이 생성됐는지 여부를 확인한다", response = Boolean.class)
-//    @GetMapping("/alarm")
-//    public ResponseEntity<?> alarmCheck(@ApiIgnore Authentication authentication) {
-//        try {
-//            JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
-//            String userId = userDetails.getUsername();
-//            UserDto userDto = userService.select(userId);
-//            if(userDto==null) {
-//                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//            }
-//            return new ResponseEntity<Boolean>(userDto.isAlarmFlag(), HttpStatus.OK);
-//        } catch (Exception e) {
-//            return exceptionHandling(e);
-//        }
-//    }
-
 
     private ResponseEntity<String> exceptionHandling(Exception e) {
         e.printStackTrace();
