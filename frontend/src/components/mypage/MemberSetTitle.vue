@@ -203,7 +203,7 @@ export default {
     },
     modifyTitle() {
       this.combiTitle = `${this.sido} ${this.changeTitle}`;
-      this.$store.dispatch("Members/modifyTitle", this.combiTitle);
+      this.$store.dispatch("Members/modifyTitle", this.sido ? this.combiTitle : this.title);
     },
   },
   components: { AchievementsMap },
