@@ -59,7 +59,7 @@
       </v-form>
     </v-card>
     <v-btn
-      :disabled="!valid || !nickChecked || nickDisable"
+      :disabled="!valid || !nickChecked || !credentials.sidoCode"
       @click="clickModify()"
       size="x-large"
       color="#c9deff"

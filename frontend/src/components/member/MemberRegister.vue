@@ -238,7 +238,9 @@
           <div style="flex: 8">
             <v-btn
               block
-              :disabled="!valid || !agreeCheck || !idChecked || idDisable || !nickChecked || nickDisable"
+              :disabled="
+                !valid || !agreeCheck || !idChecked || idDisable || !nickChecked || nickDisable || !credentials.sidoCode
+              "
               @click="regist(credentials)"
               size="large"
               style="margin-bottom: 30px; background-color: #c9deff"

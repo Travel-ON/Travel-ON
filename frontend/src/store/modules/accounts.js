@@ -56,7 +56,7 @@ export const Accounts = {
     SET_ADMIN: (state, admin) => (state.admin = admin),
     SET_TITLE: (state, title) => (state.title = title),
     SET_TROPHY: (state, trophy) => (state.trophy = trophy),
-    SET_RESIDENT: (state, resident) => (state.resident = (resident || resident === 'true' ? true : false)),
+    SET_RESIDENT: (state, resident) => (state.resident = resident || resident === "true" ? true : false),
     SET_TROPHYLIST: (state, trophyList) => (state.trophyList = trophyList),
   },
   actions: {
@@ -296,16 +296,16 @@ export const Accounts = {
             const userTitle = res.data.userTitle;
             const adminFlag = res.data.adminFlag;
             const alarmFlag = res.data.alarmFlag;
-            const sidoCode = res.data.sidoCode
+            const sidoCode = res.data.sidoCode;
             commit("SET_CURRENT_USER", nickName);
             commit("SET_CURRENT_USER_ID", id);
             commit("SET_ALARM_FLAG", alarmFlag);
             commit("SET_ADMIN", adminFlag);
             commit("SET_TITLE", userTitle);
             if (isLogin) {
-              console.log(getters.dongCode.substr(0,2));
-              console.log(sidoCode.substr(0,2));
-              if (sidoCode.substr(0,2) === getters.dongCode.substr(0,2)) {
+              console.log(getters.dongCode.substr(0, 2));
+              console.log(sidoCode.substr(0, 2));
+              if (sidoCode.substr(0, 2) === getters.dongCode.substr(0, 2)) {
                 dispatch("saveResident", true);
               }
             } else {
