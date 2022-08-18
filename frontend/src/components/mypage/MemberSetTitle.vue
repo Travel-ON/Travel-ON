@@ -159,8 +159,8 @@ export default {
   data() {
     return {
       nowTitle: null,
-      sido: null, // 변경 값
-      changeTitle: null, // 변경 값
+      sido: null,
+      changeTitle: null,
       combiTitle: null,
       selectedSido: null,
       sidoName: null,

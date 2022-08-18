@@ -328,7 +328,6 @@ export default defineComponent({
   display: inline-block;
   position: relative;
   top: 30px;
-  /* left: 50%; */
   margin-left: -12px;
   text-align: center;
   animation: arrow_down 1.5s infinite;

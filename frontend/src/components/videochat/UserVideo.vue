@@ -140,14 +140,6 @@ import OvVideo from "./OvVideo.vue";
 
 export default {
   name: "UserVideo",
-  // data: () => ({
-  //   // items: [
-  //   //   { title: "여행 플래너 보기", onlyHost: false, onlyOther: false }, // 플래너 보기
-  //   //   { title: "신고하기", onlyHost: false, onlyOther: true },
-  //   //   { title: "강퇴하기", onlyHost: true, onlyOther: true },
-  //   // ],
-
-  // }),
   data() {
     return {
       dialogm1: "",
