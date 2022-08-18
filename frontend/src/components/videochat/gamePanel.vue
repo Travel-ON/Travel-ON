@@ -14,7 +14,7 @@
           padding: 12px;
           background-color: #d1e6fb;
           flex: 1;
-          max-height: ${isChatPanel ? '294.62px' : '700.17px'};
+          max-height: ${isChatPanel ? 'calc(50vh - 196px)' : 'calc(100vh - 186px)'};
         `"
       >
         <div
