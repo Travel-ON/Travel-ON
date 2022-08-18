@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="title">FAQ</div>
+    <div style="font-weight: bold; font-size: 40px; margin: 12px 0; width: 1080px; color: #50a0f0">FAQ</div>
     <router-view />
   </div>
 </template>
