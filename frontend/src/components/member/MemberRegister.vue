@@ -136,7 +136,6 @@
             </div>
           </div>
 
-          <!-- <div style="display: flex; flex-direction: column"> -->
           <v-card
             class="overflow-y-auto"
             max-height="200"
@@ -360,7 +359,6 @@ export default {
           idChecked 상태값 True
         실패시
           -
-
         idChecked True일때만 가입 진행
       */
       if (id !== "") {
