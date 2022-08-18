@@ -1,13 +1,13 @@
 <template>
-  <v-app>
-    <v-app-bar height="80" v-if="!state.exceptList.includes($route.name)">
+  <v-app :style="!state.exceptFooterList.includes($route.name) ? `overflow: 'hidden'` : ``">
+    <v-app-bar height="80" v-if="!state.exceptNavList.includes($route.name)">
       <!-- main-nav는 기본적으로 모든 페이지에 포함, 제외시 하단 exceptList에 포함시킬것 -->
       <main-nav />
     </v-app-bar>
     <v-main>
       <router-view />
     </v-main>
-    <footer-view></footer-view>
+    <footer-view v-if="!state.exceptFooterList.includes($route.name)"></footer-view>
   </v-app>
 </template>
 
@@ -21,7 +21,8 @@ export default {
   name: "App",
   setup() {
     const state = reactive({
-      exceptList: ["VideochatMatching", "VideochatCreate", "VideochatRoom", "VideochatShare"], // Nav바 제외리스트
+      exceptNavList: ["VideochatMatching", "VideochatCreate", "VideochatRoom", "VideochatShare"], // Nav바 제외리스트
+      exceptFooterList: ["VideochatRoom"],
     });
 
     return {

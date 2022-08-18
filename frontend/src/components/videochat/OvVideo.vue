@@ -1,6 +1,6 @@
 <!-- eslint-disable vuejs-accessibility/media-has-caption -->
 <template>
-  <video class="video" autoplay />
+  <video class="video" autoplay style="box-sizing: border-box; max-height: 800px; max-width: 1060px" />
 </template>
 
 <script>
