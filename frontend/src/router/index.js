@@ -1,17 +1,14 @@
 import { createRouter, createWebHistory } from "vue-router";
-// import CreateMeeting from "@/components/meetingpage/CreateMeeting.vue";
 
 import Member from "../views/Member.vue";
 import MemberLogin from "../components/member/MemberLogin.vue";
 import MemberRegister from "../components/member/MemberRegister.vue";
-// import MemberSecession from "../components/member/MemberSecession.vue";
 import MemberLogout from "../components/member/MemberLogout.vue";
 import MemberFindpwd from "../components/member/MemberFindpwd.vue";
 
 import HomeView from "../views/HomeView.vue";
 
 import PlannerView from "../views/PlannerView.vue";
-import PlanModalTest from "../views/PlanModalTest.vue";
 
 import Notice from "../views/Notice.vue";
 import NoticeList from "../components/notice/NoticeList.vue";
@@ -86,11 +83,6 @@ const routes = [
         name: "MemberRegister",
         component: MemberRegister,
       },
-      // {
-      //   path: "secession",
-      //   name: "MemberSecession",
-      //   component: MemberSecession,
-      // },
       {
         path: "logout",
         name: "MemberLogout",
@@ -194,11 +186,6 @@ const routes = [
     path: "/planner",
     name: "Planner",
     component: PlannerView,
-  },
-  {
-    path: "/test",
-    name: "test",
-    component: PlanModalTest,
   },
 ];
 
