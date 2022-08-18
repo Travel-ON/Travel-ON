@@ -34,7 +34,9 @@ export default {
   },
   components: { MainNav, FooterView },
   mounted() {
-    this.fetchCurrentUser();
+    if (this.$route.name !== "home") {
+      this.fetchCurrentUser();
+    }
   },
   watch: {
     $route(to, form) {
