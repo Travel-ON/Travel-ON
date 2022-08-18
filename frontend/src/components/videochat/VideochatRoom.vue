@@ -452,15 +452,19 @@ export default {
         Swal.fire({
           title: "게임중에는 종료할 수 없습니다!",
           icon: "error",
+          showConfirmButton: false,
+          timer: 1000,
         });
       } else {
         Swal.fire({
           title: "화상채팅방을 종료하실건가요?",
-          text: "종료하려면 OK를 눌러주세요!",
+          text: "종료하려면 확인을 눌러주세요!",
           icon: "warning",
           showCancelButton: true,
           buttons: true,
           dangerMode: true,
+          confirmButtonText: "확인",
+          cancelButtonText: "취소",
         }).then((result) => {
           if (result.isConfirmed) {
             axios({
@@ -493,15 +497,19 @@ export default {
         Swal.fire({
           title: "게임중에는 나갈 수 없습니다!",
           icon: "error",
+          showConfirmButton: false,
+          timer: 1000,
         });
       } else {
         Swal.fire({
           title: "화상채팅방을 나가실건가요?",
-          text: "나가려면 OK를 눌러주세요!",
+          text: "나가려면 확인을 눌러주세요!",
           icon: "warning",
           showCancelButton: true,
           buttons: true,
           dangerMode: true,
+          confirmButtonText: "확인",
+          cancelButtonText: "취소",
         }).then((result) => {
           if (result.isConfirmed) {
             axios({
@@ -522,7 +530,6 @@ export default {
                 });
               })
               .catch((err) => {
-                // alert("이미 있는 아이디 입니다!");
                 console.log(err);
               });
           }
@@ -574,7 +581,7 @@ export default {
           text: "사람들에게 동의를 구하고 게임을 시작해보세요!",
           icon: "question",
           showCancelButton: true,
-          confirmButtonText: "게임신청",
+          confirmButtonText: "게임시작",
           cancelButtonText: "취소",
         }).then((result) => {
           if (result.isConfirmed) {
@@ -590,6 +597,8 @@ export default {
         input: "radio",
         inputOptions: { liar: "라이어게임", roulette: "룰렛게임" },
         showCancelButton: true,
+        confirmButtonText: "확인",
+        cancelButtonText: "취소",
         inputValidator: (value) => {
           if (!value) {
             return "게임을 선택하세요!";

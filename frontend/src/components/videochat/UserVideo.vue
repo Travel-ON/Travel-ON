@@ -218,10 +218,11 @@ export default {
         inputLabel: `${this.clientName}님을 신고하실건가요?`,
         inputPlaceholder: "신고 내용을 입력해주세요",
         showCancelButton: true,
+        confirmButtonText: "신고",
+        cancelButtonText: "취소",
       });
 
       if (text) {
-        Swal.fire(text);
         axios({
           url: spring.videochat.report(),
           method: "post",
@@ -255,6 +256,8 @@ export default {
         Swal.fire({
           title: "게임중에는 강퇴시킬 수 없습니다!",
           icon: "error",
+          showConfirmButton: false,
+          timer: 1000,
         });
       } else {
         const data = { type: "kickout", from: this.currentUser, to: this.clientName };

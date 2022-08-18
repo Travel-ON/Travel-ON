@@ -105,12 +105,14 @@ export default {
           },
         })
           .then(() => {
-            alert("플랜 삭제 성공하였습니다.");
+            Toast.fire({
+              icon: "success",
+              title: "플랜 삭제에 성공하였습니다.",
+            });
             this.getPlanList();
             this.$emit("deleted");
           })
           .catch((err) => {
-            alert("플랜 삭제 실패하였습니다.");
             console.log(err);
           });
       }

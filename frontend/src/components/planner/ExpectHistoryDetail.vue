@@ -92,12 +92,18 @@ export default {
           },
         })
           .then((res) => {
-            alert("방문 기록으로 옮기기 성공하였습니다.");
+            Toast.fire({
+              icon: "success",
+              title: "방문 기록으로 옮기기 성공하였습니다.",
+            });
             console.log(res);
             this.getExpectList();
           })
           .catch((err) => {
-            alert("밤눙 기록으로 옮기기 실패하였습니다.");
+            Toast.fire({
+              icon: "error",
+              title: "방문 기록으로 옮기기 실패하였습니다.",
+            });
             console.log(err);
           });
       }
@@ -112,13 +118,15 @@ export default {
           },
         })
           .then((res) => {
-            alert("플랜 삭제 성공하였습니다.");
+            Toast.fire({
+              icon: "success",
+              title: "플랜 삭제에 성공하였습니다.",
+            });
             console.log(res);
             this.getExpectList();
             this.$emit("deleted");
           })
           .catch((err) => {
-            alert("플랜 삭제 실패하였습니다.");
             console.log(err);
           });
       }

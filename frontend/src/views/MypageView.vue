@@ -40,7 +40,6 @@ export default {
   },
   created() {
     if (!this.isLoggedIn) {
-      alert("잘못된 접근");
       this.$router.push({
         name: "home",
       });
@@ -58,6 +57,7 @@ export default {
           input: "password",
           inputLabel: "Password",
           showCancelButton: true,
+          confirmButtonText: "확인",
           cancelButtonText: "취소",
           html: "탈퇴 시 Travel-ON의 다양한 서비스를 이용하실 수 없습니다.<br>탈퇴하려면 비밀번호를 입력해주세요.",
           inputAttributes: {

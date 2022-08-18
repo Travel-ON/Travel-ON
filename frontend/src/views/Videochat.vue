@@ -75,6 +75,8 @@ export default {
         showCancelButton: true,
         buttons: true,
         dangerMode: true,
+        confirmButtonText: "확인",
+        cancelButtonText: "취소",
       }).then((result) => {
         if (result.isConfirmed) {
           this.$router.push({

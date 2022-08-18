@@ -273,6 +273,7 @@ export const MeetingStore = {
             Swal.fire({
               title: "오류가 발생했습니다. 입장 정보를 다시 한 번 확인해주세요.",
               icon: "error",
+              confirmButtonText: "확인",
             });
             reject(error.response);
           });
@@ -318,7 +319,9 @@ export const MeetingStore = {
 
         if (check) {
           dispatch("leaveSession");
-          Swal.fire("화상채팅방 종료", "호스트에 의해 화상채팅방이 종료되었습니다.", "warning");
+          Swal.fire("화상채팅방 종료", "호스트에 의해 화상채팅방이 종료되었습니다.", "warning", {
+            button: "확인",
+          });
           router.push({
             name: "home",
           });
@@ -376,7 +379,9 @@ export const MeetingStore = {
               if (eventData.type === "kickout") {
                 if (eventData.to === rootGetters.currentUser) {
                   dispatch("leaveSession");
-                  Swal.fire("화상채팅방 강퇴", "호스트에 의해 화상채팅방에서 강퇴되었습니다.", "warning");
+                  Swal.fire("화상채팅방 강퇴", "호스트에 의해 화상채팅방에서 강퇴되었습니다.", "warning", {
+                    button: "확인",
+                  });
                   router.push({
                     name: "home",
                   });
@@ -471,6 +476,7 @@ export const MeetingStore = {
                       title: "🤫 라이어 🤫",
                       html: `키워드를 아는 것처럼 사람들을 속여보세요!`,
                       icon: "warning",
+                      confirmButtonText: "확인",
                     });
                   } else {
                     // 일반 - 키워드 전송
@@ -478,6 +484,7 @@ export const MeetingStore = {
                       title: `🤭 키워드: ${state.keyword} 🤭`,
                       html: `사람들과 이야기를 나누며 라이어를 찾아보세요!`,
                       icon: "warning",
+                      confirmButtonText: "확인",
                     });
                   }
                   state.gameCommentarys.push({
@@ -587,6 +594,7 @@ export const MeetingStore = {
                       title: "라이어 찾기 성공!!",
                       html: htmlText,
                       allowOutsideClick: false,
+                      confirmButtonText: "확인",
                     }).then((result) => {
                       if (result.isConfirmed) {
                         state.gameCommentarys.push({
@@ -603,6 +611,7 @@ export const MeetingStore = {
                       title: "라이어 찾기 실패!!",
                       html: htmlText,
                       allowOutsideClick: false,
+                      confirmButtonText: "확인",
                     }).then((result) => {
                       if (result.isConfirmed) {
                         if (state.liar === rootGetters.currentUser) {
@@ -775,6 +784,7 @@ export const MeetingStore = {
         width: 1000,
         allowOutsideClick: false,
         inputOptions,
+        confirmButtonText: "확인",
         inputValidator: (value) => {
           if (!value) {
             return "주제를 선택해주세요!";
@@ -860,6 +870,7 @@ export const MeetingStore = {
         inputOptions,
         inputPlaceholder: "누가 거짓말을 하고 있나요?",
         allowOutsideClick: false,
+        confirmButtonText: "확인",
         inputValidator: (value) => {
           if (!value) {
             return "라이어를 선택해주세요!";
@@ -890,6 +901,7 @@ export const MeetingStore = {
         inputLabel: "라이어님 키워드를 맞춰주세요!",
         allowOutsideClick: false,
         inputPlaceholder: "키워드 입력",
+        confirmButtonText: "확인",
       });
       const gameData = {
         gameId: "liar",
@@ -908,12 +920,14 @@ export const MeetingStore = {
           icon: "success",
           title: "라이어 게임 결과",
           html: `<h2>🥳 승리 🥳</h2>키워드: ${state.keyword}`,
+          confirmButtonText: "확인",
         });
       } else {
         Swal.fire({
           icon: "error",
           title: "라이어 게임 결과",
           html: `<h2>😭 패배 😭</h2>키워드: ${state.keyword}`,
+          confirmButtonText: "확인",
         });
       }
     },
@@ -1017,6 +1031,7 @@ export const MeetingStore = {
                               Swal.fire({
                                 title: "룰렛 게임 결과",
                                 html: `<h2>🥳 ${state.rouletteTargetName}님 당첨 🥳</h2>`,
+                                confirmButtonText: "확인",
                               });
                               commit("SET_ROULETTE_POINTER", "");
                               state.gameCommentarys.push({
