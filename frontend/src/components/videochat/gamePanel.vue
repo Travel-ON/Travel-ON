@@ -14,7 +14,7 @@
           padding: 12px;
           background-color: #d1e6fb;
           flex: 1;
-          max-height: ${isChatPanel ? '294.62px' : '700.17px'};
+          max-height: ${isChatPanel ? 'calc(50vh - 196px)' : 'calc(100vh - 186px)'};
         `"
       >
         <div
@@ -116,20 +116,22 @@ export default {
   overflow-y: auto;
 }
 #game-area::-webkit-scrollbar {
-  width: 15px;
-  height: 15px;
+  width: 12px;
+  height: 12px;
 }
 #game-area::-webkit-scrollbar-track {
-  background: #37474f;
+  background: #d1e6fb;
 }
 #game-area::-webkit-scrollbar-corner {
-  background: #37474f;
+  background: #50a0f0;
 }
 #game-area::-webkit-scrollbar-thumb {
-  background: #b0a2c8;
+  background: #50a0f0;
+  border-radius: 4px;
 }
 #game-area::-webkit-scrollbar-button {
-  background-color: #37474f;
-  height: 10px;
+  background-color: #50a0f0;
+  border-radius: 4px;
+  height: 12px;
 }
 </style>

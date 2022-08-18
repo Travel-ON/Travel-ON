@@ -1,6 +1,7 @@
 // import router from "@/router";
 import axios from "axios";
 import kakao from "@/api/kakao_api";
+import spring from "@/api/spring_boot";
 
 export const Locations = {
   /* eslint-disable */
@@ -30,7 +31,7 @@ export const Locations = {
     SET_LONGITUDE: (state, longitude) => (state.longitude = longitude),
   },
   actions: {
-    getLocation({ commit, dispatch, getters }, isValid) {
+    getLocation({ commit, dispatch, getters }, isValid, isLogin = false) {
       // 지역 정보 수집, isValid: 업적 업데이트 처리 여부
       let latitude = 37.5666805
       let longitude = 126.9784147
@@ -60,6 +61,23 @@ export const Locations = {
             if (isValid) {
               dispatch("fetchTrophy");
             }
+            const token = getters.token;
+            axios({
+              url: spring.accounts.detail(),
+              method: "get",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+              .then((res) => {
+                const sidoCode = res.data.sidoCode;
+                if (sidoCode.substr(0,2) == dongCode.substr(0,2)) {
+                  dispatch("saveResident", true);
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+              })
           })
           .catch((err) => {
             console.error(err);

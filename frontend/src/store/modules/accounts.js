@@ -56,7 +56,7 @@ export const Accounts = {
     SET_ADMIN: (state, admin) => (state.admin = admin),
     SET_TITLE: (state, title) => (state.title = title),
     SET_TROPHY: (state, trophy) => (state.trophy = trophy),
-    SET_RESIDENT: (state, resident) => (state.resident = resident === "true" ? true : false),
+    SET_RESIDENT: (state, resident) => (state.resident = (resident || resident === 'true' ? true : false)),
     SET_TROPHYLIST: (state, trophyList) => (state.trophyList = trophyList),
   },
   actions: {
@@ -118,8 +118,8 @@ export const Accounts = {
           commit("SET_CURRENT_USER_ID", credentials.id);
           dispatch("saveAdmin", adminFlag);
           commit("SET_TITLE", userTitle);
-          dispatch("getLocation", true);
-          dispatch("getTrophy");
+          dispatch("getLocation", true, true);
+          // dispatch("getTrophy");
           Swal.fire({
             icon: "success",
             title: "로그인 완료!",
@@ -273,7 +273,7 @@ export const Accounts = {
           alert("탈퇴 실패!");
         });
     },
-    fetchCurrentUser({ commit, getters, dispatch }) {
+    fetchCurrentUser({ commit, getters, dispatch }, isLogin = false) {
       if (getters.isLoggedIn) {
         axios({
           url: spring.accounts.detail(),
@@ -288,12 +288,21 @@ export const Accounts = {
             const userTitle = res.data.userTitle;
             const adminFlag = res.data.adminFlag;
             const alarmFlag = res.data.alarmFlag;
+            const sidoCode = res.data.sidoCode
             commit("SET_CURRENT_USER", nickName);
             commit("SET_CURRENT_USER_ID", id);
             commit("SET_ALARM_FLAG", alarmFlag);
             commit("SET_ADMIN", adminFlag);
             commit("SET_TITLE", userTitle);
-            dispatch("getLocation", false);
+            if (isLogin) {
+              console.log(getters.dongCode.substr(0,2));
+              console.log(sidoCode.substr(0,2));
+              if (sidoCode.substr(0,2) === getters.dongCode.substr(0,2)) {
+                dispatch("saveResident", true);
+              }
+            } else {
+              dispatch("getLocation", !isLogin);
+            }
             dispatch("getTrophy");
           })
           .catch((err) => {

@@ -50,7 +50,7 @@ export const Members = {
       }).then(() => {
         commit("SET_TITLE", payload, { root: true });
 
-        router.push("/member");
+        router.push("/");
       });
     },
   },
