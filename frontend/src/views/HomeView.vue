@@ -53,7 +53,7 @@
           <div style="flex: 2">
             <div data-aos="fade-right" class="title">
               <div style="color: #ffffff">여행지에서 새로운 사람들과</div>
-              <div style="color: #ffffff">만나고 대화하세요.</div>
+              <div style="color: #ffffff">만나고 대화하세요</div>
             </div>
           </div>
           <!-- <div style="flex: 1" /> -->
@@ -71,8 +71,8 @@
         </div>
       </div>
       <div style="flex: 2; display: flex">
-        <div style="flex: 1; display: flex; flex-direction: column; background-color: #6499ff">
-          <div style="flex: 1" />
+        <div style="flex: 1; background-color: #6499ff">
+          <div style="flex: 1; display: flex; flex-direction: column" />
           <div class="comment" style="flex: 1">지역 내 이미 만들어진 방에 참여할 수 있습니다!</div>
           <div style="flex: 2; display: flex">
             <div style="flex: 1" />
@@ -85,10 +85,10 @@
           </div>
           <div style="flex: 1" />
         </div>
-        <div style="flex: 1">
-          <div style="flex: 1" />
-          <div class="comment" style="flex: 1">같은 지역 범위 내 사용자들과의 방을 생성해보세요!</div>
 
+        <div style="flex: 1">
+          <div style="flex: 1; display: flex; flex-direction: column" />
+          <div class="comment" style="flex: 1">같은 지역 범위 내 사용자들과의 방을 생성해보세요!</div>
           <div style="flex: 2; display: flex">
             <div style="flex: 1" />
             <div style="flex: 5">
@@ -309,26 +309,25 @@ export default defineComponent({
 }
 .maintitle {
   font-family: "GangwonEdu_OTFBoldA";
-  font-size: 54px;
+  font-size: 70px;
   font-weight: bold;
   text-shadow: 2px 2px 2px gray;
 }
 .title {
   font-family: "GangwonEdu_OTFBoldA";
-  font-size: 48px;
+  font-size: 65px;
   font-weight: bold;
   text-shadow: 2px 2px 2px gray;
 }
 .comment {
   font-family: "Pretendard-Regular";
-  font-size: 20px;
+  font-size: 28px;
   margin-top: 5px;
 }
 .s1_arrow {
   display: inline-block;
   position: relative;
   top: 30px;
-  /* left: 50%; */
   margin-left: -12px;
   text-align: center;
   animation: arrow_down 1.5s infinite;

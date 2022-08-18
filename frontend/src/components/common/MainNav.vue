@@ -137,6 +137,7 @@ export default {
             icon: "warning",
             buttons: true,
             dangerMode: true,
+            confirmButtonText: "확인",
           });
         } else {
           this.$router.push({
@@ -151,6 +152,8 @@ export default {
           showCancelButton: true,
           buttons: true,
           dangerMode: true,
+          confirmButtonText: "이동",
+          cancelButtonText: "취소",
         }).then((result) => {
           if (result.isConfirmed) {
             this.$router.push({
@@ -200,6 +203,8 @@ export default {
           showCancelButton: true,
           buttons: true,
           dangerMode: true,
+          confirmButtonText: "삭제",
+          cancelButtonText: "취소",
         }).then((result) => {
           if (result.isConfirmed) {
             axios({
