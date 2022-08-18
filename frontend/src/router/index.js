@@ -86,11 +86,6 @@ const routes = [
         name: "MemberRegister",
         component: MemberRegister,
       },
-      // {
-      //   path: "secession",
-      //   name: "MemberSecession",
-      //   component: MemberSecession,
-      // },
       {
         path: "logout",
         name: "MemberLogout",
