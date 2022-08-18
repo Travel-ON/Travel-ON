@@ -123,7 +123,7 @@ export default {
   align-items: center;
   justify-content: start;
   font-weight: bold;
-  font-size: 24px;
+  font-size: 18px;
 }
 .expect-date {
   flex: 1;

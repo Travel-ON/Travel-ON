@@ -39,7 +39,7 @@
               <div>{{ `${expect.sidoName} ${expect.gugunName}` }}</div>
             </div>
             <div class="expect-name">
-              <div>{{ expect.expectedPlace }}</div>
+              <div style="font-size: 18px">{{ expect.expectedPlace }}</div>
             </div>
             <div class="expect-d-day">
               <div
