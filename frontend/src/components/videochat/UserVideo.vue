@@ -169,7 +169,7 @@ export default {
     isThisRoom: Boolean,
   },
   computed: {
-    ...mapState("MeetingStore", ["isChatPanel"]),
+    ...mapState("MeetingStore", ["isChatPanel", "playGame"]),
     ...mapGetters({
       currentUser: "currentUser",
       currentUserId: "currentUserId",
@@ -211,15 +211,6 @@ export default {
       const { connection } = this.streamManager.stream;
       return JSON.parse(connection.data);
     },
-    // async check(item) {
-    //   if (item.title === "여행 플래너 보기") {
-    //     alert(this.clientName.concat(" 플래너 보기!"));
-    //   } else if (item.title === "신고하기") {
-    //     alert(this.clientName.concat(" [", this.clientUserId, "] ", this.clientTitle));
-    //   } else if (item.title === "강퇴하기") {
-    //     alert(this.clientName.concat(" 강퇴!"));
-    //   }
-    // },
     async report() {
       const { value: text } = await Swal.fire({
         input: "textarea",
@@ -260,8 +251,15 @@ export default {
       }
     },
     kickout() {
-      const data = { type: "kickout", from: this.currentUser, to: this.clientName };
-      this.sendMessage(data);
+      if (this.playGame) {
+        Swal.fire({
+          title: "게임중에는 강퇴시킬 수 없습니다!",
+          icon: "error",
+        });
+      } else {
+        const data = { type: "kickout", from: this.currentUser, to: this.clientName };
+        this.sendMessage(data);
+      }
     },
   },
 };

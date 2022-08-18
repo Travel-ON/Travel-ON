@@ -341,6 +341,7 @@ export default {
       this.setVideoFlag(this.video);
       this.setAudioFlag(this.audio);
       this.joinSession();
+      this.toggleChatPanel();
     }
   },
   mounted() {
