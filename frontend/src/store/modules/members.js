@@ -1,5 +1,6 @@
 import { createApi } from "@/api";
 import router from "@/router";
+import Swal from "sweetalert2";
 
 const api = createApi();
 
@@ -49,8 +50,13 @@ export const Members = {
         },
       }).then(() => {
         commit("SET_TITLE", payload, { root: true });
-
-        router.push("/member");
+        Swal.fire({
+          icon: "success",
+          title: "칭호설정에 성공했습니다",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        router.push("/");
       });
     },
   },
