@@ -278,8 +278,9 @@ export const MeetingStore = {
         state.subscribers.push(subscriber);
         if (!state.isNewbie) {
           const data = {
-            from: "SYSTEM",
-            to: [],
+            sender: "SYSTEM",
+            receiver: "모두",
+            time: moment(new Date()).format("HH:mm"),
             message: `🎉${JSON.parse(stream.connection.data).clientName}님이 입장하였습니다🎉`,
           };
           state.messages.push(data);
@@ -310,8 +311,9 @@ export const MeetingStore = {
           });
         } else {
           const data = {
-            from: "SYSTEM",
-            to: [],
+            sender: "SYSTEM",
+            time: moment(new Date()).format("HH:mm"),
+            receiver: "모두",
             message: `✋${JSON.parse(stream.connection.data).clientName}님이 퇴장하였습니다✋`,
           };
           state.messages.push(data);

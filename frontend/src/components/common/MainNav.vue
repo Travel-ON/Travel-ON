@@ -1,39 +1,32 @@
 <template>
   <div style="position: fixed; top: 0; left: 0; right: 0; z-index: 3000">
     <v-toolbar height="80" style="background-color: white">
-      <router-link :to="{ name: 'home' }">
-        <v-btn style="width: 150px">
-          <v-img
-            class="mb-2"
-            src="https://user-images.githubusercontent.com/26339069/184654656-94988972-0726-4801-909e-43a93ef0416f.png"
-            alt="logo"
-            width="80px"
-          />
-        </v-btn>
+      <router-link class="ml-3 mr-6" :to="{ name: 'home' }">
+        <v-img src="@/assets/icon.png" alt="logo" width="60px" />
       </router-link>
       <v-btn
         @click="TransferPage('VideochatCreate')"
-        style="font-weight: bold; font-size: 23px; color: #0057ff; padding-left: 5px; padding-right: 5px"
+        style="font-weight: bold; font-size: 21px; color: #0057ff; padding-left: 5px; padding-right: 5px"
         >방만들기</v-btn
       >
       <v-btn
         @click="TransferPage('VideochatMatching')"
-        style="font-weight: bold; font-size: 23px; color: #50a0f0; padding-left: 5px; padding-right: 5px"
+        style="font-weight: bold; font-size: 21px; color: #50a0f0; padding-left: 5px; padding-right: 5px"
         >방매칭하기</v-btn
       >
       <v-btn
         @click="TransferPage('VideochatShare')"
-        style="font-weight: bold; font-size: 23px; color: #a1abff; padding-left: 5px; padding-right: 5px"
+        style="font-weight: bold; font-size: 21px; color: #a1abff; padding-left: 5px; padding-right: 5px"
         >방코드입장</v-btn
       >
       <v-btn
         @click="TransferPage('Planner')"
-        style="font-weight: bold; font-size: 23px; color: #3700b3; padding-left: 5px; padding-right: 5px"
+        style="font-weight: bold; font-size: 21px; color: #3700b3; padding-left: 5px; padding-right: 5px"
         >여행플래너</v-btn
       >
       <v-menu open-on-hover style="z-index: 3500">
         <template v-slot:activator="{ props }">
-          <v-btn v-bind="props" style="font-weight: bold; font-size: 23px; padding-left: 5px; padding-right: 5px">
+          <v-btn v-bind="props" style="font-weight: bold; font-size: 21px; padding-left: 5px; padding-right: 5px">
             커뮤니티
           </v-btn>
         </template>
@@ -56,16 +49,19 @@
         </router-link>
       </div>
       <div v-else>
+        <span v-if="isLocation"> <v-icon>mdi-map-marker</v-icon> {{ sido + " " }} {{ gugun + " " }} {{ dong }} </span>
+        <span v-else> <v-icon>mdi-map-marker-off-outline</v-icon> 위치인증안됨 </span>
+
         <!-- <v-menu style="z-index: 3500"> -->
         <v-dialog v-model="dialog" scrollable>
           <template v-slot:activator="{ props }">
-            <v-btn icon v-bind="props" @click="getAlarmList()">
-              <span style="font-size: x-large">
+            <v-btn class="ml-2" icon v-bind="props" @click="getAlarmList()">
+              <span style="font-size: large">
                 <v-badge v-if="alarmFlag" color="red" dot>
-                  <v-icon color="blue" x-large>mdi-bell</v-icon>
+                  <v-icon color="blue">mdi-bell</v-icon>
                 </v-badge>
 
-                <v-icon color="blue" x-large v-else>mdi-bell</v-icon>
+                <v-icon color="blue" v-else>mdi-bell</v-icon>
               </span>
             </v-btn>
           </template>
@@ -134,7 +130,7 @@ export default {
     alarms: [],
   }),
   methods: {
-    ...mapActions(["logout", "fetchAlarmFlag"]),
+    ...mapActions(["logout", "fetchAlarmFlag", "getLocation"]),
     TransferPage(pageName) {
       if (this.isLoggedIn) {
         if (pageName !== "Planner" && !this.isLocation) {
@@ -244,14 +240,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters({
-      isLoggedIn: "isLoggedIn",
-      isLocation: "isLocation",
-      currentUser: "currentUser",
-      title: "title",
-      token: "token",
-      alarmFlag: "alarmFlag",
-    }),
+    ...mapGetters(["isLocation", "dong", "gugun", "sido", "isLoggedIn", "currentUser", "title", "token", "alarmFlag"]),
   },
 };
 </script>
