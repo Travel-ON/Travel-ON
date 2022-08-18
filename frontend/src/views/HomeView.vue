@@ -108,7 +108,7 @@
       <div style="flex: 6; display: flex; flex-direction: column">
         <div style="flex: 1" />
         <div style="flex: 2">
-          <v-img data-aos="fade-up" src="@/assets/screen/videochat.png" alt="travel on" />
+          <v-img data-aos="fade-up" src="@/assets/screen/planner.png" alt="travel on" />
         </div>
         <div style="flex: 1" />
       </div>
@@ -139,15 +139,24 @@
       <div style="flex: 1" />
     </div>
     <!-- page 4 -->
-    <div class="page" style="background-color: #8b97ff">
+    <div class="page" style="background-color: #becffa">
       <div style="flex: 1" />
       <div style="flex: 5; display: flex; flex-direction: column">
         <div style="flex: 3" />
         <div style="flex: 4">
           <div class="title">
-            <div style="text-align: left; color: #ffffff">업적을 달성하고 <br />나의 칭호를 자랑해봐요!</div>
+            <div style="text-align: right; color: #ffffff">여행자 칭호</div>
+          </div>
+          <div class="comment" style="text-align: right">
+            위치인증을 통해 업적을 달성하면 칭호를 얻을 수 있어요!<br />
+            칭호를 설정하고 사람들에게 나의 칭호를 자랑해봐요!
           </div>
         </div>
+        <!-- <div style="flex: 4">
+          <div class="title">
+            <div style="text-align: left; color: #ffffff">업적을 달성하고 <br />나의 칭호를 자랑해봐요!</div>
+          </div>
+        </div> -->
         <div style="flex: 1" />
         <div style="flex: 5; display: flex">
           <div style="flex: 1" />
@@ -165,7 +174,7 @@
         <div style="flex: 1" />
         <div style="flex: 2">
           <router-link :to="{ name: 'MemberSetTitle' }">
-            <v-img data-aos="fade-up" src="@/assets/achievementsMap.png" alt="travel on" />
+            <v-img data-aos="fade-up" src="@/assets/screen/achievement.png" alt="travel on" />
           </router-link>
         </div>
         <div style="flex: 1" />
@@ -187,11 +196,11 @@
             style="flex: 3; background-color: #ffffff; border-radius: 15px; display: flex; flex-direction: column"
           >
             <div style="flex: 1" />
-            <div style="flex: 7">
+            <div style="flex: 7; margin-top: 5px">
               <v-img src="@/assets/icon_roulette.png" alt="travel on" />
             </div>
             <div style="flex: 1" />
-            <div style="flex: 3; color: #50a0f0; font-size: 40px; font-weight: bold">룰렛</div>
+            <div style="flex: 3; color: #50a0f0; font-size: 35px">룰렛</div>
             <div style="flex: 1" />
           </div>
           <div style="flex: 2" />
@@ -210,11 +219,11 @@
             style="flex: 3; background-color: #ffffff; border-radius: 15px; display: flex; flex-direction: column"
           >
             <div style="flex: 1" />
-            <div style="flex: 7">
-              <v-img src="@/assets/icon_liar.jpeg" alt="travel on" />
+            <div style="flex: 7; margin-top: 5px">
+              <v-img src="@/assets/icon_liar.jpeg" alt="travel on" style="border-radius: 15px" />
             </div>
             <div style="flex: 1" />
-            <div style="flex: 3; color: #50a0f0; font-size: 40px; font-weight: bold">라이어</div>
+            <div style="flex: 3; color: #50a0f0; font-size: 35px">라이어</div>
             <div style="flex: 1" />
           </div>
           <div style="flex: 2" />
