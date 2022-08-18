@@ -208,9 +208,9 @@ export default {
       }
     },
     clickModify() {
-      if (this.credentials.nickname === this.info.nickname) {
-        this.credentials.nickname = null;
-      }
+      // if (this.credentials.nickname === this.info.nickname) {
+      //   this.credentials.nickname = null;
+      // }
       if (this.credentials.email === this.info.email) {
         this.credentials.email = null;
       }
