@@ -36,6 +36,8 @@ import MemberSetTitle from "../components/mypage/MemberSetTitle.vue";
 import MemberModify from "../components/mypage/MemberModify.vue";
 import MemberModifyPwd from "../components/mypage/MemberModifyPwd.vue";
 
+import NotFound from "../views/NotFound.vue";
+
 const routes = [
   {
     path: "/",
@@ -186,6 +188,15 @@ const routes = [
     path: "/planner",
     name: "Planner",
     component: PlannerView,
+  },
+  {
+    path: "/404",
+    name: "notFound",
+    component: NotFound,
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    redirect: "/404",
   },
 ];
 
