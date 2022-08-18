@@ -220,7 +220,6 @@ export default {
                 });
               })
               .catch((err) => {
-                // alert("이미 있는 아이디 입니다!");
                 console.log(err);
               });
           }

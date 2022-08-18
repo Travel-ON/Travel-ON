@@ -15,8 +15,24 @@
       />
       <div class="expect-history-detail-body-shell">
         <div style="text-align: right; font-size: 24px; font-weight: bold">
-          <div :style="`color: ${convertDday(expect.expectedDate) > 0 ? '#7a64ff' : '#ff5151'}; z-index: 2`">
-            {{ `D-${convertDday(expect.expectedDate) > 0 ? convertDday(expect.expectedDate) : "DAY"}` }}
+          <div
+            :style="`color: ${
+              convertDday(expect.expectedDate) > 0
+                ? '#7a64ff'
+                : convertDday(expect.expectedDate) < 0
+                ? '#000'
+                : '#ff5151'
+            }; z-index: 2`"
+          >
+            {{
+              `${
+                convertDday(expect.expectedDate) > 0
+                  ? `D-${convertDday(expect.expectedDate)}`
+                  : convertDday(expect.expectedDate) < 0
+                  ? `D+${convertDday(expect.expectedDate) * -1}`
+                  : "D-DAY"
+              }`
+            }}
           </div>
         </div>
         <div style="display: flex; align-items: center; margin-bottom: 10px">
@@ -69,6 +85,7 @@
 <script>
 import axios from "axios";
 import spring from "@/api/spring_boot";
+import Swal from "sweetalert2";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -92,12 +109,22 @@ export default {
           },
         })
           .then((res) => {
-            alert("방문 기록으로 옮기기 성공하였습니다.");
+            Swal.fire({
+              icon: "success",
+              title: "방문 기록으로 옮기기 성공하였습니다.",
+              showConfirmButton: false,
+              timer: 1000,
+            });
             console.log(res);
             this.getExpectList();
           })
           .catch((err) => {
-            alert("밤눙 기록으로 옮기기 실패하였습니다.");
+            Swal.fire({
+              icon: "error",
+              title: "방문 기록으로 옮기기 실패하였습니다.",
+              showConfirmButton: false,
+              timer: 1000,
+            });
             console.log(err);
           });
       }
@@ -112,13 +139,17 @@ export default {
           },
         })
           .then((res) => {
-            alert("플랜 삭제 성공하였습니다.");
+            Swal.fire({
+              icon: "success",
+              title: "플랜 삭제에 성공하였습니다.",
+              showConfirmButton: false,
+              timer: 1000,
+            });
             console.log(res);
             this.getExpectList();
             this.$emit("deleted");
           })
           .catch((err) => {
-            alert("플랜 삭제 실패하였습니다.");
             console.log(err);
           });
       }

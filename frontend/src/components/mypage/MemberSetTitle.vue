@@ -161,8 +161,8 @@ export default {
   data() {
     return {
       nowTitle: null,
-      sido: null, // 변경 값
-      changeTitle: null, // 변경 값
+      sido: null,
+      changeTitle: null,
       combiTitle: null,
       selectedSido: null,
       sidoName: null,
@@ -203,7 +203,7 @@ export default {
     },
     modifyTitle() {
       this.combiTitle = `${this.sido} ${this.changeTitle}`;
-      this.$store.dispatch("Members/modifyTitle", this.combiTitle);
+      this.$store.dispatch("Members/modifyTitle", this.sido ? this.combiTitle : this.title);
     },
   },
   components: { AchievementsMap },

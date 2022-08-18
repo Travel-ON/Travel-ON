@@ -56,7 +56,7 @@
               </div>
             </div>
             <div v-else class="plan-rating">
-              <div style="margin-right: 5px; color: #f5c343; font-size: 16px">?.?</div>
+              <div style="margin-right: 5px; color: #f5c343; font-size: 16px"><v-icon>mdi-pencil-outline</v-icon></div>
               <div>
                 <v-rating
                   value="0"
