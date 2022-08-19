@@ -1,15 +1,14 @@
-import router from "@/router";
 import { createApi } from "@/api";
+import router from "@/router";
 
 const api = createApi();
 
 export const Notices = {
   namespaced: true,
-  state: {
-    notices: [],
-    notice: {},
-  },
-  getters: {},
+
+  state: { token: localStorage.getItem("token") || "", notices: [], notice: {}, totalPage: "", faq: [] },
+  getters: { token: (state) => state.token },
+
   mutations: {
     GET_NOTICE(state, payload) {
       state.notice = payload;
@@ -17,7 +16,7 @@ export const Notices = {
     GET_NOTICES(state, payload) {
       // notice 정렬
       payload.sort((a, b) => {
-        return a.fixation_flag > b.fixation_flag ? -1 : 1;
+        return a.fixationFlag > b.fixationFlag ? -1 : 1;
       });
       state.notices = payload;
     },
@@ -26,6 +25,12 @@ export const Notices = {
     },
     MODIFY_NOTICE(state, payload) {
       state.notice = payload;
+    },
+    TOTAL_PAGE(state, payload) {
+      state.totalPage = payload;
+    },
+    GET_FAQ(state, payload) {
+      state.faq = payload;
     },
   },
   actions: {
@@ -41,62 +46,89 @@ export const Notices = {
           console.log(err);
         });
     },
-    getNotices({ commit }, payload) {
-      let params = null;
-      if (payload) {
-        params = payload;
-      }
+    // 쿼리스트링으로 페이지가 안넘어감
+    getNotices({ commit }, pageNumber) {
       api({
         url: `/notice/page`,
-        moethod: "GET",
-        params,
+        method: "GET",
+        params: { page: pageNumber },
       })
         .then((res) => {
-          console.log(res);
-          commit("GET_NOTICES", res.data);
+          commit("GET_NOTICES", res.data.p.content);
+          commit("TOTAL_PAGE", res.data.p.totalPages);
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    writeNotice({ commit }, newNotice) {
+    writeNotice({ commit, getters }, newNotice) {
       api({
         url: `/notice/regist`,
         method: "POST",
-        params: newNotice,
+        data: newNotice,
+        headers: {
+          Authorization: `Bearer ${getters.token}`,
+        },
       })
         .then(() => {
           commit("WRITE_NOTICE", newNotice);
-          router.push("/notice");
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    modifyNotice({ commit }, payload) {
+    modifyNotice({ commit, getters }, payload) {
       api({
         url: `/notice/modify`,
         method: "PUT",
-        params: payload,
+        data: payload,
+        headers: {
+          Authorization: `Bearer ${getters.token}`,
+        },
       }).then(() => {
         commit("MODIFY_NOTICE", payload);
-        router.push({
-          name: "NoticeDetail",
-          params: {
-            noticeId: payload.notice_id,
-          },
-        });
       });
     },
-    deleteNotice({ commit }, payload) {
-      // eslint-disable-next-line no-unused-expressions
-      commit;
+    deleteNotice({ getters }, payload) {
       api({
         url: `/notice/delete/${payload}`,
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${getters.token}`,
+        },
       }).then(() => {
         router.push({ name: "NoticeList" });
       });
+    },
+    getFAQ({ commit }, faqPageNumber) {
+      let params = 0;
+      params = faqPageNumber;
+      api({
+        url: `/notice/faq`,
+        method: "GET",
+        params: { page: params },
+      })
+        .then((res) => {
+          commit("GET_FAQ", res.data.pf.content);
+          commit("TOTAL_PAGE", res.data.pf.totalPages);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getSearchFAQ({ commit }, payload) {
+      api({
+        url: `/notice/faq/search`,
+        method: "POST",
+        params: { key: payload },
+      })
+        .then((res) => {
+          commit("GET_FAQ", res.data.pf.content);
+          commit("TOTAL_PAGE", res.data.pf.totalPages);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };

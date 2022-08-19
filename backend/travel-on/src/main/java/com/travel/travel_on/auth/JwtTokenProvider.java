@@ -16,7 +16,7 @@ import java.util.Date;
     @Component
     public class JwtTokenProvider {
         private static String secretKey = "travel_on_secretKey@";
-        private static int expirationTime= 60 * 60 * 1000;
+        private static int expirationTime= 60 * 60 * 10000;
 
         public static final String TOKEN_PREFIX = "Bearer ";
         public static final String HEADER_STRING = "Authorization";
