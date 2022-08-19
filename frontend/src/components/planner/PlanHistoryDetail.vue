@@ -97,29 +97,39 @@ export default {
       this.$emit("switchUpdate", plan);
     },
     deletePlan() {
-      if (window.confirm("정말 이 게시글을 삭제하시겠습니까?")) {
-        axios({
-          url: spring.plan.delete(this.plan.visitPlaceId),
-          method: "delete",
-          headers: {
-            Authorization: `Bearer ${this.token()}`,
-          },
-        })
-          .then(() => {
-            Swal.fire({
-              icon: "success",
-              title: "플랜 삭제에 성공하였습니다.",
-              showConfirmButton: false,
-              timer: 1000,
-            });
-
-            this.getPlanList();
-            this.$emit("deleted");
+      Swal.fire({
+        text: "정말 이 플랜을 삭제하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        buttons: true,
+        dangerMode: true,
+        confirmButtonText: "삭제",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios({
+            url: spring.plan.delete(this.plan.visitPlaceId),
+            method: "delete",
+            headers: {
+              Authorization: `Bearer ${this.token()}`,
+            },
           })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+            .then(() => {
+              Swal.fire({
+                icon: "success",
+                title: "플랜 삭제에 성공하였습니다.",
+                showConfirmButton: false,
+                timer: 1000,
+              });
+
+              this.getPlanList();
+              this.$emit("deleted");
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      });
     },
   },
 };
