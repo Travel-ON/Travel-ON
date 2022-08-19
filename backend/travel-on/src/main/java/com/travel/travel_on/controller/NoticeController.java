@@ -9,6 +9,8 @@ import com.travel.travel_on.model.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
+
 
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
 @RestController
@@ -58,6 +61,8 @@ public class NoticeController {
             JwtUserDetails userDetails = (JwtUserDetails)authentication.getDetails();
             String userId = userDetails.getUsername();
             UserDto userDto = userService.select(userId);
+            System.out.println(userDto.isAdminFlag());
+            System.out.println(userId);
             if(userDto.isAdminFlag()) {
                 Date time = new Date();
                 String nowTime = simpleDateFormat.format(time);
@@ -140,9 +145,20 @@ public class NoticeController {
         }
     }
 
-    @ApiOperation(value = "FAQ 리스트 조회: FAQ 글 조회 및 페이징, 검색", response = FAQBoard.class)
-    @PostMapping("/faq")
-    public ResponseEntity<?> searchFAQ(String keyword, @PageableDefault(sort = "faqId")Pageable pageable){
+    @ApiOperation(value = "FAQ 리스트 조회: FAQ 글 조회 및 페이징", response = FAQBoard.class)
+    @GetMapping("/faq")
+    public ResponseEntity<?> searchFAQ(@PageableDefault(sort = "faqId")Pageable pageable){
+        FAQBoard result = new FAQBoard();
+        result.PF = noticeService.faqPage(pageable);
+        result.previous = pageable.previousOrFirst().getPageNumber();
+        result.next = pageable.next().getPageNumber();
+
+        return new ResponseEntity<FAQBoard>(result, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "FAQ 리스트 조회: FAQ 글 조회 및 검색", response = FAQBoard.class)
+    @PostMapping("/faq/search")
+    public ResponseEntity<?> searchFAQ(@RequestParam("key") String keyword, @PageableDefault(sort = "faqId")Pageable pageable){
         FAQBoard result = new FAQBoard();
         result.PF = noticeService.search(keyword, pageable);
         result.previous = pageable.previousOrFirst().getPageNumber();
@@ -156,17 +172,38 @@ public class NoticeController {
         return new ResponseEntity<String>("Sorry: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Getter
+    @Setter
     static class Board{
         Page<Notice> P;
         int previous;
         int next;
+
+        public Board() {}
+
+        public Board(Page<Notice> P, int previous, int next){
+            P = this.P;
+            previous = this.previous;
+            next = this.next;
+        }
     }
 
+    @Getter
+    @Setter
     static class FAQBoard{
         Page<FAQ> PF;
         int previous;
         int next;
+
+        public  FAQBoard(){}
+
+        public FAQBoard(Page<FAQ> PF, int previous, int next){
+            PF = this.PF;
+            previous = this.previous;
+            next = this.next;
+        }
     }
 }
+
 
 

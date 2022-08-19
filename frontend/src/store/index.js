@@ -1,8 +1,12 @@
+/* eslint-disable */
 import { createStore } from "vuex";
-// import { createApi } from "@/api";
 import { Notices } from "@/store/modules/notices";
+import { MeetingStore } from "@/store/modules/meetingStore";
 import { Accounts } from "./modules/accounts";
-// const api = createApi();
+import { QnAs } from "./modules/qnas";
+import { Locations } from "./modules/locations";
+import { Plans } from "./modules/plans";
+import { Members } from "./modules/members";
 
 export default createStore({
   state: {},
@@ -11,6 +15,11 @@ export default createStore({
   actions: {},
   modules: {
     Accounts,
+    QnAs,
     Notices,
+    Locations,
+    MeetingStore,
+    Plans,
+    Members,
   },
 });

@@ -13,11 +13,12 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.firewall.DefaultHttpFirewall;
+import org.springframework.security.web.firewall.HttpFirewall;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -35,8 +36,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/user/nickcheck",
             "/api/user/email",
             "/api/notice/page",
-            "/api/notice/faq",
+            "/api/notice/faq/**",
             "/api/notice/detail/**",
+            "/api/plan/auto",
+            "/api/plan/load/**",
     };
 
     @Autowired
@@ -46,14 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserService userService;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
     DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        daoAuthenticationProvider.setPasswordEncoder(PasswordEncoderConfig.passwordEncoder());
         daoAuthenticationProvider.setUserDetailsService(this.jwtUserDetailService);
         return daoAuthenticationProvider;
     }
@@ -75,4 +73,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
                 .anyRequest().authenticated();
     }
+
+    @Override
+    public void configure(WebSecurity web) {
+        web.httpFirewall(defaultHttpFirwall());
+    }
+
+    @Bean
+    public HttpFirewall defaultHttpFirwall(){
+        return new DefaultHttpFirewall();
+    }
+
 }
