@@ -263,6 +263,7 @@ export default {
 
 .title-scroll {
   overflow-y: scroll;
+  max-height: 490px;
 }
 .title-scroll::-webkit-scrollbar {
   display: none;
