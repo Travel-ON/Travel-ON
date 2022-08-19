@@ -84,59 +84,79 @@ export default {
       return parseInt(Math.ceil((new Date(day).getTime() - new Date()) / (1000 * 60 * 60 * 24)), 10);
     },
     switchUpdate() {
-      if (window.confirm("방문 기록으로 옮기시겠습니까?")) {
-        axios({
-          url: spring.plan.modifyExpect(this.expect.visitExpectedId),
-          method: "put",
-          headers: {
-            Authorization: `Bearer ${this.token()}`,
-          },
-        })
-          .then((res) => {
-            Swal.fire({
-              icon: "success",
-              title: "방문 기록으로 옮기기 성공하였습니다.",
-              showConfirmButton: false,
-              timer: 1000,
-            });
-            console.log(res);
-            this.getExpectList();
+      Swal.fire({
+        text: "방문 기록으로 옮기시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        buttons: true,
+        dangerMode: true,
+        confirmButtonText: "확인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios({
+            url: spring.plan.modifyExpect(this.expect.visitExpectedId),
+            method: "put",
+            headers: {
+              Authorization: `Bearer ${this.token()}`,
+            },
           })
-          .catch((err) => {
-            Swal.fire({
-              icon: "error",
-              title: "방문 기록으로 옮기기 실패하였습니다.",
-              showConfirmButton: false,
-              timer: 1000,
+            .then((res) => {
+              Swal.fire({
+                icon: "success",
+                title: "방문 기록으로 옮기기 성공하였습니다.",
+                showConfirmButton: false,
+                timer: 1000,
+              });
+              console.log(res);
+              this.getExpectList();
+            })
+            .catch((err) => {
+              Swal.fire({
+                icon: "error",
+                title: "방문 기록으로 옮기기 실패하였습니다.",
+                showConfirmButton: false,
+                timer: 1000,
+              });
+              console.log(err);
             });
-            console.log(err);
-          });
-      }
+        }
+      });
     },
     deleteExpect() {
-      if (window.confirm("정말 이 게시글을 삭제하시겠습니까?")) {
-        axios({
-          url: spring.plan.deleteExpect(this.expect.visitExpectedId),
-          method: "delete",
-          headers: {
-            Authorization: `Bearer ${this.token()}`,
-          },
-        })
-          .then((res) => {
-            Swal.fire({
-              icon: "success",
-              title: "플랜 삭제에 성공하였습니다.",
-              showConfirmButton: false,
-              timer: 1000,
-            });
-            console.log(res);
-            this.getExpectList();
-            this.$emit("deleted");
+      Swal.fire({
+        text: "정말 이 플랜을 삭제하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        buttons: true,
+        dangerMode: true,
+        confirmButtonText: "삭제",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios({
+            url: spring.plan.deleteExpect(this.expect.visitExpectedId),
+            method: "delete",
+            headers: {
+              Authorization: `Bearer ${this.token()}`,
+            },
           })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+            .then((res) => {
+              Swal.fire({
+                icon: "success",
+                title: "플랜 삭제에 성공하였습니다.",
+                showConfirmButton: false,
+                timer: 1000,
+              });
+              console.log(res);
+              this.getExpectList();
+              this.$emit("deleted");
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      });
     },
   },
 };
