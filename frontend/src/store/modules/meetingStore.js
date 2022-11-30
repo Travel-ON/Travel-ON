@@ -405,7 +405,7 @@ export const MeetingStore = {
               if (eventData.isHashTag) {
                 axios({
                   url: kakao.region.imageSearch(),
-                  headers: { Authorization: "KakaoAK a7cedeb35de4c99731ff3ee0bc0ade21" },
+                  headers: { Authorization: `KakaoAK ${process.env.KAKAO_AK}` },
                   method: "GET",
                   params: {
                     query: eventData.message,
