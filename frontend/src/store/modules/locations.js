@@ -43,7 +43,7 @@ export const Locations = {
         axios({
           url: kakao.region.locInform(),
           method: "get",
-          headers: { Authorization: "KakaoAK a7cedeb35de4c99731ff3ee0bc0ade21" },
+          headers: { Authorization: `KakaoAK ${process.env.KAKAO_AK}` },
           params: {
             x: longitude,
             y: latitude,

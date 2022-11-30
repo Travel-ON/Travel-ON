@@ -10,6 +10,7 @@ export const Accounts = {
     token: localStorage.getItem("token") || "", // 토큰
     currentUser: "", // 현재 유저 닉네임
     currentUserId: "", // 현재 유저 아이디
+    currentSidoCode: localStorage.getItem("sidoCode") || "", // 현재 시도 코드
     alarmFlag: false,
     admin: localStorage.getItem("admin") || false, // 관리자 여부
     title: "", // 유저 타이틀
@@ -41,6 +42,7 @@ export const Accounts = {
     token: (state) => state.token,
     currentUser: (state) => state.currentUser,
     currentUserId: (state) => state.currentUserId,
+    currentSidoCode: (state) => state.currentSidoCode,
     alarmFlag: (state) => state.alarmFlag,
     admin: (state) => state.admin,
     title: (state) => state.title,
@@ -51,6 +53,7 @@ export const Accounts = {
   mutations: {
     SET_CURRENT_USER: (state, user) => (state.currentUser = user),
     SET_CURRENT_USER_ID: (state, id) => (state.currentUserId = id),
+    SET_CURRENT_SIDO_CODE: (state, sidoCode) => (state.sidoCode = sidoCode),
     SET_ALARM_FLAG: (state, alarmFlag) => (state.alarmFlag = alarmFlag),
     SET_TOKEN: (state, token) => (state.token = token),
     SET_ADMIN: (state, admin) => (state.admin = admin),
