@@ -49,32 +49,34 @@
                       required
                     ></v-select>
                   </div>
-                  <div
-                    v-for="temptitle in titles"
-                    :key="temptitle.userAchievementId"
-                    :style="`
-                      height: 42px;
-                      margin-bottom: 8px;
-                      width: 260px;
-                      border: 3px solid #bfd9ff;
-                      display: flex;
-                      justify-content: center;
-                      align-items: center;
-                      background-color: ${
-                        (combiTitle ? combiTitle : title) === `${temptitle.sidoName} ${temptitle.title}`
-                          ? '#bfd9ff'
-                          : '#fff'
-                      };
-                      color: ${
-                        (combiTitle ? combiTitle : title) === `${temptitle.sidoName} ${temptitle.title}`
-                          ? '#020715'
-                          : '#000'
-                      };
-                      cursor: pointer;
-                    `"
-                    @click="setTitle(temptitle.sidoName, temptitle.title)"
-                  >
-                    {{ temptitle.sidoName }} {{ temptitle.title }}
+                  <div class="title-scroll">
+                    <div
+                      v-for="temptitle in titles"
+                      :key="temptitle.userAchievementId"
+                      :style="`
+                        height: 42px;
+                        margin-bottom: 8px;
+                        width: 260px;
+                        border: 3px solid #bfd9ff;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        background-color: ${
+                          (combiTitle ? combiTitle : title) === `${temptitle.sidoName} ${temptitle.title}`
+                            ? '#bfd9ff'
+                            : '#fff'
+                        };
+                        color: ${
+                          (combiTitle ? combiTitle : title) === `${temptitle.sidoName} ${temptitle.title}`
+                            ? '#020715'
+                            : '#000'
+                        };
+                        cursor: pointer;
+                      `"
+                      @click="setTitle(temptitle.sidoName, temptitle.title)"
+                    >
+                      {{ temptitle.sidoName }} {{ temptitle.title }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -115,7 +117,7 @@
                       ? changeTitle !== ""
                         ? `${sido} ${changeTitle}`
                         : "칭호를 선택해주세요"
-                      : title !== " "
+                      : title !== " " && title !== null
                       ? `${title}`
                       : "칭호를 선택해주세요"
                   }}
@@ -159,8 +161,8 @@ export default {
   data() {
     return {
       nowTitle: null,
-      sido: null, // 변경 값
-      changeTitle: null, // 변경 값
+      sido: null,
+      changeTitle: null,
       combiTitle: null,
       selectedSido: null,
       sidoName: null,
@@ -201,7 +203,7 @@ export default {
     },
     modifyTitle() {
       this.combiTitle = `${this.sido} ${this.changeTitle}`;
-      this.$store.dispatch("Members/modifyTitle", this.combiTitle);
+      this.$store.dispatch("Members/modifyTitle", this.sido ? this.combiTitle : this.title);
     },
   },
   components: { AchievementsMap },
@@ -257,5 +259,13 @@ export default {
   font-weight: normal;
   text-anchor: middle;
   alignment-baseline: middle;
+}
+
+.title-scroll {
+  overflow-y: scroll;
+  max-height: 300px;
+}
+.title-scroll::-webkit-scrollbar {
+  display: none;
 }
 </style>

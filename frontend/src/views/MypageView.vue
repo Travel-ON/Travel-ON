@@ -40,9 +40,29 @@ export default {
   },
   created() {
     if (!this.isLoggedIn) {
-      alert("잘못된 접근");
+      Swal.fire({
+        title: "로그인이 필요한 서비스입니다.",
+        text: "로그인 화면으로 이동할까요?",
+        icon: "warning",
+        showCancelButton: true,
+        buttons: true,
+        dangerMode: true,
+        confirmButtonText: "확인",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.$router.push({
+            name: "MemberLogin",
+          });
+        } else {
+          this.$router.push({
+            name: "home",
+          });
+        }
+      });
+    } else {
       this.$router.push({
-        name: "home",
+        name: "MemberSetTitle",
       });
     }
   },
@@ -54,33 +74,39 @@ export default {
           title: "🥺 탈퇴하실건가요? 🥺",
           input: "password",
           inputLabel: "Password",
+          showCancelButton: true,
+          confirmButtonText: "확인",
+          cancelButtonText: "취소",
           html: "탈퇴 시 Travel-ON의 다양한 서비스를 이용하실 수 없습니다.<br>탈퇴하려면 비밀번호를 입력해주세요.",
           inputAttributes: {
             maxlength: 17,
             autocapitalize: "off",
             autocorrect: "off",
           },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            axios({
+              url: spring.accounts.pwdCheck(),
+              method: "post",
+              headers: { Authorization: `Bearer ${this.token}` },
+              data: { password },
+            })
+              .then(() => {
+                this.delete();
+              })
+              .catch((err) => {
+                console.error(err);
+                Swal.fire({
+                  title: "인증실패",
+                  icon: "error",
+                  confirmButtonText: "확인",
+                });
+                this.$router.push({
+                  name: "home",
+                });
+              });
+          }
         });
-        axios({
-          url: spring.accounts.pwdCheck(),
-          method: "post",
-          headers: { Authorization: `Bearer ${this.token}` },
-          data: { password },
-        })
-          .then(() => {
-            this.delete();
-          })
-          .catch((err) => {
-            console.error(err);
-            Swal.fire({
-              title: "인증실패",
-              icon: "error",
-              confirmButtonText: "확인",
-            });
-            this.$router.push({
-              name: "home",
-            });
-          });
       } else {
         this.$router.push({ name: item.name });
       }

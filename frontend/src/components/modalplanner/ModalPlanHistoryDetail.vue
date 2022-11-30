@@ -60,6 +60,7 @@
 <script>
 import axios from "axios";
 import spring from "@/api/spring_boot";
+import Swal from "sweetalert2";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -75,25 +76,39 @@ export default {
       this.$emit("switchUpdate", plan);
     },
     deletePlan() {
-      if (window.confirm("정말 이 게시글을 삭제하시겠습니까?")) {
-        axios({
-          url: spring.plan.delete(this.plan.visitPlaceId),
-          method: "delete",
-          headers: {
-            Authorization: `Bearer ${this.token()}`,
-          },
-        })
-          .then((res) => {
-            alert("플랜 삭제 성공하였습니다.");
-            console.log(res);
-            this.getPlanList();
-            this.$emit("deleted");
+      Swal.fire({
+        text: "정말 이 플랜을 삭제하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        buttons: true,
+        dangerMode: true,
+        confirmButtonText: "삭제",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios({
+            url: spring.plan.delete(this.plan.visitPlaceId),
+            method: "delete",
+            headers: {
+              Authorization: `Bearer ${this.token()}`,
+            },
           })
-          .catch((err) => {
-            alert("플랜 삭제 실패하였습니다.");
-            console.log(err);
-          });
-      }
+            .then((res) => {
+              Swal.fire({
+                icon: "success",
+                title: "플랜 삭제에 성공하였습니다.",
+                showConfirmButton: false,
+                timer: 1000,
+              });
+              console.log(res);
+              this.getPlanList();
+              this.$emit("deleted");
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      });
     },
   },
 };

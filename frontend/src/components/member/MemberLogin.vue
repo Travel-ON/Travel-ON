@@ -1,8 +1,11 @@
 <template>
   <div class="bg" style="display: flex">
     <div style="flex: 1" />
-    <div style="flex: 3">
-      <div class="mt-10" style="background-color: #ffffff; display: flex; border-radius: 15px">
+    <div style="flex: 2">
+      <div
+        class="mt-10"
+        style="background-color: #ffffff; display: flex; border-radius: 15px; box-shadow: 5px 5px 5px 5px gray"
+      >
         <div style="display: flex; flex: 1">
           <v-img
             src="https://user-images.githubusercontent.com/26339069/185124395-e7f5f8ad-3572-4c71-8ee0-b429049f4de1.jpeg"
@@ -108,14 +111,7 @@ export default {
 <style scoped>
 .bg {
   width: 100vw;
-  height: 85vh;
-  background: #b2fefa; /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #e7f0ff, #c2e9ff); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #e7f0ff,
-    #c2e9ff
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  height: 100%;
 }
 #findPW:hover {
   text-decoration-line: underline;

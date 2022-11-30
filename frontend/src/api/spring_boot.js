@@ -1,5 +1,4 @@
-const HOST = "http://localhost:3000/";
-// const HOST = "https://i7b301.p.ssafy.io:3000/";
+const HOST = "https://i7b301.p.ssafy.io:3000/";
 
 const USER = "api/user/";
 const PLAN = "api/plan/";

@@ -34,14 +34,16 @@ export default {
   },
   components: { MainNav, FooterView },
   mounted() {
-    this.fetchCurrentUser();
+    // if (this.$route.name !== "home") {
+    //   this.fetchCurrentUser();
+    // }
   },
   watch: {
-    $route(to, form) {
-      if (to.path !== form.path) {
-        this.fetchCurrentUser();
-      }
-    },
+    // $route(to, form) {
+    //   if (to.path !== form.path) {
+    //     this.fetchCurrentUser();
+    //   }
+    // },
   },
 };
 </script>
@@ -54,5 +56,17 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #1b2d47;
+}
+@font-face {
+  font-family: "GangwonEdu_OTFBoldA";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
 }
 </style>

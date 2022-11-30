@@ -6,29 +6,27 @@
       </router-link>
       <v-btn
         @click="TransferPage('VideochatCreate')"
-        style="font-weight: bold; font-size: 21px; color: #0057ff; padding-left: 5px; padding-right: 5px"
+        style="font-size: 21px; color: #0057ff; padding-left: 5px; padding-right: 5px"
         >방만들기</v-btn
       >
       <v-btn
         @click="TransferPage('VideochatMatching')"
-        style="font-weight: bold; font-size: 21px; color: #50a0f0; padding-left: 5px; padding-right: 5px"
+        style="font-size: 21px; color: #50a0f0; padding-left: 5px; padding-right: 5px"
         >방매칭하기</v-btn
       >
       <v-btn
         @click="TransferPage('VideochatShare')"
-        style="font-weight: bold; font-size: 21px; color: #a1abff; padding-left: 5px; padding-right: 5px"
+        style="font-size: 21px; color: #a1abff; padding-left: 5px; padding-right: 5px"
         >방코드입장</v-btn
       >
       <v-btn
         @click="TransferPage('Planner')"
-        style="font-weight: bold; font-size: 21px; color: #3700b3; padding-left: 5px; padding-right: 5px"
+        style="font-size: 21px; color: #3700b3; padding-left: 5px; padding-right: 5px"
         >여행플래너</v-btn
       >
       <v-menu open-on-hover style="z-index: 3500">
         <template v-slot:activator="{ props }">
-          <v-btn v-bind="props" style="font-weight: bold; font-size: 21px; padding-left: 5px; padding-right: 5px">
-            커뮤니티
-          </v-btn>
+          <v-btn v-bind="props" style="font-size: 21px; padding-left: 5px; padding-right: 5px"> 커뮤니티 </v-btn>
         </template>
         <v-list>
           <v-list-item v-for="(item, index) in items_community" :key="index" :value="index">
@@ -42,10 +40,10 @@
       <!-- false시 로그인 상태, true시 비로그인 상태 -->
       <div v-if="!isLoggedIn">
         <router-link :to="{ name: 'MemberLogin' }">
-          <v-btn style="font-weight: bold; color: #50a0f0; font-size: 23px">로그인</v-btn>
+          <v-btn style="color: #50a0f0; font-size: 21px">로그인</v-btn>
         </router-link>
         <router-link :to="{ name: 'MemberRegister' }">
-          <v-btn style="font-weight: bold; color: #50a0f0; font-size: 23px">회원가입</v-btn>
+          <v-btn style="color: #50a0f0; font-size: 21px">회원가입</v-btn>
         </router-link>
       </div>
       <div v-else>
@@ -139,6 +137,7 @@ export default {
             icon: "warning",
             buttons: true,
             dangerMode: true,
+            confirmButtonText: "확인",
           });
         } else {
           this.$router.push({
@@ -153,6 +152,8 @@ export default {
           showCancelButton: true,
           buttons: true,
           dangerMode: true,
+          confirmButtonText: "이동",
+          cancelButtonText: "취소",
         }).then((result) => {
           if (result.isConfirmed) {
             this.$router.push({
@@ -202,6 +203,8 @@ export default {
           showCancelButton: true,
           buttons: true,
           dangerMode: true,
+          confirmButtonText: "삭제",
+          cancelButtonText: "취소",
         }).then((result) => {
           if (result.isConfirmed) {
             axios({
